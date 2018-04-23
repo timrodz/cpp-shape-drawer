@@ -29,6 +29,10 @@ void Utils::SetTriangleData(std::vector<VertexFormat>& vertices, std::vector<GLu
     indices = Indices;
 }
 
+void Utils::SetHexagonData(std::vector<VertexFormat>& _vertices, std::vector<GLuint>& _indices)
+{
+}
+
 void Utils::SetSquareData(std::vector<VertexFormat>& vertices, std::vector<GLuint>& indices)
 {
     std::vector<VertexFormat> Vertices;
@@ -48,7 +52,7 @@ void Utils::SetSquareData(std::vector<VertexFormat>& vertices, std::vector<GLuin
     indices = Indices;
 }
 
-void Utils::SetHexagonData(std::vector<VertexFormat>& vertices, std::vector<GLuint>& indices)
+void Utils::SetCubeData(std::vector<VertexFormat>& vertices, std::vector<GLuint>& indices)
 {
     std::vector<VertexFormat> Vertices;
 
@@ -114,7 +118,7 @@ void Utils::SetHexagonData(std::vector<VertexFormat>& vertices, std::vector<GLui
 }
 
 
-void Utils::SetCircleData(std::vector<VertexFormat>& _vertices, std::vector<GLuint>& _indices)
+void Utils::SetSphereData(std::vector<VertexFormat>& _vertices, std::vector<GLuint>& _indices)
 {
     std::vector<VertexFormat> Vertices;
 

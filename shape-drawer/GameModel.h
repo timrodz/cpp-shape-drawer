@@ -6,7 +6,7 @@ class Camera;
 
 class GameModel {
 public:
-	GameModel(ModelType _modelType, Camera* _camera, MovementDirection _movementDirection);
+	GameModel(ModelType _modelType, Camera* _camera);
 	~GameModel();
 
 	void Update(GLfloat time);
@@ -14,15 +14,17 @@ public:
 
 	void SetPosition(glm::vec3 _position);
 	void SetScale(glm::vec3 _scale);
-	//void SetRotation(glm::vec3 angle);
-	//void SetRotationAxis(glm::vec3 rotationAxis);
-
 	void SetColor(glm::vec3 _color);
 	void SetCamera(Camera* camera);
 	void SetSpeed(float _speed);
 	void SetProgram(GLuint program);
+	//void SetRotation(glm::vec3 angle);
+	//void SetRotationAxis(glm::vec3 rotationAxis);
+
 	//void SetTexture(std::string texFileName);
 	//void SetSpecularStrength(float strength);
+
+    void SetMovementType(MovementType _type);
 
 	glm::vec3 GetPosition();
 	glm::vec3 GetScale();
@@ -42,7 +44,7 @@ public:
 
 private:
 	Camera* camera;
-    MovementDirection m_MovementDirection;
+    MovementType m_MovementType;
 	//Light* light;
 
 	//bool bIsTextureSet = false;
@@ -69,4 +71,5 @@ private:
 	//float specularStrength;
 	//float ambientStrength;
 
+    bool movementToggle;
 };

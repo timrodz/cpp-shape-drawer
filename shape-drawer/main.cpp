@@ -56,10 +56,11 @@ int main(int argc, char **argv)
     g_Camera = new Camera(vec3(0, 0, 8), Utils::WIDTH, Utils::HEIGHT);
 
     GLuint triangleProgram = g_ShaderLoader.CreateProgram("shaders/unlit.vs", "shaders/unlit.fs");
-    g_Triangle = new GameModel(ModelType::Circle, g_Camera, MovementDirection::UpDown);
+    g_Triangle = new GameModel(ModelType::Circle, g_Camera);
+    g_Triangle->SetMovementType(MovementType::UpDown);
     g_Triangle->SetColor(Utils::RGBtoAlpha(66, 134, 244));
     g_Triangle->SetProgram(triangleProgram);
-    g_Triangle->SetPosition(vec3(-3, -0.5f, 0));
+    g_Triangle->SetPosition(vec3(0, -0.5f, 0));
     g_Triangle->SetSpeed(0.005f);
 
     // Skybox
@@ -76,7 +77,6 @@ int main(int argc, char **argv)
     glutMainLoop();
 
     return (EXIT_SUCCESS);
-
 }
 
 void Render()
@@ -98,6 +98,8 @@ void Update()
 
     // Update the models
     g_Triangle->Update(deltaTime);
+
+    //LerpAtoB<GameModel>(g_Triangle, vec3(1, 1, 1), vec3(2, 1, 1));
 }
 
 void KeyDown(unsigned char key, int x, int y)

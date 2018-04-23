@@ -1,70 +1,68 @@
-
 #include "GameModel.h"
 #include "Camera.h"
 
-
-GameModel::GameModel(ModelType _modelType, Camera* _camera, MovementDirection _movementDirection)
+GameModel::GameModel(ModelType _modelType, Camera* _camera)
 {
-	camera = _camera;
-	//light = _light;
-    m_MovementDirection = _movementDirection;
+    camera = _camera;
 
-	scale = glm::vec3(1.0f, 1.0f, 1.0f);
-	position = glm::vec3(0.0, 0.0, 0.0);
-	color = glm::vec3(1.0f, 1.0f, 1.0f);
+    scale = glm::vec3(1.0f, 1.0f, 1.0f);
+    position = glm::vec3(0.0, 0.0, 0.0);
+    color = glm::vec3(1.0f, 1.0f, 1.0f);
 
-	speed = 0.05f;
-	rotationAxis = glm::bvec3(0.0f, 0.0f, 1.0f);
+    speed = 0.0f;
+    rotationAxis = glm::vec3(0.0f, 0.0f, 1.0f);
+    m_MovementType = MovementType::Idle;
 
-	//glEnable(GL_DEPTH_TEST);
-	//glDepthMask(GL_FALSE);//if enabled, disables writing to depth
-	//glDepthFunc(GL_LESS);//passes if the fragment depth value is less than stored depth value
+    //glEnable(GL_DEPTH_TEST);
+    //glDepthMask(GL_FALSE);//if enabled, disables writing to depth
+    //glDepthFunc(GL_LESS);//passes if the fragment depth value is less than stored depth value
 
-	switch (_modelType)
-	{
-		case Triangle: Utils::SetTriangleData(vertices, indices); break;
-		case Square: Utils::SetSquareData(vertices, indices); break;
-		case Hexagon: Utils::SetHexagonData(vertices, indices); break;
-		case Circle: Utils::SetCircleData(vertices, indices); break;
-	}
+    switch (_modelType)
+    {
+        case Triangle: Utils::SetTriangleData(vertices, indices); break;
+        case Square: Utils::SetSquareData(vertices, indices); break;
+        case Hexagon: Utils::SetHexagonData(vertices, indices); break;
+        case Cube: Utils::SetCubeData(vertices, indices); break;
+        case Circle: Utils::SetSphereData(vertices, indices); break;
+    }
 
-	for (auto item : vertices)
-	{
-		//printf("position: %f, %f, %f \n", item.pos.x, item.pos.y, item.pos.z);
-	}
+    for (auto item : vertices)
+    {
+        //printf("position: %f, %f, %f \n", item.pos.x, item.pos.y, item.pos.z);
+    }
 
-	for (auto item : indices)
-	{
-		//printf("index: %d, %d, %d \n", item.x, item.y, item.z);
-	}
+    for (auto item : indices)
+    {
+        //printf("index: %d, %d, %d \n", item.x, item.y, item.z);
+    }
 
-	glGenVertexArrays(1, &vao);
-	glBindVertexArray(vao);
+    glGenVertexArrays(1, &vao);
+    glBindVertexArray(vao);
 
-	glGenBuffers(1, &vbo);
-	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(VertexFormat) * vertices.size(), &vertices[0], GL_STATIC_DRAW);
+    glGenBuffers(1, &vbo);
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(VertexFormat) * vertices.size(), &vertices[0], GL_STATIC_DRAW);
 
-	glGenBuffers(1, &ebo);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * indices.size(), &indices[0], GL_STATIC_DRAW);
+    glGenBuffers(1, &ebo);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * indices.size(), &indices[0], GL_STATIC_DRAW);
 
-	//this->SetTexture(texFileName);
+    //this->SetTexture(texFileName);
 
-	// Position
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(VertexFormat), (GLvoid*)0);
+    // Position
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(VertexFormat), (GLvoid*) 0);
 
-	// Texture Coordinates
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(VertexFormat), (void*)(offsetof(VertexFormat, VertexFormat::texCoord)));
+    // Texture Coordinates
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(VertexFormat), (void*) (offsetof(VertexFormat, VertexFormat::texCoord)));
 
-	// Normals
-	glEnableVertexAttribArray(2);
-	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(VertexFormat), (void*)(offsetof(VertexFormat, VertexFormat::normal)));
+    // Normals
+    glEnableVertexAttribArray(2);
+    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(VertexFormat), (void*) (offsetof(VertexFormat, VertexFormat::normal)));
 
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindVertexArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindVertexArray(0);
 
 }
 
@@ -76,74 +74,89 @@ GameModel::~GameModel()
 
 void GameModel::Update(GLfloat time)
 {
-	//model = glm::rotate(model,glm::radians(45.0f) * time, glm::vec3(0.0, 1.0, 0.0f));
-	//model = glm::translate(model, position);
-	glutPostRedisplay();
+    //model = glm::rotate(model,glm::radians(45.0f) * time, glm::vec3(0.0, 1.0, 0.0f));
+    //model = glm::translate(model, position);
+    switch (m_MovementType)
+    {
+        case (MovementType::UpDown):
+        {
+            if (position.y < Utils::VERTICAL_LIMIT)
+            {
+                position += glm::vec3(0, 1, 0) * 0.05f;
+            }
+            else if (position.y > -Utils::VERTICAL_LIMIT)
+            {
+                position -= glm::vec3(0, 1, 0) * 0.05f;
+            }
+        }
+        break;
+    }
+    glutPostRedisplay();
 }
 
 
 void GameModel::Render()
 {
-	glUseProgram(this->program);
+    glUseProgram(this->program);
 
-	glColor3f(1, 1, 0);
+    glColor3f(1, 1, 0);
 
-	glActiveTexture(GL_TEXTURE0);
-	//glBindTexture(GL_TEXTURE_2D, texture);
-	//glUniform1i(glGetUniformLocation(program, "Texture"), 0);
+    glActiveTexture(GL_TEXTURE0);
+    //glBindTexture(GL_TEXTURE_2D, texture);
+    //glUniform1i(glGetUniformLocation(program, "Texture"), 0);
 
-	glm::mat4 model, view, projection;
-	model = glm::translate(model, position);
+    glm::mat4 model, view, projection;
+    model = glm::translate(model, position);
 
-	model = glm::translate(model, glm::vec3(0.0f * this->scale.x, 0.0f * scale.y, 0.0f));
-	model = glm::rotate(model, glm::radians(angle.x), glm::vec3(1.0, 0.0, 0.0));
-	model = glm::rotate(model, glm::radians(angle.y), glm::vec3(0.0, 1.0, 0.0));
-	model = glm::rotate(model, glm::radians(angle.z), glm::vec3(0.0, 0.0, 1.0));
-	model = glm::translate(model, glm::vec3(-0.0f * scale.x, -0.0f * scale.y, 0.0f));
+    model = glm::translate(model, glm::vec3(0.0f * this->scale.x, 0.0f * scale.y, 0.0f));
+    model = glm::rotate(model, glm::radians(angle.x), glm::vec3(1.0, 0.0, 0.0));
+    model = glm::rotate(model, glm::radians(angle.y), glm::vec3(0.0, 1.0, 0.0));
+    model = glm::rotate(model, glm::radians(angle.z), glm::vec3(0.0, 0.0, 1.0));
+    model = glm::translate(model, glm::vec3(-0.0f * scale.x, -0.0f * scale.y, 0.0f));
 
-	model = glm::scale(model, scale);
+    model = glm::scale(model, scale);
 
-	//glm::mat4 vp = camera->GetProjectionMatrix() * camera->GetViewMatrix();
-	//GLint vpLoc = glGetUniformLocation(program, "vp");
-	//glUniformMatrix4fv(vpLoc, 1, GL_FALSE, glm::value_ptr(vp));
-	// Transformation matrices
+    //glm::mat4 vp = camera->GetProjectionMatrix() * camera->GetViewMatrix();
+    //GLint vpLoc = glGetUniformLocation(program, "vp");
+    //glUniformMatrix4fv(vpLoc, 1, GL_FALSE, glm::value_ptr(vp));
+    // Transformation matrices
 
-	view = this->camera->GetViewMatrix();
-	projection = this->camera->GetProjectionMatrix();
+    view = this->camera->GetViewMatrix();
+    projection = this->camera->GetProjectionMatrix();
 
-	// Get their uniform location
-	GLint viewLoc = glGetUniformLocation(program, "view");
-	GLint projLoc = glGetUniformLocation(program, "projection");
+    // Get their uniform location
+    GLint viewLoc = glGetUniformLocation(program, "view");
+    GLint projLoc = glGetUniformLocation(program, "projection");
 
-	// Pass them to the shaders
-	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
-	glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
+    // Pass them to the shaders
+    glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+    glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
 
-	GLint modelLoc = glGetUniformLocation(program, "model");
-	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+    GLint modelLoc = glGetUniformLocation(program, "model");
+    glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 
-	// lighting calculations
-	GLint objColorLoc = glGetUniformLocation(program, "objectColor");
-	glUniform3f(objColorLoc, color.x, color.y, color.z);
+    // lighting calculations
+    GLint objColorLoc = glGetUniformLocation(program, "objectColor");
+    glUniform3f(objColorLoc, color.x, color.y, color.z);
 
-	GLuint cameraPosLoc = glGetUniformLocation(program, "viewPosition");
-	glUniform3f(cameraPosLoc, camera->GetPosition().x, camera->GetPosition().y, camera->GetPosition().z);
+    GLuint cameraPosLoc = glGetUniformLocation(program, "viewPosition");
+    glUniform3f(cameraPosLoc, camera->GetPosition().x, camera->GetPosition().y, camera->GetPosition().z);
 
-	/*GLuint lightPosLoc = glGetUniformLocation(program, "lightPosition");
-	glUniform3f(lightPosLoc, this->light->GetPosition().x, this->light->GetPosition().y, this->light->GetPosition().z);
+    /*GLuint lightPosLoc = glGetUniformLocation(program, "lightPosition");
+    glUniform3f(lightPosLoc, this->light->GetPosition().x, this->light->GetPosition().y, this->light->GetPosition().z);
 
-	GLuint lightColorLoc = glGetUniformLocation(program, "lightColor");
-	glUniform3f(lightColorLoc, this->light->GetColor().x, this->light->GetColor().y, this->light->GetColor().z);*/
+    GLuint lightColorLoc = glGetUniformLocation(program, "lightColor");
+    glUniform3f(lightColorLoc, this->light->GetColor().x, this->light->GetColor().y, this->light->GetColor().z);*/
 
-	/*GLuint specularStrengthLoc = glGetUniformLocation(program, "specularStrength");
-	glUniform1f(specularStrengthLoc, specularStrength);
+    /*GLuint specularStrengthLoc = glGetUniformLocation(program, "specularStrength");
+    glUniform1f(specularStrengthLoc, specularStrength);
 
-	GLuint ambientStrengthLoc = glGetUniformLocation(program, "ambientStrength");
-	glUniform1f(ambientStrengthLoc, ambientStrength);*/
+    GLuint ambientStrengthLoc = glGetUniformLocation(program, "ambientStrength");
+    glUniform1f(ambientStrengthLoc, ambientStrength);*/
 
-	glBindVertexArray(vao);
-	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
-	glBindVertexArray(0);
+    glBindVertexArray(vao);
+    glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
+    glBindVertexArray(0);
 }
 
 //movement
@@ -179,9 +192,9 @@ void GameModel::Render()
 
 void GameModel::Rotate(glm::vec3 axis)
 {
-	this->angle.x += axis.x * speed * 20;
-	this->angle.y += axis.y * speed * 20;
-	this->angle.z += axis.z * speed * 20;
+    this->angle.x += axis.x * speed * 20;
+    this->angle.y += axis.y * speed * 20;
+    this->angle.z += axis.z * speed * 20;
 }
 
 //void GameModel::SetTexture(std::string  texFileName)
@@ -215,7 +228,7 @@ void GameModel::Rotate(glm::vec3 axis)
 
 void GameModel::SetScale(glm::vec3 _scale)
 {
-	this->scale = _scale;
+    this->scale = _scale;
 }
 
 //void GameModel::SetRotation(glm::vec3 angle)
@@ -230,12 +243,12 @@ void GameModel::SetScale(glm::vec3 _scale)
 
 void GameModel::SetPosition(glm::vec3 _position)
 {
-	this->position = _position;
+    this->position = _position;
 }
 
 void GameModel::SetColor(glm::vec3 _color)
 {
-	this->color = _color;
+    this->color = _color;
 }
 
 void GameModel::SetCamera(Camera * camera)
@@ -243,12 +256,12 @@ void GameModel::SetCamera(Camera * camera)
 
 void GameModel::SetSpeed(float _speed)
 {
-	this->speed = _speed;
+    this->speed = _speed;
 }
 
 void GameModel::SetProgram(GLuint program)
 {
-	this->program = program;
+    this->program = program;
 }
 
 //void GameModel::SetSpecularStrength(float strength)
@@ -256,14 +269,19 @@ void GameModel::SetProgram(GLuint program)
 //	specularStrength = strength;
 //}
 
+void GameModel::SetMovementType(MovementType _type)
+{
+    m_MovementType = _type;
+}
+
 glm::vec3 GameModel::GetPosition()
 {
-	return position;
+    return position;
 }
 
 glm::vec3 GameModel::GetColor()
 {
-	return this->color;
+    return this->color;
 }
 
 void GameModel::Move()
@@ -273,12 +291,12 @@ void GameModel::Move()
 
 glm::vec3 GameModel::GetScale()
 {
-	return this->scale;
+    return this->scale;
 }
 
 glm::vec3 GameModel::GetRotation()
 {
-	return this->angle;
+    return this->angle;
 }
 
 //glm::vec3 GameModel::GetRotationAxis()
