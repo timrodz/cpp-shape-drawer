@@ -70,8 +70,8 @@ GameModel::GameModel(ModelType _modelType, Camera* _camera, MovementDirection _m
 
 GameModel::~GameModel()
 {
-    this->camera = nullptr;
-    delete this->camera;
+    //this->camera = nullptr;
+    //delete this->camera;
 }
 
 void GameModel::Update(GLfloat time)
