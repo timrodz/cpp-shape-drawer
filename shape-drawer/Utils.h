@@ -121,9 +121,9 @@ public:
     const static int WIDTH = 1280;
     const static int HEIGHT = 720;
 
-    const static int VERTICAL_LIMIT = 3;
-    const static int HORIZONTAL_LIMIT = 3;
-    const static int CIRCULAR_RADIUS = 3;
+    const static int VERTICAL_LIMIT = 2;
+    const static int HORIZONTAL_LIMIT = 2;
+    const static int CIRCULAR_RADIUS = 1;
 
     static glm::vec3 RGBtoAlpha(int _r, int _g, int _b);
     static void SetSquareData(std::vector<VertexFormat>& _vertices, std::vector<GLuint>&_indices);

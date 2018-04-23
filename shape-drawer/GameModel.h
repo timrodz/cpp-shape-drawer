@@ -53,7 +53,8 @@ private:
 
 	std::vector<VertexFormat>vertices;
 	std::vector<GLuint>indices;
-
+    
+    glm::vec3 startPosition;
 	glm::vec3 position;
 	glm::vec3 scale;
 	glm::vec3 angle;
@@ -72,4 +73,5 @@ private:
 	//float ambientStrength;
 
     bool movementToggle;
+    glm::vec3 direction;
 };

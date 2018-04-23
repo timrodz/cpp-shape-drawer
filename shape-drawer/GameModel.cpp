@@ -80,14 +80,26 @@ void GameModel::Update(GLfloat time)
     {
         case (MovementType::UpDown):
         {
-            if (position.y < Utils::VERTICAL_LIMIT)
+            position += direction * speed;
+            if (position.y >= (startPosition.y + Utils::VERTICAL_LIMIT) || position.y <= (startPosition.y -Utils::VERTICAL_LIMIT))
             {
-                position += glm::vec3(0, 1, 0) * 0.05f;
+                direction *= -1;
             }
-            else if (position.y > -Utils::VERTICAL_LIMIT)
+        }
+        break;
+        case (MovementType::LeftRight):
+        {
+            position += direction * speed;
+            if (position.x >= (startPosition.x + Utils::HORIZONTAL_LIMIT) || position.x <= (startPosition.x -Utils::HORIZONTAL_LIMIT))
             {
-                position -= glm::vec3(0, 1, 0) * 0.05f;
+                direction *= -1;
             }
+        }
+        break;
+        case (MovementType::Circular):
+        {
+            position.x = (Utils::CIRCULAR_RADIUS * cos(time) + startPosition.x);
+            position.y = (Utils::CIRCULAR_RADIUS * sin(time) + startPosition.y);
         }
         break;
     }
@@ -244,6 +256,7 @@ void GameModel::SetScale(glm::vec3 _scale)
 void GameModel::SetPosition(glm::vec3 _position)
 {
     this->position = _position;
+    this->startPosition = this->position;
 }
 
 void GameModel::SetColor(glm::vec3 _color)
@@ -272,6 +285,20 @@ void GameModel::SetProgram(GLuint program)
 void GameModel::SetMovementType(MovementType _type)
 {
     m_MovementType = _type;
+
+    switch (m_MovementType)
+    {
+        case (MovementType::UpDown):
+        {
+            direction = glm::vec3(0, 1, 0);
+        }
+        break;
+        case (MovementType::LeftRight):
+        {
+            direction = glm::vec3(1, 0, 0);
+        }
+        break;
+    }
 }
 
 glm::vec3 GameModel::GetPosition()

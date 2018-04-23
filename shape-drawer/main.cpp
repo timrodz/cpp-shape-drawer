@@ -21,7 +21,10 @@ using glm::vec3;
 ShaderLoader g_ShaderLoader;
 Camera* g_Camera;
 //Light* light;
+GameModel* g_Square;
 GameModel* g_Triangle;
+GameModel* g_Circle;
+
 Cubemap* g_Skybox;
 
 unsigned char KeyCode[255];
@@ -55,13 +58,28 @@ int main(int argc, char **argv)
     // -- Object creation
     g_Camera = new Camera(vec3(0, 0, 8), Utils::WIDTH, Utils::HEIGHT);
 
+    GLuint squareProgram = g_ShaderLoader.CreateProgram("shaders/unlit.vs", "shaders/unlit.fs");
+    g_Square = new GameModel(ModelType::Square, g_Camera);
+    g_Square->SetMovementType(MovementType::LeftRight);
+    g_Square->SetColor(Utils::RGBtoAlpha(227, 181, 5));
+    g_Square->SetProgram(squareProgram);
+    g_Square->SetPosition(vec3(-4, 0, 0));
+    g_Square->SetSpeed(0.05f);
+
     GLuint triangleProgram = g_ShaderLoader.CreateProgram("shaders/unlit.vs", "shaders/unlit.fs");
-    g_Triangle = new GameModel(ModelType::Circle, g_Camera);
+    g_Triangle = new GameModel(ModelType::Triangle, g_Camera);
     g_Triangle->SetMovementType(MovementType::UpDown);
-    g_Triangle->SetColor(Utils::RGBtoAlpha(66, 134, 244));
+    g_Triangle->SetColor(Utils::RGBtoAlpha(219, 80, 74));
     g_Triangle->SetProgram(triangleProgram);
-    g_Triangle->SetPosition(vec3(0, -0.5f, 0));
-    g_Triangle->SetSpeed(0.005f);
+    g_Triangle->SetPosition(vec3(4, 0, 0));
+    g_Triangle->SetSpeed(0.05f);
+
+    GLuint circleProgram = g_ShaderLoader.CreateProgram("shaders/unlit.vs", "shaders/unlit.fs");
+    g_Circle = new GameModel(ModelType::Circle, g_Camera);
+    g_Circle->SetMovementType(MovementType::Circular);
+    g_Circle->SetColor(Utils::RGBtoAlpha(86, 163, 166));
+    g_Circle->SetProgram(circleProgram);
+    g_Circle->SetSpeed(5.0f);
 
     // Skybox
     //GLuint cubemapProgram = shaderLoader.CreateProgram("shaders/skybox.vs", "shaders/skybox.fs");
@@ -85,7 +103,9 @@ void Render()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // Models to render
+    g_Square->Render();
     g_Triangle->Render();
+    g_Circle->Render();
     //skybox->Render();
 
     glutSwapBuffers();
@@ -97,7 +117,9 @@ void Update()
     deltaTime *= 0.001f;
 
     // Update the models
+    g_Square->Update(deltaTime);
     g_Triangle->Update(deltaTime);
+    g_Circle->Update(deltaTime);
 
     //LerpAtoB<GameModel>(g_Triangle, vec3(1, 1, 1), vec3(2, 1, 1));
 }
