@@ -3,17 +3,16 @@
 #include "Camera.h"
 
 
-GameModel::GameModel(ModelType modelType, Camera* _camera, std::string texFileName, float _ambientStrength, float _specularStrength)
+GameModel::GameModel(ModelType _modelType, Camera* _camera, MovementDirection _movementDirection)
 {
 	camera = _camera;
 	//light = _light;
+    m_MovementDirection = _movementDirection;
 
 	scale = glm::vec3(1.0f, 1.0f, 1.0f);
 	position = glm::vec3(0.0, 0.0, 0.0);
 	color = glm::vec3(1.0f, 1.0f, 1.0f);
 
-	ambientStrength = _ambientStrength;
-	specularStrength = _specularStrength;
 	speed = 0.05f;
 	rotationAxis = glm::bvec3(0.0f, 0.0f, 1.0f);
 
@@ -21,12 +20,12 @@ GameModel::GameModel(ModelType modelType, Camera* _camera, std::string texFileNa
 	//glDepthMask(GL_FALSE);//if enabled, disables writing to depth
 	//glDepthFunc(GL_LESS);//passes if the fragment depth value is less than stored depth value
 
-	switch (modelType)
+	switch (_modelType)
 	{
-		case Triangle: Utils::setTriData(vertices, indices); break;
-		case Square: Utils::setQuadData(vertices, indices); break;
-		case Hexagon: Utils::setCubeData(vertices, indices); break;
-		case Circle: Utils::setSphereData(vertices, indices); break;
+		case Triangle: Utils::SetTriangleData(vertices, indices); break;
+		case Square: Utils::SetSquareData(vertices, indices); break;
+		case Hexagon: Utils::SetHexagonData(vertices, indices); break;
+		case Circle: Utils::SetCircleData(vertices, indices); break;
 	}
 
 	for (auto item : vertices)
@@ -50,7 +49,7 @@ GameModel::GameModel(ModelType modelType, Camera* _camera, std::string texFileNa
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * indices.size(), &indices[0], GL_STATIC_DRAW);
 
-	this->SetTexture(texFileName);
+	//this->SetTexture(texFileName);
 
 	// Position
 	glEnableVertexAttribArray(0);
@@ -71,7 +70,8 @@ GameModel::GameModel(ModelType modelType, Camera* _camera, std::string texFileNa
 
 GameModel::~GameModel()
 {
-
+    this->camera = nullptr;
+    delete this->camera;
 }
 
 void GameModel::Update(GLfloat time)
@@ -79,7 +79,6 @@ void GameModel::Update(GLfloat time)
 	//model = glm::rotate(model,glm::radians(45.0f) * time, glm::vec3(0.0, 1.0, 0.0f));
 	//model = glm::translate(model, position);
 	glutPostRedisplay();
-
 }
 
 
@@ -90,7 +89,7 @@ void GameModel::Render()
 	glColor3f(1, 1, 0);
 
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, texture);
+	//glBindTexture(GL_TEXTURE_2D, texture);
 	//glUniform1i(glGetUniformLocation(program, "Texture"), 0);
 
 	glm::mat4 model, view, projection;
@@ -148,35 +147,35 @@ void GameModel::Render()
 }
 
 //movement
-void GameModel::MoveForward()
-{
-	position -= glm::vec3(0.0f, 0.0f, 1.0f) * speed;
-}
-
-void GameModel::MoveBackward()
-{
-	position += glm::vec3(0.0f, 0.0f, 1.0f) * speed;
-}
-
-void GameModel::MoveLeft()
-{
-	position -= glm::vec3(1.0f, 0.0f, 0.0f) * speed;
-}
-
-void GameModel::MoveRight()
-{
-	position += glm::vec3(1.0f, 0.0f, 0.0f) * speed;
-}
-
-void GameModel::MoveUp()
-{
-	position += glm::vec3(0.0f, 1.0f, 0.0f) * speed;
-}
-
-void GameModel::MoveDown()
-{
-	position -= glm::vec3(0.0f, 1.0f, 0.0f) * speed;
-}
+//void GameModel::MoveForward()
+//{
+//	position -= glm::vec3(0.0f, 0.0f, 1.0f) * speed;
+//}
+//
+//void GameModel::MoveBackward()
+//{
+//	position += glm::vec3(0.0f, 0.0f, 1.0f) * speed;
+//}
+//
+//void GameModel::MoveLeft()
+//{
+//	position -= glm::vec3(1.0f, 0.0f, 0.0f) * speed;
+//}
+//
+//void GameModel::MoveRight()
+//{
+//	position += glm::vec3(1.0f, 0.0f, 0.0f) * speed;
+//}
+//
+//void GameModel::MoveUp()
+//{
+//	position += glm::vec3(0.0f, 1.0f, 0.0f) * speed;
+//}
+//
+//void GameModel::MoveDown()
+//{
+//	position -= glm::vec3(0.0f, 1.0f, 0.0f) * speed;
+//}
 
 void GameModel::Rotate(glm::vec3 axis)
 {
@@ -185,32 +184,32 @@ void GameModel::Rotate(glm::vec3 axis)
 	this->angle.z += axis.z * speed * 20;
 }
 
-void GameModel::SetTexture(std::string  texFileName)
-{
-	//** load texture
-	glGenTextures(1, &texture);
-	glBindTexture(GL_TEXTURE_2D, texture);
-
-	// Set texture wrapping to GL_REPEAT (usually basic wrapping method)
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	// Set texture filtering parameters
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-	//** loadImage and create texture
-	// Load image, create texture and generate mipmaps
-	int width, height;
-	unsigned char* image = SOIL_load_image(texFileName.c_str(), &width, &height, 0, SOIL_LOAD_RGB);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
-	glGenerateMipmap(GL_TEXTURE_2D);
-	SOIL_free_image_data(image);
-	glBindTexture(GL_TEXTURE_2D, 0);
-
-	printf("fileName %s \n", texFileName.c_str());
-
-	bIsTextureSet = true;
-}
+//void GameModel::SetTexture(std::string  texFileName)
+//{
+//	////** load texture
+//	//glGenTextures(1, &texture);
+//	//glBindTexture(GL_TEXTURE_2D, texture);
+//
+//	//// Set texture wrapping to GL_REPEAT (usually basic wrapping method)
+//	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+//	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+//	//// Set texture filtering parameters
+//	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+//	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+//
+//	////** loadImage and create texture
+//	//// Load image, create texture and generate mipmaps
+//	//int width, height;
+//	//unsigned char* image = SOIL_load_image(texFileName.c_str(), &width, &height, 0, SOIL_LOAD_RGB);
+//	//glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+//	//glGenerateMipmap(GL_TEXTURE_2D);
+//	//SOIL_free_image_data(image);
+//	//glBindTexture(GL_TEXTURE_2D, 0);
+//
+//	//printf("fileName %s \n", texFileName.c_str());
+//
+//	//bIsTextureSet = true;
+//}
 
 // setters and getters
 
@@ -219,15 +218,15 @@ void GameModel::SetScale(glm::vec3 _scale)
 	this->scale = _scale;
 }
 
-void GameModel::SetRotation(glm::vec3 angle)
-{
-	this->angle = angle;
-}
-
-void GameModel::SetRotationAxis(glm::vec3 rotationAxis)
-{
-	this->rotationAxis = rotationAxis;
-}
+//void GameModel::SetRotation(glm::vec3 angle)
+//{
+//	this->angle = angle;
+//}
+//
+//void GameModel::SetRotationAxis(glm::vec3 rotationAxis)
+//{
+//	this->rotationAxis = rotationAxis;
+//}
 
 void GameModel::SetPosition(glm::vec3 _position)
 {
@@ -252,10 +251,10 @@ void GameModel::SetProgram(GLuint program)
 	this->program = program;
 }
 
-void GameModel::SetSpecularStrength(float strength)
-{
-	specularStrength = strength;
-}
+//void GameModel::SetSpecularStrength(float strength)
+//{
+//	specularStrength = strength;
+//}
 
 glm::vec3 GameModel::GetPosition()
 {
@@ -265,6 +264,11 @@ glm::vec3 GameModel::GetPosition()
 glm::vec3 GameModel::GetColor()
 {
 	return this->color;
+}
+
+void GameModel::Move()
+{
+
 }
 
 glm::vec3 GameModel::GetScale()
@@ -277,7 +281,7 @@ glm::vec3 GameModel::GetRotation()
 	return this->angle;
 }
 
-glm::vec3 GameModel::GetRotationAxis()
-{
-	return rotationAxis;
-}
+//glm::vec3 GameModel::GetRotationAxis()
+//{
+//	return rotationAxis;
+//}

@@ -13,8 +13,8 @@ uniform mat4 projection;
 
 uniform mat4 transform;
 
-void main(void) {
-
+void main(void) 
+{
 	gl_Position = projection * view * model * vec4(position, 1.0f);
 
 	OutFragPosition = vec3(model * vec4(position, 1.0f));
@@ -22,5 +22,4 @@ void main(void) {
 	OutNormVec = mat3(transpose(inverse(model))) * normVec;
 
 	TexCoord = vec2(texCoord.x, 1 - texCoord.y);
-
 }
