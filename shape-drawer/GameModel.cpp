@@ -98,8 +98,8 @@ void GameModel::Update(GLfloat time)
         break;
         case (MovementType::Circular):
         {
-            position.x = (Utils::CIRCULAR_RADIUS * cos(time) + startPosition.x);
-            position.y = (Utils::CIRCULAR_RADIUS * sin(time) + startPosition.y);
+            position.x = (Utils::CIRCULAR_RADIUS * cos(time * speed) + startPosition.x);
+            position.y = (Utils::CIRCULAR_RADIUS * sin(time * speed) + startPosition.y);
         }
         break;
     }
