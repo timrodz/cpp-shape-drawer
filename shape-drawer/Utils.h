@@ -124,21 +124,21 @@ public:
     const static int VERTICAL_LIMIT = 2;
     const static int HORIZONTAL_LIMIT = 2;
     const static int CIRCULAR_RADIUS = 1;
+    const static glm::vec3 BOX_POSITIONS = {
+        (1, 0, 0),
+        (1, -1, 0),
+        (0, -1, 0),
+        (0, 0, 0)
+    };
+    static int movementIndex = 0;
 
     static glm::vec3 RGBtoAlpha(int _r, int _g, int _b);
+    static glm::vec3 MoveTowards(glm::vec3 _currentPosition, glm::vec3 _targetPosition, float _maxDistanceDelta);
+    
     static void SetSquareData(std::vector<VertexFormat>& _vertices, std::vector<GLuint>&_indices);
     static void SetTriangleData(std::vector<VertexFormat>& _vertices, std::vector<GLuint>&_indices);
     static void SetHexagonData(std::vector<VertexFormat>& _vertices, std::vector<GLuint>&_indices);
     static void SetCubeData(std::vector<VertexFormat>& _vertices, std::vector<GLuint>&_indices);
     // TODO: Replace for circle
     static void SetSphereData(std::vector<VertexFormat>& _vertices, std::vector<GLuint>&_indices);
-
 };
-
-class GameModel;
-
-template<typename T>
-static void LerpAtoB(T* _t, glm::vec3 _A, glm::vec3 _B)
-{
-
-}

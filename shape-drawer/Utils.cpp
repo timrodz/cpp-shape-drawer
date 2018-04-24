@@ -6,22 +6,32 @@ glm::vec3 Utils::RGBtoAlpha(int r, int g, int b)
     return glm::vec3((float) r / 255, (float) g / 255, (float) b / 255);
 }
 
+glm::vec3 Utils::MoveTowards(glm::vec3 _currentPosition, glm::vec3 _targetPosition, float _maxDistanceDelta)
+{
+    glm::vec3 a = _targetPosition - _currentPosition;
+    float magnitude = glm::length(a); // Length of vector (http://glm.g-truc.net/0.9.8/api/a00148.html#ga18d45e3d4c7705e67ccfabd99e521604)
+    
+    if (magnitude <= _maxDistanceDelta || magnitude == 0.0f)
+    {
+        return _targetPosition;
+    }
+    
+    return (_currentPosition + a / magnitude * _maxDistanceDelta);
+}
+
 void Utils::SetTriangleData(std::vector<VertexFormat>& vertices, std::vector<GLuint>&indices)
 {
-
     std::vector<VertexFormat> Vertices;
 
-    Vertices.push_back(VertexFormat(Position(0.0f, 1.0f, 0.0f), TexCoord(1, 1), Normal(0.0f, 0.0f, 1.0)));
-    Vertices.push_back(VertexFormat(Position(1.0, 0.0, 0.0), TexCoord(0, 1), Normal(0.0f, 0.0f, 1.0)));
-    Vertices.push_back(VertexFormat(Position(-1.0, 0.0, 0.0), TexCoord(1, 0), Normal(0.0f, 0.0f, 1.0)));
-
+    Vertices.push_back(VertexFormat(Position(0.0f, 1.0f, 0.0f), TexCoord(1, 1), Normal(0.0f, 0.0f, 1.0))); // Top
+    Vertices.push_back(VertexFormat(Position(1.0, 0.0, 0.0), TexCoord(0, 1), Normal(0.0f, 0.0f, 1.0))); // Right
+    Vertices.push_back(VertexFormat(Position(-1.0, 0.0, 0.0), TexCoord(1, 0), Normal(0.0f, 0.0f, 1.0))); // Left
 
     std::vector<GLuint>Indices;
+    
     Indices.push_back(0);
     Indices.push_back(1);
     Indices.push_back(2);
-
-    //Indices[0] = 0; Indices[1] = 1; Indices[2] = 2;
 
     vertices.clear(); indices.clear();
 
@@ -29,18 +39,14 @@ void Utils::SetTriangleData(std::vector<VertexFormat>& vertices, std::vector<GLu
     indices = Indices;
 }
 
-void Utils::SetHexagonData(std::vector<VertexFormat>& _vertices, std::vector<GLuint>& _indices)
-{
-}
-
 void Utils::SetSquareData(std::vector<VertexFormat>& vertices, std::vector<GLuint>& indices)
 {
     std::vector<VertexFormat> Vertices;
 
-    Vertices.push_back(VertexFormat(Position(-1.0f, -1.0, 0.0), TexCoord(-1.0, -1.0), Normal(0.0f, 0.0f, 1.0)));
-    Vertices.push_back(VertexFormat(Position(-1.0, 1.0, 0.0), TexCoord(-1.0, 1.0), Normal(0.0f, 0.0f, 1.0)));
-    Vertices.push_back(VertexFormat(Position(1.0, 1.0, 0.0), TexCoord(1.0, 1.0), Normal(0.0f, 0.0f, 1.0)));
-    Vertices.push_back(VertexFormat(Position(1.0, -1.0, 0.0), TexCoord(1.0, -1.0), Normal(0.0f, 0.0f, 1.0)));
+    Vertices.push_back(VertexFormat(Position(-1.0, 1.0, 0.0), TexCoord(-1.0, 1.0), Normal(0.0f, 0.0f, 1.0))); // Top-left
+    Vertices.push_back(VertexFormat(Position(1.0, 1.0, 0.0), TexCoord(1.0, 1.0), Normal(0.0f, 0.0f, 1.0))); // Top-right
+    Vertices.push_back(VertexFormat(Position(1.0, -1.0, 0.0), TexCoord(1.0, -1.0), Normal(0.0f, 0.0f, 1.0))); // Bottom-right
+    Vertices.push_back(VertexFormat(Position(-1.0f, -1.0, 0.0), TexCoord(-1.0, -1.0), Normal(0.0f, 0.0f, 1.0))); // Bottom-left
 
     std::vector<GLuint> Indices;
 
@@ -117,6 +123,25 @@ void Utils::SetCubeData(std::vector<VertexFormat>& vertices, std::vector<GLuint>
     indices = Indices;
 }
 
+void Utils::SetHexagonData(std::vector<VertexFormat>& _vertices, std::vector<GLuint>& _indices)
+{
+    std::vector<VertexFormat> Vertices;
+    
+    // TODO: Test this loop
+    // for (int i = 0; i < 6; ++i)
+    // {
+    //     float y = sin(i/6.0*2*3.14);
+    //     float x = cos(i/6.0*2*3.14);
+    // }
+    
+    // TODO: Maybe divide them by 2?
+    Vertices.push_back(VertexFormat(Position(-1.0, 2.0, 0.0), TexCoord(1.0, 1.0), Normal(0.0f, 0.0f, 1.0))); // Top-left
+    Vertices.push_back(VertexFormat(Position(1.0, 2.0, 0.0), TexCoord(1.0, 1.0), Normal(0.0f, 0.0f, 1.0))); // Top-right
+    Vertices.push_back(VertexFormat(Position(-1.0, -2.0, 0.0), TexCoord(-1.0, 1.0), Normal(0.0f, 0.0f, 1.0))); // Bottom-left
+    Vertices.push_back(VertexFormat(Position(1.0, -2.0, 0.0), TexCoord(1.0, 1.0), Normal(0.0f, 0.0f, 1.0))); // Bottom-right
+    Vertices.push_back(VertexFormat(Position(-2.0, 0.0, 0.0), TexCoord(-1.0, -1.0), Normal(0.0f, 0.0f, 1.0))); // Mid-left
+    Vertices.push_back(VertexFormat(Position(2.0, 0.0, 0.0), TexCoord(1.0, -1.0), Normal(0.0f, 0.0f, 1.0))); // Mid-right
+}
 
 void Utils::SetSphereData(std::vector<VertexFormat>& _vertices, std::vector<GLuint>& _indices)
 {
