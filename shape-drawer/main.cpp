@@ -27,6 +27,7 @@ void Update();
 void KeyDown(unsigned char key, int x, int y);
 void KeyUp(unsigned char key, int x, int y);
 unsigned char KeyCode[255];
+bool key;
 
 int main(int argc, char **argv)
 {
@@ -52,12 +53,12 @@ int main(int argc, char **argv)
     // Initialise the global camera at (0, 0, 10)
     g_Camera = new Camera(vec3(0, 0, 10), Utils::WIDTH, Utils::HEIGHT);
 
+    GLuint shaderProgram = g_ShaderLoader.CreateProgram("shaders/unlit.vs", "shaders/unlit.fs");
+
     // Get the scene instance. We will add a camera and models to it
     GameScene& gs = GameScene::GetInstance();
-
     gs.AddCamera(g_Camera);
-
-    GLuint shaderProgram = g_ShaderLoader.CreateProgram("shaders/unlit.vs", "shaders/unlit.fs");
+    //gs.CreateDefaultScene(shaderProgram);
 
     gs.CreateModel(ModelType::Triangle, MovementType::LeftRight, shaderProgram, "", Utils::RGBtoAlpha(51, 153, 51), vec3(-4, 0, 0), vec3(0, 0, 0), 0.05f);
     gs.CreateModel(ModelType::Square, MovementType::UpDown, shaderProgram, "", Utils::RGBtoAlpha(227, 181, 5), vec3(4, 0, 0), vec3(0, 0, 0), 0.05f);
@@ -98,13 +99,19 @@ void Update()
 
     GameScene::GetInstance().Update(deltaTime);
     
-    if (KeyCode[(unsigned char)'q'] == DOWN || KeyCode[(unsigned char)'Q'] == DOWN) {
-        GameScene::GetInstance().ClearScene();
-	}
-    if (KeyCode[(unsigned char)'r'] == DOWN || KeyCode[(unsigned char)'R'] == DOWN)
+    if (!key)
     {
-        GameScene::GetInstance().ReloadScene();
+
+    if (KeyCode[(unsigned char)'q'] == KeyState::Pressed || KeyCode[(unsigned char)'Q'] == KeyState::Pressed) {
+        GameScene::GetInstance().ClearScene();
+        key = true;
+        cout << "Clear scene" << std::endl;
+	}
     }
+    //if (KeyCode[(unsigned char)'r'] == DOWN || KeyCode[(unsigned char)'R'] == DOWN)
+    //{
+    //    GameScene::GetInstance().ReloadScene();
+    //}
 }
 
 void KeyDown(unsigned char key, int x, int y)
@@ -116,5 +123,6 @@ void KeyDown(unsigned char key, int x, int y)
 void KeyUp(unsigned char key, int x, int y)
 {
     KeyCode[key] = KeyState::Released;
+    key = false;
     cout << "Key Released: " << key << "\n";
 }
