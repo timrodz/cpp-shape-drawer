@@ -29,15 +29,13 @@
 
 /* Constants */
 #define M_PI 3.14159265358979323846264338327950288f // Pi
-#define UP 0 // Keyboard up
-#define DOWN 1 // Keyboard down
 
 /* Enums */
 #pragma region Enums
 enum KeyState
 {
-    Pressed,
-    Released
+    Released = 0,
+    Pressed = 1
 };
 
 enum ModelType
