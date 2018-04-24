@@ -18,7 +18,7 @@ public:
 	void SetCamera(Camera* camera);
 	void SetSpeed(float _speed);
 	void SetProgram(GLuint program);
-	//void SetRotation(glm::vec3 angle);
+	void SetRotation(glm::vec3 angle);
 	//void SetRotationAxis(glm::vec3 rotationAxis);
 
 	void SetTexture(std::string texFileName);

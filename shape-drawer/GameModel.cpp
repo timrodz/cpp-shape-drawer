@@ -29,6 +29,11 @@ GameModel::GameModel(ModelType _modelType, Camera* _camera)
             Utils::SetSquareData(vertices, indices);
         }
         break;
+        case Circle:
+        {
+            Utils::SetCircleData(vertices, indices);
+        }
+        break;
         case Hexagon:
         {
             Utils::SetHexagonData(vertices, indices);
@@ -39,9 +44,14 @@ GameModel::GameModel(ModelType _modelType, Camera* _camera)
             Utils::SetCubeData(vertices, indices);
         }
         break;
-        case Circle:
+        case Pentagon:
         {
-            Utils::SetCircleData(vertices, indices);
+            Utils::SetPentagonData(vertices, indices);
+        }
+        break;
+        case Heptagon:
+        {
+            Utils::SetHeptagonData(vertices, indices);
         }
         break;
     }
@@ -81,7 +91,7 @@ GameModel::~GameModel()
     //delete this->camera;
 }
 
-void GameModel::Update(GLfloat time)
+void GameModel::Update(GLfloat _currentTime)
 {
     //model = glm::rotate(model,glm::radians(45.0f) * time, glm::vec3(0.0, 1.0, 0.0f));
     //model = glm::translate(model, position);
@@ -107,8 +117,8 @@ void GameModel::Update(GLfloat time)
         break;
         case (MovementType::Circular):
         {
-            position.x = (Utils::CIRCULAR_RADIUS * cos(time * speed) + startPosition.x);
-            position.y = (Utils::CIRCULAR_RADIUS * sin(time * speed) + startPosition.y);
+            position.x = (Utils::CIRCULAR_RADIUS * cos(_currentTime * speed) + startPosition.x);
+            position.y = (Utils::CIRCULAR_RADIUS * sin(_currentTime * speed) + startPosition.y);
         }
         break;
         case (MovementType::Box):
@@ -192,14 +202,14 @@ void GameModel::Render()
     glBindVertexArray(0);
 }
 
-void GameModel::Rotate(glm::vec3 axis)
+void GameModel::Rotate(glm::vec3 _axis)
 {
-    this->angle.x += axis.x * speed * 20;
-    this->angle.y += axis.y * speed * 20;
-    this->angle.z += axis.z * speed * 20;
+    this->angle.x += _axis.x * speed * 20;
+    this->angle.y += _axis.y * speed * 20;
+    this->angle.z += _axis.z * speed * 20;
 }
 
-void GameModel::SetTexture(std::string  texFileName)
+void GameModel::SetTexture(std::string _textureFile)
 {
     glGenTextures(1, &texture);
     glBindTexture(GL_TEXTURE_2D, texture);
@@ -213,13 +223,13 @@ void GameModel::SetTexture(std::string  texFileName)
 
     // Load image, create texture and generate mipmaps
     int width, height;
-    unsigned char* image = SOIL_load_image(texFileName.c_str(), &width, &height, 0, SOIL_LOAD_RGB);
+    unsigned char* image = SOIL_load_image(_textureFile.c_str(), &width, &height, 0, SOIL_LOAD_RGB);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
     glGenerateMipmap(GL_TEXTURE_2D);
     SOIL_free_image_data(image);
     glBindTexture(GL_TEXTURE_2D, 0);
 
-    printf("fileName %s \n", texFileName.c_str());
+    printf("fileName %s \n", _textureFile.c_str());
 
     isTextureSet = true;
 }
@@ -229,11 +239,11 @@ void GameModel::SetScale(glm::vec3 _scale)
     this->scale = _scale;
 }
 
-//void GameModel::SetRotation(glm::vec3 angle)
-//{
-//	this->angle = angle;
-//}
-//
+void GameModel::SetRotation(glm::vec3 angle)
+{
+	this->angle = angle;
+}
+
 //void GameModel::SetRotationAxis(glm::vec3 rotationAxis)
 //{
 //	this->rotationAxis = rotationAxis;

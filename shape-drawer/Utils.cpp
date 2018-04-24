@@ -1,5 +1,14 @@
+//
+//  File Name: 
+//  Author: Juan Alejandro Rodriguez Morais
+//  Email: timrodz@icloud.com
+//
+// 
+//
+
 #include "Utils.h"
 
+/* Static variable initialisations */
 int Utils::movementIndex = 0;
 
 glm::vec3 Utils::BOX_POSITIONS[] = {
@@ -176,6 +185,16 @@ void Utils::SetCubeData(std::vector<VertexFormat>& _vertices, std::vector<GLuint
     _indices = Indices;
 }
 
+void Utils::SetPentagonData(std::vector<VertexFormat>& _vertices, std::vector<GLuint>& _indices)
+{
+    Utils::SetPolygonData(_vertices, _indices, 5);
+}
+
+void Utils::SetHeptagonData(std::vector<VertexFormat>& _vertices, std::vector<GLuint>& _indices)
+{
+    Utils::SetPolygonData(_vertices, _indices, 7);
+}
+
 // Method Name:
 // Description:
 // author: Juan Alejandro Rodriguez Morais
@@ -183,62 +202,62 @@ void Utils::SetCubeData(std::vector<VertexFormat>& _vertices, std::vector<GLuint
 // return:
 void Utils::SetSphereData(std::vector<VertexFormat>& _vertices, std::vector<GLuint>& _indices)
 {
-    std::vector<VertexFormat> Vertices;
-    std::vector<GLuint> Indices;
+    //std::vector<VertexFormat> Vertices;
+    //std::vector<GLuint> Indices;
 
-    double latitudeBands = 30;
-    double longitudeBands = 30;
-    double radius = 1.0f;
+    //double latitudeBands = 30;
+    //double longitudeBands = 30;
+    //double radius = 1.0f;
 
-    for (double latNumber = 0; latNumber <= latitudeBands; latNumber++)
-    {
-        double theta = latNumber * 3.14 / latitudeBands;
-        double sinTheta = sin(theta);
-        double cosTheta = cos(theta);
+    //for (double latNumber = 0; latNumber <= latitudeBands; latNumber++)
+    //{
+    //    double theta = latNumber * 3.14 / latitudeBands;
+    //    double sinTheta = sin(theta);
+    //    double cosTheta = cos(theta);
 
-        for (double longNumber = 0; longNumber <= longitudeBands; longNumber++)
-        {
-            double phi = longNumber * 2 * 3.14 / longitudeBands;
-            double sinPhi = sin(phi);
-            double cosPhi = cos(phi);
+    //    for (double longNumber = 0; longNumber <= longitudeBands; longNumber++)
+    //    {
+    //        double phi = longNumber * 2 * 3.14 / longitudeBands;
+    //        double sinPhi = sin(phi);
+    //        double cosPhi = cos(phi);
 
-            VertexFormat vs;
+    //        VertexFormat vs;
 
-            vs.texCoord.u = 1 - (longNumber / longitudeBands); // u
-            vs.texCoord.v = 1 - (latNumber / latitudeBands);   // v
+    //        vs.texCoord.u = 1 - (longNumber / longitudeBands); // u
+    //        vs.texCoord.v = 1 - (latNumber / latitudeBands);   // v
 
-            vs.normal.x = cosPhi * sinTheta;   // x
-            vs.normal.y = cosTheta;            // y
-            vs.normal.z = 1;   // z
+    //        vs.normal.x = cosPhi * sinTheta;   // x
+    //        vs.normal.y = cosTheta;            // y
+    //        vs.normal.z = 1;   // z
 
-            vs.pos.x = radius * vs.normal.x;
-            vs.pos.y = radius * vs.normal.y;
-            vs.pos.z = radius * vs.normal.z;
+    //        vs.pos.x = radius * vs.normal.x;
+    //        vs.pos.y = radius * vs.normal.y;
+    //        vs.pos.z = radius * vs.normal.z;
 
-            Vertices.push_back(vs);
-        }
-    }
+    //        Vertices.push_back(vs);
+    //    }
+    //}
 
-    for (GLuint latNumber = 0; latNumber < latitudeBands; latNumber++)
-    {
-        for (GLuint longNumber = 0; longNumber < longitudeBands; longNumber++)
-        {
-            GLuint first = (latNumber * (longitudeBands + 1)) + longNumber;
-            GLuint second = first + longitudeBands + 1;
+    //for (GLuint latNumber = 0; latNumber < latitudeBands; latNumber++)
+    //{
+    //    for (GLuint longNumber = 0; longNumber < longitudeBands; longNumber++)
+    //    {
+    //        GLuint first = (latNumber * (longitudeBands + 1)) + longNumber;
+    //        GLuint second = first + longitudeBands + 1;
 
-            Indices.push_back(first);
-            Indices.push_back(second);
-            Indices.push_back(first + 1);
+    //        Indices.push_back(first);
+    //        Indices.push_back(second);
+    //        Indices.push_back(first + 1);
 
-            Indices.push_back(second);
-            Indices.push_back(second + 1);
-            Indices.push_back(first + 1);
-        }
-    }
+    //        Indices.push_back(second);
+    //        Indices.push_back(second + 1);
+    //        Indices.push_back(first + 1);
+    //    }
+    //}
 
-    _vertices.clear(); _indices.clear();
-    _vertices = Vertices;
-    _indices = Indices;
+    //_vertices.clear(); _indices.clear();
+    //_vertices = Vertices;
+    //_indices = Indices;
 }
 
 // Method Name: SetPolygonData
@@ -269,7 +288,7 @@ void Utils::SetPolygonData(std::vector<VertexFormat>& _vertices, std::vector<GLu
 	for (int i = 0; i < outerVertexCount; ++i)
 	{
 		float percent = (i / (float)(outerVertexCount - 1));
-		float rad = percent * 2 * M_PI;
+		float rad = percent * 2.0f * M_PI;
 
 		//Vertex position
 		float outer_x = center_x + radius * cos(rad);

@@ -9,6 +9,7 @@
 #include <iostream>
 
 #include "Utils.h"
+#include "GameScene.h"
 #include "GameModel.h"
 #include "Camera.h"
 #include "Cubemap.h"
@@ -19,21 +20,13 @@ using glm::vec3;
 // Classes
 ShaderLoader g_ShaderLoader;
 Camera* g_Camera;
-//Light* light;
-GameModel* g_Square;
-GameModel* g_Triangle;
-GameModel* g_Circle;
-GameModel* g_Hexagon;
-
 Cubemap* g_Skybox;
-
-unsigned char KeyCode[255];
 
 void Render();
 void Update();
 void KeyDown(unsigned char key, int x, int y);
 void KeyUp(unsigned char key, int x, int y);
-void AnimateModel(GameModel* _model, vec3 _moveDirection);
+unsigned char KeyCode[255];
 
 int main(int argc, char **argv)
 {
@@ -53,46 +46,30 @@ int main(int argc, char **argv)
 
     glewInit();
 
-    // -- Object creation
-    g_Camera = new Camera(vec3(0, 0, 8), Utils::WIDTH, Utils::HEIGHT);
+    // Initialise the box movement index (Utils)
+    Utils::movementIndex = 0;
 
-    GLuint squareProgram = g_ShaderLoader.CreateProgram("shaders/unlit.vs", "shaders/unlit.fs");
-    g_Square = new GameModel(ModelType::Square, g_Camera);
-	g_Square->SetTexture("textures/triangle.jpg");
-    g_Square->SetProgram(squareProgram);
-    g_Square->SetMovementType(MovementType::LeftRight);
-    g_Square->SetColor(Utils::RGBtoAlpha(227, 181, 5));
-    g_Square->SetPosition(vec3(-4, 0, 0));
-    g_Square->SetSpeed(0.05f);
+    // Initialise the global camera at (0, 0, 10)
+    g_Camera = new Camera(vec3(0, 0, 10), Utils::WIDTH, Utils::HEIGHT);
 
-    GLuint triangleProgram = g_ShaderLoader.CreateProgram("shaders/unlit.vs", "shaders/unlit.fs");
-    g_Triangle = new GameModel(ModelType::Triangle, g_Camera);
-    g_Triangle->SetProgram(triangleProgram);
-    g_Triangle->SetMovementType(MovementType::UpDown);
-    g_Triangle->SetColor(Utils::RGBtoAlpha(219, 80, 74));
-    g_Triangle->SetPosition(vec3(4, 0, 0));
-    g_Triangle->SetSpeed(0.05f);
+    // Get the scene instance. We will add a camera and models to it
+    GameScene& gs = GameScene::GetInstance();
 
-    GLuint circleProgram = g_ShaderLoader.CreateProgram("shaders/unlit.vs", "shaders/unlit.fs");
-    g_Circle = new GameModel(ModelType::Circle, g_Camera);
-    g_Circle->SetProgram(circleProgram);
-    g_Circle->SetMovementType(MovementType::Box);
-    g_Circle->SetColor(Utils::RGBtoAlpha(86, 163, 166));
-    g_Circle->SetPosition(vec3(0, -2, 0));
-    g_Circle->SetSpeed(0.05f);
+    gs.AddCamera(g_Camera);
 
-	GLuint hexagonProgram = g_ShaderLoader.CreateProgram("shaders/unlit.vs", "shaders/unlit.fs");
-	g_Hexagon = new GameModel(ModelType::Hexagon, g_Camera);
-	g_Hexagon->SetProgram(hexagonProgram);
-	g_Hexagon->SetMovementType(MovementType::Circular);
-	g_Hexagon->SetColor(Utils::RGBtoAlpha(51, 153, 51));
-	g_Hexagon->SetPosition(vec3(0, 2, 0));
-	g_Hexagon->SetSpeed(3);
+    GLuint shaderProgram = g_ShaderLoader.CreateProgram("shaders/unlit.vs", "shaders/unlit.fs");
 
+    gs.CreateModel(ModelType::Triangle, MovementType::LeftRight, shaderProgram, "", Utils::RGBtoAlpha(51, 153, 51), vec3(-4, 0, 0), vec3(0, 0, 0), 0.05f);
+    gs.CreateModel(ModelType::Square, MovementType::UpDown, shaderProgram, "", Utils::RGBtoAlpha(227, 181, 5), vec3(4, 0, 0), vec3(0, 0, 0), 0.05f);
+    gs.CreateModel(ModelType::Circle, MovementType::Box, shaderProgram, "", Utils::RGBtoAlpha(86, 163, 166), vec3(0, -2, 0), vec3(0, 0, 0), 0.05f);
+    gs.CreateModel(ModelType::Hexagon, MovementType::Circular, shaderProgram, "", Utils::RGBtoAlpha(219, 80, 74), vec3(0, 2, 0), vec3(0, 0, 0), 3.0f);
+    gs.CreateModel(ModelType::Pentagon, MovementType::Idle, shaderProgram, "", Utils::RGBtoAlpha(219, 80, 74), vec3(-4, -3, 0), vec3(0, 0, 0), 3.0f);
+    
     // Skybox
     GLuint cubemapProgram = g_ShaderLoader.CreateProgram("shaders/skybox.vs", "shaders/skybox.fs");
     g_Skybox = new Cubemap(cubemapProgram, g_Camera);
 
+    // Main loop functions
     glutDisplayFunc(Render);
     glutKeyboardFunc(KeyDown);
     glutKeyboardUpFunc(KeyUp);
@@ -108,12 +85,8 @@ void Render()
     glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    // Models to render
-    //g_Skybox->Render();
-    g_Square->Render();
-    g_Triangle->Render();
-    g_Circle->Render();
-	g_Hexagon->Render();
+    g_Skybox->Render();
+    GameScene::GetInstance().Render();
 
     glutSwapBuffers();
 }
@@ -123,39 +96,25 @@ void Update()
     GLfloat deltaTime = (GLfloat) glutGet(GLUT_ELAPSED_TIME);
     deltaTime *= 0.001f;
 
-    // Update the models
-    g_Square->Update(deltaTime);
-    g_Triangle->Update(deltaTime);
-    g_Circle->Update(deltaTime);
-	g_Hexagon->Update(deltaTime);
-
-    //LerpAtoB<GameModel>(g_Triangle, vec3(1, 1, 1), vec3(2, 1, 1));
+    GameScene::GetInstance().Update(deltaTime);
+    
+    if (KeyCode[(unsigned char)'q'] == DOWN || KeyCode[(unsigned char)'Q'] == DOWN) {
+        GameScene::GetInstance().ClearScene();
+	}
+    if (KeyCode[(unsigned char)'r'] == DOWN || KeyCode[(unsigned char)'R'] == DOWN)
+    {
+        GameScene::GetInstance().ReloadScene();
+    }
 }
 
 void KeyDown(unsigned char key, int x, int y)
 {
-
     KeyCode[key] = KeyState::Pressed;
     cout << "Key pressed: " << key << "\n";
-
 }
 
 void KeyUp(unsigned char key, int x, int y)
 {
-
     KeyCode[key] = KeyState::Released;
     cout << "Key Released: " << key << "\n";
-
-}
-
-// Function AnimateModel
-// Animates the model by moving it in a few spaces in the given direction
-// author : Juan Rodriguez
-// param _model : The game model that will be animated
-// param _moveDirection : The direction of the movement
-void AnimateModel(GameModel* _model, vec3 _moveDirection)
-{
-
-
-
 }

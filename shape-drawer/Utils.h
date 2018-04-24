@@ -1,3 +1,11 @@
+//
+//  File Name: Utils.h
+//  Author: Juan Alejandro Rodriguez Morais
+//  Email: timrodz@icloud.com
+//
+// 
+//
+
 #pragma once
 
 /* External libraries */
@@ -20,9 +28,12 @@
 #include "ShaderLoader.h"
 
 /* Constants */
-#define M_PI 3.14159265358979323846264338327950288
+#define M_PI 3.14159265358979323846264338327950288f // Pi
+#define UP 0 // Keyboard up
+#define DOWN 1 // Keyboard down
 
 /* Enums */
+#pragma region Enums
 enum KeyState
 {
     Pressed,
@@ -36,6 +47,8 @@ enum ModelType
     Circle = 2,
     Hexagon = 3,
     Cube = 4,
+    Pentagon = 5,
+    Heptagon = 6,
     Sphere = 7
 };
 
@@ -47,8 +60,10 @@ enum MovementType
     Circular,
     Box
 };
+#pragma endregion
 
 /* Vertex Formats */
+#pragma region VertexFormat
 struct Position
 {
     float x, y, z;
@@ -112,6 +127,7 @@ struct IndexFormat
 
     IndexFormat() {}
 };
+#pragma endregion
 
 /* Utilities class */
 class Utils
@@ -134,6 +150,8 @@ public:
 	static void SetCircleData(std::vector<VertexFormat>& _vertices, std::vector<GLuint>& _indices);
 	static void SetHexagonData(std::vector<VertexFormat>& _vertices, std::vector<GLuint>& _indices);
     static void SetCubeData(std::vector<VertexFormat>& _vertices, std::vector<GLuint>& _indices);
+    static void SetPentagonData(std::vector<VertexFormat>& _vertices, std::vector<GLuint>& _indices);
+    static void SetHeptagonData(std::vector<VertexFormat>& _vertices, std::vector<GLuint>& _indices);
     // TODO: Remove sphere
     static void SetSphereData(std::vector<VertexFormat>& _vertices, std::vector<GLuint>& _indices);
 
