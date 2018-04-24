@@ -1,9 +1,8 @@
 //
-//  File Name   : main.cpp
-//  Author	   : Juan Alejandro Rodriguez Morais
-//  Mail		   : timrodz@icloud.com
+//  File Name: main.cpp
+//  Author: Juan Alejandro Rodriguez Morais
+//  Email: timrodz@icloud.com
 //
-//  DESCRIPTION
 // 
 //
 
@@ -24,6 +23,7 @@ Camera* g_Camera;
 GameModel* g_Square;
 GameModel* g_Triangle;
 GameModel* g_Circle;
+GameModel* g_Hexagon;
 
 Cubemap* g_Skybox;
 
@@ -44,48 +44,54 @@ int main(int argc, char **argv)
     glutInitWindowSize(Utils::WIDTH, Utils::HEIGHT);
     glutCreateWindow("PikPok Competency Test - Juan Rodriguez");
 
-    //glClearColor(1.0f, 0.0f, 0.0f, 1.0f);               // Set background color to black and opaque
+    glClearColor(1.0f, 0.0f, 0.0f, 1.0f);               // Set background color to black and opaque
     glClearDepth(1.0f);                                 // Set background depth to farthest
-    //glEnable(GL_DEPTH_TEST);                            // Enable depth testing for z-culling
-    //glDepthFunc(GL_LEQUAL);                             // Set the type of depth-test
-    //glShadeModel(GL_SMOOTH);                            // Enable smooth shading
+    glEnable(GL_DEPTH_TEST);                            // Enable depth testing for z-culling
+    glDepthFunc(GL_LEQUAL);                             // Set the type of depth-test
+    glShadeModel(GL_SMOOTH);                            // Enable smooth shading
     glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);  // Nice perspective corrections
 
     glewInit();
-
-    //glewExperimental = true;
 
     // -- Object creation
     g_Camera = new Camera(vec3(0, 0, 8), Utils::WIDTH, Utils::HEIGHT);
 
     GLuint squareProgram = g_ShaderLoader.CreateProgram("shaders/unlit.vs", "shaders/unlit.fs");
     g_Square = new GameModel(ModelType::Square, g_Camera);
+	g_Square->SetTexture("textures/triangle.jpg");
+    g_Square->SetProgram(squareProgram);
     g_Square->SetMovementType(MovementType::LeftRight);
     g_Square->SetColor(Utils::RGBtoAlpha(227, 181, 5));
-    g_Square->SetProgram(squareProgram);
     g_Square->SetPosition(vec3(-4, 0, 0));
     g_Square->SetSpeed(0.05f);
 
     GLuint triangleProgram = g_ShaderLoader.CreateProgram("shaders/unlit.vs", "shaders/unlit.fs");
     g_Triangle = new GameModel(ModelType::Triangle, g_Camera);
+    g_Triangle->SetProgram(triangleProgram);
     g_Triangle->SetMovementType(MovementType::UpDown);
     g_Triangle->SetColor(Utils::RGBtoAlpha(219, 80, 74));
-    g_Triangle->SetProgram(triangleProgram);
     g_Triangle->SetPosition(vec3(4, 0, 0));
     g_Triangle->SetSpeed(0.05f);
 
     GLuint circleProgram = g_ShaderLoader.CreateProgram("shaders/unlit.vs", "shaders/unlit.fs");
     g_Circle = new GameModel(ModelType::Circle, g_Camera);
-    g_Circle->SetMovementType(MovementType::Circular);
-    g_Circle->SetColor(Utils::RGBtoAlpha(86, 163, 166));
     g_Circle->SetProgram(circleProgram);
-    g_Circle->SetSpeed(5.0f);
+    g_Circle->SetMovementType(MovementType::Box);
+    g_Circle->SetColor(Utils::RGBtoAlpha(86, 163, 166));
+    g_Circle->SetPosition(vec3(0, -2, 0));
+    g_Circle->SetSpeed(0.05f);
+
+	GLuint hexagonProgram = g_ShaderLoader.CreateProgram("shaders/unlit.vs", "shaders/unlit.fs");
+	g_Hexagon = new GameModel(ModelType::Hexagon, g_Camera);
+	g_Hexagon->SetProgram(hexagonProgram);
+	g_Hexagon->SetMovementType(MovementType::Circular);
+	g_Hexagon->SetColor(Utils::RGBtoAlpha(51, 153, 51));
+	g_Hexagon->SetPosition(vec3(0, 2, 0));
+	g_Hexagon->SetSpeed(3);
 
     // Skybox
-    //GLuint cubemapProgram = shaderLoader.CreateProgram("shaders/skybox.vs", "shaders/skybox.fs");
-    //skybox = new Cubemap(cubemapProgram, camera);
-
-    // -- Object creation
+    GLuint cubemapProgram = g_ShaderLoader.CreateProgram("shaders/skybox.vs", "shaders/skybox.fs");
+    g_Skybox = new Cubemap(cubemapProgram, g_Camera);
 
     glutDisplayFunc(Render);
     glutKeyboardFunc(KeyDown);
@@ -99,14 +105,15 @@ int main(int argc, char **argv)
 
 void Render()
 {
-    glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
+    glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // Models to render
+    //g_Skybox->Render();
     g_Square->Render();
     g_Triangle->Render();
     g_Circle->Render();
-    //skybox->Render();
+	g_Hexagon->Render();
 
     glutSwapBuffers();
 }
@@ -120,6 +127,7 @@ void Update()
     g_Square->Update(deltaTime);
     g_Triangle->Update(deltaTime);
     g_Circle->Update(deltaTime);
+	g_Hexagon->Update(deltaTime);
 
     //LerpAtoB<GameModel>(g_Triangle, vec3(1, 1, 1), vec3(2, 1, 1));
 }
