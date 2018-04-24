@@ -91,7 +91,7 @@ Cubemap::~Cubemap()
 
 GLuint Cubemap::loadCubemap(std::vector<const GLchar*> faces)
 {
-	/*GLuint textureID;
+	GLuint textureID;
 	glGenTextures(1, &textureID);
 
 	int width, height;
@@ -110,7 +110,7 @@ GLuint Cubemap::loadCubemap(std::vector<const GLchar*> faces)
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 
-	return textureID;*/
+	return textureID;
     return 0;
 }
 
