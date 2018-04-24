@@ -91,11 +91,20 @@ void GameScene::Update(float _deltaTime)
 void GameScene::ClearScene()
 {
     m_vectorModels.clear();
-    std::cout << "The scene has been cleared!";
 }
 
 void GameScene::ReloadScene()
 {
+}
+
+void GameScene::CreateDefaultScene(GLuint _shaderProgram)
+{
+    GameScene& gs = GameScene::GetInstance();
+    gs.CreateModel(ModelType::Triangle, MovementType::LeftRight, _shaderProgram, "", Utils::RGBtoAlpha(51, 153, 51), glm::vec3(-4, 0, 0), glm::vec3(0, 0, 0), 0.05f);
+    gs.CreateModel(ModelType::Square, MovementType::UpDown, _shaderProgram, "", Utils::RGBtoAlpha(227, 181, 5), glm::vec3(4, 0, 0), glm::vec3(0, 0, 0), 0.05f);
+    gs.CreateModel(ModelType::Circle, MovementType::Box, _shaderProgram, "", Utils::RGBtoAlpha(86, 163, 166), glm::vec3(0, -2, 0), glm::vec3(0, 0, 0), 0.05f);
+    gs.CreateModel(ModelType::Hexagon, MovementType::Circular, _shaderProgram, "", Utils::RGBtoAlpha(219, 80, 74), glm::vec3(0, 2, 0), glm::vec3(0, 0, 0), 3.0f);
+    gs.CreateModel(ModelType::Pentagon, MovementType::Idle, _shaderProgram, "", Utils::RGBtoAlpha(219, 80, 74), glm::vec3(-4, -3, 0), glm::vec3(0, 0, 0), 3.0f);
 }
 
 GameScene GameScene::operator=(GameScene const &)

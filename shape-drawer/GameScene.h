@@ -29,6 +29,8 @@ public:
     void ClearScene();
     void ReloadScene();
 
+    void CreateDefaultScene(GLuint _shaderProgram);
+
 private:
     GameScene();
     GameScene(GameScene const&);
