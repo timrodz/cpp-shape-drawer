@@ -58,13 +58,7 @@ int main(int argc, char **argv)
     // Get the scene instance. We will add a camera and models to it
     GameScene& gs = GameScene::GetInstance();
     gs.AddCamera(g_Camera);
-    //gs.CreateDefaultScene(shaderProgram);
-
-    gs.CreateModel(ModelType::Triangle, MovementType::LeftRight, shaderProgram, "", Utils::RGBtoAlpha(51, 153, 51), vec3(-4, 0, 0), vec3(0, 0, 0), 0.05f);
-    gs.CreateModel(ModelType::Square, MovementType::UpDown, shaderProgram, "", Utils::RGBtoAlpha(227, 181, 5), vec3(4, 0, 0), vec3(0, 0, 0), 0.05f);
-    gs.CreateModel(ModelType::Circle, MovementType::Box, shaderProgram, "", Utils::RGBtoAlpha(86, 163, 166), vec3(0, -2, 0), vec3(0, 0, 0), 0.05f);
-    gs.CreateModel(ModelType::Hexagon, MovementType::Circular, shaderProgram, "", Utils::RGBtoAlpha(219, 80, 74), vec3(0, 2, 0), vec3(0, 0, 0), 3.0f);
-    gs.CreateModel(ModelType::Pentagon, MovementType::Idle, shaderProgram, "", Utils::RGBtoAlpha(219, 80, 74), vec3(-4, -3, 0), vec3(0, 0, 0), 3.0f);
+    gs.CreateDefaultScene(shaderProgram);
 
     // Skybox
     GLuint cubemapProgram = g_ShaderLoader.CreateProgram("shaders/skybox.vs", "shaders/skybox.fs");
@@ -101,7 +95,6 @@ void Update()
 
     if (!anyKeyDown)
     {
-
         if (KeyCode[(unsigned char)'q'] == KeyState::Pressed || KeyCode[(unsigned char)'Q'] == KeyState::Pressed)
         {
             GameScene::GetInstance().ClearScene();
