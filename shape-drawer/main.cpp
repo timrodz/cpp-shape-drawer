@@ -27,7 +27,7 @@ void Update();
 void KeyDown(unsigned char key, int x, int y);
 void KeyUp(unsigned char key, int x, int y);
 unsigned char KeyCode[255];
-bool key;
+bool anyKeyDown;
 
 int main(int argc, char **argv)
 {
@@ -65,7 +65,7 @@ int main(int argc, char **argv)
     gs.CreateModel(ModelType::Circle, MovementType::Box, shaderProgram, "", Utils::RGBtoAlpha(86, 163, 166), vec3(0, -2, 0), vec3(0, 0, 0), 0.05f);
     gs.CreateModel(ModelType::Hexagon, MovementType::Circular, shaderProgram, "", Utils::RGBtoAlpha(219, 80, 74), vec3(0, 2, 0), vec3(0, 0, 0), 3.0f);
     gs.CreateModel(ModelType::Pentagon, MovementType::Idle, shaderProgram, "", Utils::RGBtoAlpha(219, 80, 74), vec3(-4, -3, 0), vec3(0, 0, 0), 3.0f);
-    
+
     // Skybox
     GLuint cubemapProgram = g_ShaderLoader.CreateProgram("shaders/skybox.vs", "shaders/skybox.fs");
     g_Skybox = new Cubemap(cubemapProgram, g_Camera);
@@ -98,20 +98,23 @@ void Update()
     deltaTime *= 0.001f;
 
     GameScene::GetInstance().Update(deltaTime);
-    
-    if (!key)
+
+    if (!anyKeyDown)
     {
 
-    if (KeyCode[(unsigned char)'q'] == KeyState::Pressed || KeyCode[(unsigned char)'Q'] == KeyState::Pressed) {
-        GameScene::GetInstance().ClearScene();
-        key = true;
-        cout << "Clear scene" << std::endl;
-	}
+        if (KeyCode[(unsigned char)'q'] == KeyState::Pressed || KeyCode[(unsigned char)'Q'] == KeyState::Pressed)
+        {
+            GameScene::GetInstance().ClearScene();
+            anyKeyDown = true;
+            cout << "Clear scene" << std::endl;
+        }
+        if (KeyCode[(unsigned char)'r'] == KeyState::Pressed || KeyCode[(unsigned char)'R'] == KeyState::Pressed)
+        {
+            GameScene::GetInstance().ReloadScene();
+            anyKeyDown = true;
+            cout << "Scene reloaded" << std::endl;
+        }
     }
-    //if (KeyCode[(unsigned char)'r'] == DOWN || KeyCode[(unsigned char)'R'] == DOWN)
-    //{
-    //    GameScene::GetInstance().ReloadScene();
-    //}
 }
 
 void KeyDown(unsigned char key, int x, int y)
@@ -123,6 +126,6 @@ void KeyDown(unsigned char key, int x, int y)
 void KeyUp(unsigned char key, int x, int y)
 {
     KeyCode[key] = KeyState::Released;
-    key = false;
+    anyKeyDown = false;
     cout << "Key Released: " << key << "\n";
 }
