@@ -21,7 +21,7 @@ public:
 	//void SetRotation(glm::vec3 angle);
 	//void SetRotationAxis(glm::vec3 rotationAxis);
 
-	//void SetTexture(std::string texFileName);
+	void SetTexture(std::string texFileName);
 	//void SetSpecularStrength(float strength);
 
     void SetMovementType(MovementType _type);
@@ -47,7 +47,7 @@ private:
     MovementType m_MovementType;
 	//Light* light;
 
-	//bool bIsTextureSet = false;
+	bool isTextureSet = false;
 
 	float speed;
 
@@ -64,7 +64,7 @@ private:
 	GLuint vao;
 	GLuint vbo;
 	GLuint ebo;
-	//GLuint texture;
+	GLuint texture;
 	GLuint program;
 
 	//glm::mat4 model;
@@ -72,6 +72,6 @@ private:
 	//float specularStrength;
 	//float ambientStrength;
 
-    bool movementToggle;
     glm::vec3 direction;
+	bool triangleFan;
 };

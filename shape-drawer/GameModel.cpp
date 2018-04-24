@@ -19,21 +19,31 @@ GameModel::GameModel(ModelType _modelType, Camera* _camera)
 
     switch (_modelType)
     {
-        case Triangle: Utils::SetTriangleData(vertices, indices); break;
-        case Square: Utils::SetSquareData(vertices, indices); break;
-        case Hexagon: Utils::SetHexagonData(vertices, indices); break;
-        case Cube: Utils::SetCubeData(vertices, indices); break;
-        case Circle: Utils::SetSphereData(vertices, indices); break;
-    }
-
-    for (auto item : vertices)
-    {
-        //printf("position: %f, %f, %f \n", item.pos.x, item.pos.y, item.pos.z);
-    }
-
-    for (auto item : indices)
-    {
-        //printf("index: %d, %d, %d \n", item.x, item.y, item.z);
+        case Triangle:
+        {
+            Utils::SetTriangleData(vertices, indices);
+        }
+        break;
+        case Square:
+        {
+            Utils::SetSquareData(vertices, indices);
+        }
+        break;
+        case Hexagon:
+        {
+            Utils::SetHexagonData(vertices, indices);
+        }
+        break;
+        case Cube:
+        {
+            Utils::SetCubeData(vertices, indices);
+        }
+        break;
+        case Circle:
+        {
+            Utils::SetCircleData(vertices, indices);
+        }
+        break;
     }
 
     glGenVertexArrays(1, &vao);
@@ -51,19 +61,18 @@ GameModel::GameModel(ModelType _modelType, Camera* _camera)
 
     // Position
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(VertexFormat), (GLvoid*) 0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(VertexFormat), (GLvoid*)0);
 
     // Texture Coordinates
     glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(VertexFormat), (void*) (offsetof(VertexFormat, VertexFormat::texCoord)));
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(VertexFormat), (void*)(offsetof(VertexFormat, VertexFormat::texCoord)));
 
     // Normals
     glEnableVertexAttribArray(2);
-    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(VertexFormat), (void*) (offsetof(VertexFormat, VertexFormat::normal)));
+    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(VertexFormat), (void*)(offsetof(VertexFormat, VertexFormat::normal)));
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
-
 }
 
 GameModel::~GameModel()
@@ -81,7 +90,7 @@ void GameModel::Update(GLfloat time)
         case (MovementType::UpDown):
         {
             position += direction * speed;
-            if (position.y >= (startPosition.y + Utils::VERTICAL_LIMIT) || position.y <= (startPosition.y -Utils::VERTICAL_LIMIT))
+            if (position.y >= (startPosition.y + Utils::VERTICAL_LIMIT) || position.y <= (startPosition.y - Utils::VERTICAL_LIMIT))
             {
                 direction *= -1;
             }
@@ -90,7 +99,7 @@ void GameModel::Update(GLfloat time)
         case (MovementType::LeftRight):
         {
             position += direction * speed;
-            if (position.x >= (startPosition.x + Utils::HORIZONTAL_LIMIT) || position.x <= (startPosition.x -Utils::HORIZONTAL_LIMIT))
+            if (position.x >= (startPosition.x + Utils::HORIZONTAL_LIMIT) || position.x <= (startPosition.x - Utils::HORIZONTAL_LIMIT))
             {
                 direction *= -1;
             }
@@ -104,11 +113,11 @@ void GameModel::Update(GLfloat time)
         break;
         case (MovementType::Box):
         {
-            position = Utils::MoveTowards(position, Utils::BOX_POSITIONS[Utils::movementIndex], time * speed);
-            
-            if (position == Utils::BOX_POSITIONS[Utils::movementIndex])
+            position = Utils::MoveTowards(position, startPosition + Utils::BOX_POSITIONS[Utils::movementIndex], speed);
+
+            if (position == (startPosition + Utils::BOX_POSITIONS[Utils::movementIndex]))
             {
-                Utils::movementIndex = (Utils::movementIndex + 1) % 4;
+                Utils::movementIndex = (Utils::movementIndex + 1) % (4);
             }
         }
         break;
@@ -121,11 +130,13 @@ void GameModel::Render()
 {
     glUseProgram(this->program);
 
-    glColor3f(1, 1, 0);
-
-    glActiveTexture(GL_TEXTURE0);
-    //glBindTexture(GL_TEXTURE_2D, texture);
-    //glUniform1i(glGetUniformLocation(program, "Texture"), 0);
+    // TODO: Check for a way to draw textures and colors
+    if (isTextureSet)
+    {
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, texture);
+        glUniform1i(glGetUniformLocation(program, "Texture"), 0);
+    }
 
     glm::mat4 model, view, projection;
     model = glm::translate(model, position);
@@ -181,37 +192,6 @@ void GameModel::Render()
     glBindVertexArray(0);
 }
 
-//movement
-//void GameModel::MoveForward()
-//{
-//	position -= glm::vec3(0.0f, 0.0f, 1.0f) * speed;
-//}
-//
-//void GameModel::MoveBackward()
-//{
-//	position += glm::vec3(0.0f, 0.0f, 1.0f) * speed;
-//}
-//
-//void GameModel::MoveLeft()
-//{
-//	position -= glm::vec3(1.0f, 0.0f, 0.0f) * speed;
-//}
-//
-//void GameModel::MoveRight()
-//{
-//	position += glm::vec3(1.0f, 0.0f, 0.0f) * speed;
-//}
-//
-//void GameModel::MoveUp()
-//{
-//	position += glm::vec3(0.0f, 1.0f, 0.0f) * speed;
-//}
-//
-//void GameModel::MoveDown()
-//{
-//	position -= glm::vec3(0.0f, 1.0f, 0.0f) * speed;
-//}
-
 void GameModel::Rotate(glm::vec3 axis)
 {
     this->angle.x += axis.x * speed * 20;
@@ -219,34 +199,30 @@ void GameModel::Rotate(glm::vec3 axis)
     this->angle.z += axis.z * speed * 20;
 }
 
-//void GameModel::SetTexture(std::string  texFileName)
-//{
-//	////** load texture
-//	//glGenTextures(1, &texture);
-//	//glBindTexture(GL_TEXTURE_2D, texture);
-//
-//	//// Set texture wrapping to GL_REPEAT (usually basic wrapping method)
-//	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-//	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-//	//// Set texture filtering parameters
-//	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-//	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-//
-//	////** loadImage and create texture
-//	//// Load image, create texture and generate mipmaps
-//	//int width, height;
-//	//unsigned char* image = SOIL_load_image(texFileName.c_str(), &width, &height, 0, SOIL_LOAD_RGB);
-//	//glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
-//	//glGenerateMipmap(GL_TEXTURE_2D);
-//	//SOIL_free_image_data(image);
-//	//glBindTexture(GL_TEXTURE_2D, 0);
-//
-//	//printf("fileName %s \n", texFileName.c_str());
-//
-//	//bIsTextureSet = true;
-//}
+void GameModel::SetTexture(std::string  texFileName)
+{
+    glGenTextures(1, &texture);
+    glBindTexture(GL_TEXTURE_2D, texture);
 
-// setters and getters
+    // Set texture wrapping to GL_REPEAT (usually basic wrapping method)
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    // Set texture filtering parameters
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    // Load image, create texture and generate mipmaps
+    int width, height;
+    unsigned char* image = SOIL_load_image(texFileName.c_str(), &width, &height, 0, SOIL_LOAD_RGB);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+    glGenerateMipmap(GL_TEXTURE_2D);
+    SOIL_free_image_data(image);
+    glBindTexture(GL_TEXTURE_2D, 0);
+
+    printf("fileName %s \n", texFileName.c_str());
+
+    isTextureSet = true;
+}
 
 void GameModel::SetScale(glm::vec3 _scale)
 {
