@@ -102,6 +102,16 @@ void GameModel::Update(GLfloat time)
             position.y = (Utils::CIRCULAR_RADIUS * sin(time * speed) + startPosition.y);
         }
         break;
+        case (MovementType::Box):
+        {
+            position = Utils::MoveTowards(position, Utils::BOX_POSITIONS[Utils::movementIndex], time * speed);
+            
+            if (position == Utils::BOX_POSITIONS[Utils::movementIndex])
+            {
+                Utils::movementIndex = (Utils::movementIndex + 1) % 4;
+            }
+        }
+        break;
     }
     glutPostRedisplay();
 }
