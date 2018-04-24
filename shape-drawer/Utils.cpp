@@ -1,45 +1,48 @@
 #include "Utils.h"
 
+int Utils::movementIndex = 0;
 
-glm::vec3 Utils::RGBtoAlpha(int r, int g, int b)
+glm::vec3 Utils::BOX_POSITIONS[] = {
+	glm::vec3(1, 0, 0),
+	glm::vec3(1, -1, 0),
+	glm::vec3(0, -1, 0),
+	glm::vec3(0, 0, 0)
+};
+
+// Method Name:
+// Description:
+// author: Juan Alejandro Rodriguez Morais
+// param:
+// return:
+glm::vec3 Utils::RGBtoAlpha(int _r, int _g, int _b)
 {
-    return glm::vec3((float) r / 255, (float) g / 255, (float) b / 255);
+    return glm::vec3((float) _r / 255, (float) _g / 255, (float) _b / 255);
 }
 
+// Method Name:
+// Description:
+// author: Juan Alejandro Rodriguez Morais
+// param:
+// return:
 glm::vec3 Utils::MoveTowards(glm::vec3 _currentPosition, glm::vec3 _targetPosition, float _maxDistanceDelta)
 {
-    glm::vec3 a = _targetPosition - _currentPosition;
-    float magnitude = glm::length(a); // Length of vector (http://glm.g-truc.net/0.9.8/api/a00148.html#ga18d45e3d4c7705e67ccfabd99e521604)
-    
-    if (magnitude <= _maxDistanceDelta || magnitude == 0.0f)
-    {
-        return _targetPosition;
-    }
-    
-    return (_currentPosition + a / magnitude * _maxDistanceDelta);
+	glm::vec3 a = _targetPosition - _currentPosition;
+	float magnitude = glm::length(a); // Length of vector (http://glm.g-truc.net/0.9.8/api/a00148.html#ga18d45e3d4c7705e67ccfabd99e521604)
+
+	if (magnitude <= _maxDistanceDelta || magnitude == 0.0f)
+	{
+		return _targetPosition;
+	}
+
+	return (_currentPosition + a / magnitude * _maxDistanceDelta);
 }
 
-void Utils::SetTriangleData(std::vector<VertexFormat>& vertices, std::vector<GLuint>&indices)
-{
-    std::vector<VertexFormat> Vertices;
-
-    Vertices.push_back(VertexFormat(Position(0.0f, 1.0f, 0.0f), TexCoord(1, 1), Normal(0.0f, 0.0f, 1.0))); // Top
-    Vertices.push_back(VertexFormat(Position(1.0, 0.0, 0.0), TexCoord(0, 1), Normal(0.0f, 0.0f, 1.0))); // Right
-    Vertices.push_back(VertexFormat(Position(-1.0, 0.0, 0.0), TexCoord(1, 0), Normal(0.0f, 0.0f, 1.0))); // Left
-
-    std::vector<GLuint>Indices;
-    
-    Indices.push_back(0);
-    Indices.push_back(1);
-    Indices.push_back(2);
-
-    vertices.clear(); indices.clear();
-
-    vertices = Vertices;
-    indices = Indices;
-}
-
-void Utils::SetSquareData(std::vector<VertexFormat>& vertices, std::vector<GLuint>& indices)
+// Method Name:
+// Description:
+// author: Juan Alejandro Rodriguez Morais
+// param:
+// return:
+void Utils::SetSquareData(std::vector<VertexFormat>& _vertices, std::vector<GLuint>& _indices)
 {
     std::vector<VertexFormat> Vertices;
 
@@ -53,12 +56,62 @@ void Utils::SetSquareData(std::vector<VertexFormat>& vertices, std::vector<GLuin
     Indices.push_back(0); Indices.push_back(1); Indices.push_back(2);
     Indices.push_back(0); Indices.push_back(2); Indices.push_back(3);
 
-    vertices.clear(); indices.clear();
-    vertices = Vertices;
-    indices = Indices;
+    _vertices.clear(); _indices.clear();
+    _vertices = Vertices;
+    _indices = Indices;
 }
 
-void Utils::SetCubeData(std::vector<VertexFormat>& vertices, std::vector<GLuint>& indices)
+// Method Name:
+// Description:
+// author: Juan Alejandro Rodriguez Morais
+// param:
+// return:
+void Utils::SetTriangleData(std::vector<VertexFormat>& vertices, std::vector<GLuint>&indices)
+{
+	std::vector<VertexFormat> Vertices;
+
+	Vertices.push_back(VertexFormat(Position(0.0f, 1.0f, 0.0f), TexCoord(1, 1), Normal(0.0f, 0.0f, 1.0))); // Top
+	Vertices.push_back(VertexFormat(Position(1.0, 0.0, 0.0), TexCoord(0, 1), Normal(0.0f, 0.0f, 1.0))); // Right
+	Vertices.push_back(VertexFormat(Position(-1.0, 0.0, 0.0), TexCoord(1, 0), Normal(0.0f, 0.0f, 1.0))); // Left
+
+	std::vector<GLuint>Indices;
+
+	Indices.push_back(0);
+	Indices.push_back(1);
+	Indices.push_back(2);
+
+	vertices.clear(); indices.clear();
+
+	vertices = Vertices;
+	indices = Indices;
+}
+
+// Method Name:
+// Description:
+// author: Juan Alejandro Rodriguez Morais
+// param:
+// return:
+void Utils::SetCircleData(std::vector<VertexFormat>& _vertices, std::vector<GLuint>& _indices)
+{
+	Utils::SetPolygonData(_vertices, _indices, 30);
+}
+
+// Method Name:
+// Description:
+// author: Juan Alejandro Rodriguez Morais
+// param:
+// return:
+void Utils::SetHexagonData(std::vector<VertexFormat>& _vertices, std::vector<GLuint>& _indices)
+{
+	Utils::SetPolygonData(_vertices, _indices, 6);
+}
+
+// Method Name:
+// Description:
+// author: Juan Alejandro Rodriguez Morais
+// param:
+// return:
+void Utils::SetCubeData(std::vector<VertexFormat>& _vertices, std::vector<GLuint>& _indices)
 {
     std::vector<VertexFormat> Vertices;
 
@@ -118,35 +171,19 @@ void Utils::SetCubeData(std::vector<VertexFormat>& vertices, std::vector<GLuint>
     Indices.push_back(20); Indices.push_back(21); Indices.push_back(22);
     Indices.push_back(22); Indices.push_back(23); Indices.push_back(20);
 
-    vertices.clear(); indices.clear();
-    vertices = Vertices;
-    indices = Indices;
+    _vertices.clear(); _indices.clear();
+    _vertices = Vertices;
+    _indices = Indices;
 }
 
-void Utils::SetHexagonData(std::vector<VertexFormat>& _vertices, std::vector<GLuint>& _indices)
-{
-    std::vector<VertexFormat> Vertices;
-    
-    // TODO: Test this loop
-    // for (int i = 0; i < 6; ++i)
-    // {
-    //     float y = sin(i/6.0*2*3.14);
-    //     float x = cos(i/6.0*2*3.14);
-    // }
-    
-    // TODO: Maybe divide them by 2?
-    Vertices.push_back(VertexFormat(Position(-1.0, 2.0, 0.0), TexCoord(1.0, 1.0), Normal(0.0f, 0.0f, 1.0))); // Top-left
-    Vertices.push_back(VertexFormat(Position(1.0, 2.0, 0.0), TexCoord(1.0, 1.0), Normal(0.0f, 0.0f, 1.0))); // Top-right
-    Vertices.push_back(VertexFormat(Position(-1.0, -2.0, 0.0), TexCoord(-1.0, 1.0), Normal(0.0f, 0.0f, 1.0))); // Bottom-left
-    Vertices.push_back(VertexFormat(Position(1.0, -2.0, 0.0), TexCoord(1.0, 1.0), Normal(0.0f, 0.0f, 1.0))); // Bottom-right
-    Vertices.push_back(VertexFormat(Position(-2.0, 0.0, 0.0), TexCoord(-1.0, -1.0), Normal(0.0f, 0.0f, 1.0))); // Mid-left
-    Vertices.push_back(VertexFormat(Position(2.0, 0.0, 0.0), TexCoord(1.0, -1.0), Normal(0.0f, 0.0f, 1.0))); // Mid-right
-}
-
+// Method Name:
+// Description:
+// author: Juan Alejandro Rodriguez Morais
+// param:
+// return:
 void Utils::SetSphereData(std::vector<VertexFormat>& _vertices, std::vector<GLuint>& _indices)
 {
     std::vector<VertexFormat> Vertices;
-
     std::vector<GLuint> Indices;
 
     double latitudeBands = 30;
@@ -202,4 +239,70 @@ void Utils::SetSphereData(std::vector<VertexFormat>& _vertices, std::vector<GLui
     _vertices.clear(); _indices.clear();
     _vertices = Vertices;
     _indices = Indices;
+}
+
+// Method Name: SetPolygonData
+// Description: Fills up a polygon using the Triangle Fan method.
+// author: Juan Rodriguez
+// param _vertices: GameModel vertices (VertexFormat)
+// param _indices: GameModel indices (GLuint)
+// param _polygonCount: The amount of polygons to be used for the object
+// return: void
+void Utils::SetPolygonData(std::vector<VertexFormat>& _vertices, std::vector<GLuint>& _indices, int _polygonCount)
+{
+	std::vector<VertexFormat> Vertices;
+
+	// Add the origin
+	Vertices.push_back(VertexFormat(Position(0.0, 0.0, 0.0), TexCoord(1.0, 1.0), Normal(0.0f, 0.0f, 1.0)));
+
+	int vertexCount = _polygonCount + 2;
+	float radius = 1.0f;
+	float center_x = 0.0f;
+	float center_y = 0.0f;
+
+	// Create a buffer for vertex data
+	int index = 0;
+
+	// Outer vertices of the circle
+	int outerVertexCount = vertexCount - 1;
+
+	for (int i = 0; i < outerVertexCount; ++i)
+	{
+		float percent = (i / (float)(outerVertexCount - 1));
+		float rad = percent * 2 * M_PI;
+
+		//Vertex position
+		float outer_x = center_x + radius * cos(rad);
+		float outer_y = center_y + radius * sin(rad);
+
+		VertexFormat vs;
+		vs.pos.x = outer_x;
+		vs.pos.y = outer_y;
+		vs.pos.z = 0;
+
+		Vertices.push_back(vs);
+	}
+
+	std::vector<GLuint> Indices;
+
+	for (GLuint latNumber = 0; latNumber < vertexCount; latNumber++)
+	{
+		for (GLuint longNumber = 0; longNumber < vertexCount; longNumber++)
+		{
+			GLuint first = (latNumber * (vertexCount + 1)) + longNumber;
+			GLuint second = first + vertexCount + 1;
+
+			Indices.push_back(first);
+			Indices.push_back(second);
+			Indices.push_back(first + 1);
+
+			Indices.push_back(second);
+			Indices.push_back(second + 1);
+			Indices.push_back(first + 1);
+		}
+	}
+
+	_vertices.clear(); _indices.clear();
+	_vertices = Vertices;
+	_indices = Indices;
 }
