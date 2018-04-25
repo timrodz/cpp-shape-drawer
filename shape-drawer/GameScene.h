@@ -12,7 +12,6 @@
 
 #include "GameModel.h"
 #include "Camera.h"
-//class Camera;
 
 class GameScene {
 public:

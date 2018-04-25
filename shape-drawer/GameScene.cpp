@@ -60,7 +60,7 @@ void GameScene::CreateModel(ModelType _type,
     tempModel->SetPosition(_position);
     tempModel->SetRotation(_rotation);
     tempModel->SetSpeed(_speed);
-    if (_texture != "")
+    if (_texture != "" || _texture != "NULL")
     {
         tempModel->SetTexture(_texture);
     }
