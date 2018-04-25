@@ -13,12 +13,14 @@
 #include "GameModel.h"
 #include "Camera.h"
 #include "Cubemap.h"
+#include "INIParser.h"
 
 using std::cout;
 using glm::vec3;
 
 // Classes
 ShaderLoader g_ShaderLoader;
+GLuint g_shaderProgram;
 Camera* g_Camera;
 Cubemap* g_Skybox;
 
@@ -26,6 +28,7 @@ void Render();
 void Update();
 void KeyDown(unsigned char key, int x, int y);
 void KeyUp(unsigned char key, int x, int y);
+void LoadModelsFromFile(GLuint _shaderProgram);
 unsigned char KeyCode[255];
 bool anyKeyDown;
 
@@ -53,16 +56,19 @@ int main(int argc, char **argv)
     // Initialise the global camera at (0, 0, 10)
     g_Camera = new Camera(vec3(0, 0, 10), Utils::WIDTH, Utils::HEIGHT);
 
-    GLuint shaderProgram = g_ShaderLoader.CreateProgram("shaders/unlit.vs", "shaders/unlit.fs");
+    // Skybox
+    GLuint cubemapProgram = g_ShaderLoader.CreateProgram("shaders/skybox.vs", "shaders/skybox.fs");
+    g_Skybox = new Cubemap(cubemapProgram, g_Camera);
+
+    // Default shader program, most objects will use it.
+    g_shaderProgram = g_ShaderLoader.CreateProgram("shaders/unlit.vs", "shaders/unlit.fs");
 
     // Get the scene instance. We will add a camera and models to it
     GameScene& gs = GameScene::GetInstance();
     gs.AddCamera(g_Camera);
-    gs.CreateDefaultScene(shaderProgram);
 
-    // Skybox
-    GLuint cubemapProgram = g_ShaderLoader.CreateProgram("shaders/skybox.vs", "shaders/skybox.fs");
-    g_Skybox = new Cubemap(cubemapProgram, g_Camera);
+    //gs.CreateDefaultScene(g_shaderProgram);
+    //LoadModelsFromFile(g_shaderProgram);
 
     // Main loop functions
     glutDisplayFunc(Render);
@@ -95,15 +101,25 @@ void Update()
 
     if (!anyKeyDown)
     {
-        if (KeyCode[(unsigned char)'q'] == KeyState::Pressed || KeyCode[(unsigned char)'Q'] == KeyState::Pressed)
+        if (KeyCode[(unsigned char)'1'] == KeyState::Pressed)
         {
             GameScene::GetInstance().ClearScene();
+            GameScene::GetInstance().CreateDefaultScene(g_shaderProgram);
             anyKeyDown = true;
-            cout << "Clear scene" << std::endl;
+            cout << "Load Default Scene" << std::endl;
+        }
+        if (KeyCode[(unsigned char)'2'] == KeyState::Pressed)
+        {
+            GameScene::GetInstance().ClearScene();
+            GameScene::GetInstance().CreateDefaultScene(g_shaderProgram);
+            LoadModelsFromFile(g_shaderProgram);
+            anyKeyDown = true;
+            cout << "Load Default Scene w/ External files" << std::endl;
         }
         if (KeyCode[(unsigned char)'r'] == KeyState::Pressed || KeyCode[(unsigned char)'R'] == KeyState::Pressed)
         {
-            GameScene::GetInstance().ReloadScene();
+            GameScene::GetInstance().ClearScene();
+            LoadModelsFromFile(g_shaderProgram);
             anyKeyDown = true;
             cout << "Scene reloaded" << std::endl;
         }
@@ -121,4 +137,52 @@ void KeyUp(unsigned char key, int x, int y)
     KeyCode[key] = KeyState::Released;
     anyKeyDown = false;
     cout << "Key Released: " << key << "\n";
+}
+
+void LoadModelsFromFile(GLuint _shaderProgram)
+{
+    INIParser parser;
+    parser.LoadIniFile("shapes");
+
+    std::string line = "";
+
+    // Populate shapes
+    for (int i = 1; i <= parser.GetSectionCount(); ++i)
+    {
+        std::string s = "shape" + std::to_string(i);
+        const char* shape = s.c_str();
+
+        // Model Type
+        parser.GetStringValue(shape, "ModelType", line);
+        ModelType mod = Utils::GetModelType(line);
+
+        // Movement Type
+        parser.GetStringValue(shape, "MovementType", line);
+        MovementType mov = Utils::GetMovementType(line);
+
+        // Movement Type
+        parser.GetStringValue(shape, "Texture", line);
+        const char* texture = line.c_str();
+
+        // Colour
+        parser.GetStringValue(shape, "Colour", line);
+        glm::vec3 colour = Utils::GetVector3(line);
+        colour = Utils::RGBtoAlpha(colour.r, colour.g, colour.b);
+
+        // Position
+        parser.GetStringValue(shape, "Position", line);
+        glm::vec3 position = Utils::GetVector3(line);
+
+        // Rotation
+        parser.GetStringValue(shape, "Rotation", line);
+        glm::vec3 rotation = Utils::GetVector3(line);
+
+        // Speed
+        float speed = 0.0f;
+        parser.GetFloatValue(shape, "Speed", speed);
+
+        // Build the model
+        GameScene::GetInstance().CreateModel(mod, mov, _shaderProgram, texture, colour, position, rotation, speed);
+    }
+
 }

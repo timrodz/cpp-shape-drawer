@@ -93,8 +93,6 @@ GameModel::~GameModel()
 
 void GameModel::Update(GLfloat _currentTime)
 {
-    //model = glm::rotate(model,glm::radians(45.0f) * time, glm::vec3(0.0, 1.0, 0.0f));
-    //model = glm::translate(model, position);
     switch (m_MovementType)
     {
         case (MovementType::UpDown):
@@ -123,11 +121,11 @@ void GameModel::Update(GLfloat _currentTime)
         break;
         case (MovementType::Box):
         {
-            position = Utils::MoveTowards(position, startPosition + Utils::BOX_POSITIONS[Utils::movementIndex], speed);
+            position = Utils::MoveTowards(position, startPosition + Utils::BoxPositions[Utils::movementIndex], speed);
 
-            if (position == (startPosition + Utils::BOX_POSITIONS[Utils::movementIndex]))
+            if (position == (startPosition + Utils::BoxPositions[Utils::movementIndex]))
             {
-                Utils::movementIndex = (Utils::movementIndex + 1) % (4);
+                Utils::movementIndex = (Utils::movementIndex + 1) % (Utils::GetBoxPositionLength());
             }
         }
         break;
