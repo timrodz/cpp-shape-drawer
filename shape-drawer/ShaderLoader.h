@@ -1,3 +1,11 @@
+//
+//  File Name: ShaderLoader.h
+//  Author: Juan Alejandro Rodriguez Morais
+//  Email: timrodz@icloud.com
+//
+//  Header file for the scene loader class
+//
+
 #pragma once
 
 #include <iostream>
@@ -5,20 +13,15 @@
 #include <glew\glew.h>
 #include <freeglut\freeglut.h>
 
-class ShaderLoader {
-
-private:
-
-	std::string ReadShader(char *filename);
-	GLuint CreateShader(GLenum shaderType,
-						std::string source,
-						char* shaderName);
+class ShaderLoader
+{
 
 public:
+    ShaderLoader();
+    ~ShaderLoader();
+    GLuint CreateProgram(char* _vertexShaderFilename, char* _fragmentShaderFilename);
 
-	ShaderLoader(void);
-	~ShaderLoader(void);
-	GLuint CreateProgram(char* VertexShaderFilename,
-						 char* FragmentShaderFilename);
-
+private:
+    std::string ReadShader(char* _filename);
+    GLuint CreateShader(GLenum _shaderType, std::string source, char* _shaderName);
 };

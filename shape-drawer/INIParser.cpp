@@ -30,17 +30,17 @@ bool INIParser::SaveIniFile()
         std::cout << "Ini file saved\n";
 
         std::map<string, string>::const_iterator it;
-        it = m_mapPairs.begin();
+        it = mapPairs.begin();
 
-        for (int i = 0; i < m_mapPairs.size(); i++)
+        for (unsigned int i = 0; i < mapPairs.size(); i++)
         {
             std::cout << it->first << " = " << it->second << "\n";
             it++;
         }
 
-        it = m_mapPairs.begin();
+        it = mapPairs.begin();
 
-        while (it != m_mapPairs.end())
+        while (it != mapPairs.end())
         {
 
             string tempSection = "";
@@ -162,7 +162,7 @@ bool INIParser::AddValue(const char* _pcSection, const char* _pcKey, const char*
 
     if (GetStringValue(_pcSection, _pcKey, string(_pcValue)) == false)
     {
-        m_mapPairs.insert(std::make_pair(mapKey, _pcValue));
+        mapPairs.insert(std::make_pair(mapKey, _pcValue));
         return true;
     }
 
@@ -176,9 +176,9 @@ bool INIParser::GetStringValue(const char* _pcSection, const char* _pcKey, std::
 {
     string mapKey = GenerateMapKey(_pcSection, _pcKey);
     std::map<string, string>::const_iterator it;
-    it = m_mapPairs.find(mapKey);
+    it = mapPairs.find(mapKey);
 
-    if (it != m_mapPairs.end())
+    if (it != mapPairs.end())
     {
         _rStrValue = it->second;
         return true;
@@ -195,9 +195,9 @@ bool INIParser::GetIntValue(const char* _pcSection, const char* _pcKey, int& _ri
 {
     string mapKey = GenerateMapKey(_pcSection, _pcKey);
     std::map<string, string>::const_iterator it;
-    it = m_mapPairs.find(mapKey);
+    it = mapPairs.find(mapKey);
 
-    if (it != m_mapPairs.end())
+    if (it != mapPairs.end())
     {
         _riValue = std::stoi(it->second);
         return true;
@@ -213,9 +213,9 @@ bool INIParser::GetFloatValue(const char* _pcSection, const char* _pcKey, float&
 {
     string mapKey = GenerateMapKey(_pcSection, _pcKey);
     std::map<string, string>::const_iterator it;
-    it = m_mapPairs.find(mapKey);
+    it = mapPairs.find(mapKey);
 
-    if (it != m_mapPairs.end())
+    if (it != mapPairs.end())
     {
         _rfValue = std::stof(it->second);
         return true;
@@ -232,9 +232,9 @@ bool INIParser::GetBoolValue(const char* _pcSection, const char* _pcKey, bool& _
 {
     string mapKey = GenerateMapKey(_pcSection, _pcKey);
     std::map<string, string>::const_iterator it;
-    it = m_mapPairs.find(mapKey);
+    it = mapPairs.find(mapKey);
 
-    if (it != m_mapPairs.end())
+    if (it != mapPairs.end())
     {
         if (it->second == "true" || it->second == "1")
         {

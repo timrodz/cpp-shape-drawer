@@ -1,3 +1,11 @@
+//
+//  File Name: GameModel.h
+//  Author: Juan Alejandro Rodriguez Morais
+//  Email: timrodz@icloud.com
+//
+//  Header file for the GameModel class
+//
+
 #pragma once
 
 #include "Utils.h"
@@ -9,43 +17,31 @@ public:
 	GameModel(ModelType _modelType, Camera* _camera);
 	~GameModel();
 
-	void Update(GLfloat time);
+	void Update(GLfloat _time);
 	void Render();
 
+	void SetTexture(std::string _texture);
 	void SetPosition(glm::vec3 _position);
 	void SetScale(glm::vec3 _scale);
 	void SetColor(glm::vec3 _color);
-	void SetCamera(Camera* camera);
 	void SetSpeed(float _speed);
-	void SetProgram(GLuint program);
-	void SetRotation(glm::vec3 angle);
-	//void SetRotationAxis(glm::vec3 rotationAxis);
-
-	void SetTexture(std::string texFileName);
-	//void SetSpecularStrength(float strength);
+	void SetProgram(GLuint _program);
+	void SetRotation(glm::vec3 _angle);
+	void SetRotationAxis(glm::vec3 _rotationAxis);
 
     void SetMovementType(MovementType _type);
 
-	glm::vec3 GetPosition();
-	glm::vec3 GetScale();
-	glm::vec3 GetRotation();
-	//glm::vec3 GetRotationAxis();
-	glm::vec3 GetColor();
+	glm::vec3 GetPosition() const;
+	glm::vec3 GetScale() const;
+	glm::vec3 GetRotation() const;
+    glm::vec3 GetRotationAxis() const;
+	glm::vec3 GetColour() const;
 
-    void Move();
-	//void MoveForward();
-	//void MoveBackward();
-	//void MoveLeft();
-	//void MoveRight();
-	//void MoveUp();
-	//void MoveDown();
-
-	void Rotate(glm::vec3 axis);
+	void Rotate();
 
 private:
 	Camera* camera;
     MovementType m_MovementType;
-	//Light* light;
 
 	bool isTextureSet = false;
 
@@ -59,7 +55,7 @@ private:
 	glm::vec3 scale;
 	glm::vec3 angle;
 	glm::vec3 rotationAxis;
-	glm::vec3 color;
+	glm::vec3 colour;
 
 	GLuint vao;
 	GLuint vbo;
@@ -67,11 +63,5 @@ private:
 	GLuint texture;
 	GLuint program;
 
-	//glm::mat4 model;
-
-	//float specularStrength;
-	//float ambientStrength;
-
     glm::vec3 direction;
-	bool triangleFan;
 };

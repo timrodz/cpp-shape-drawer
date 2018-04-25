@@ -1,13 +1,26 @@
+//
+//  File Name: 
+//  Author: Juan Alejandro Rodriguez Morais
+//  Email: timrodz@icloud.com
+//
+// 
+//
+
 #include "GameModel.h"
 #include "Camera.h"
 
+// Method Name: 
+// Description: 
+// author: Juan Alejandro Rodriguez Morais
+// param: 
+// return: 
 GameModel::GameModel(ModelType _modelType, Camera* _camera)
 {
     camera = _camera;
 
     scale = glm::vec3(1.0f, 1.0f, 1.0f);
     position = glm::vec3(0.0, 0.0, 0.0);
-    color = glm::vec3(1.0f, 1.0f, 1.0f);
+    colour = glm::vec3(1.0f, 1.0f, 1.0f);
 
     speed = 0.0f;
     rotationAxis = glm::vec3(0.0f, 0.0f, 1.0f);
@@ -85,12 +98,13 @@ GameModel::GameModel(ModelType _modelType, Camera* _camera)
     glBindVertexArray(0);
 }
 
-GameModel::~GameModel()
-{
-    //this->camera = nullptr;
-    //delete this->camera;
-}
+GameModel::~GameModel() {}
 
+// Method Name: 
+// Description: 
+// author: Juan Alejandro Rodriguez Morais
+// param: 
+// return: 
 void GameModel::Update(GLfloat _currentTime)
 {
     switch (m_MovementType)
@@ -133,7 +147,11 @@ void GameModel::Update(GLfloat _currentTime)
     glutPostRedisplay();
 }
 
-
+// Method Name: 
+// Description: 
+// author: Juan Alejandro Rodriguez Morais
+// param: 
+// return: 
 void GameModel::Render()
 {
     glUseProgram(this->program);
@@ -178,7 +196,7 @@ void GameModel::Render()
 
     // lighting calculations
     GLint objColorLoc = glGetUniformLocation(program, "objectColor");
-    glUniform3f(objColorLoc, color.x, color.y, color.z);
+    glUniform3f(objColorLoc, colour.x, colour.y, colour.z);
 
     GLuint cameraPosLoc = glGetUniformLocation(program, "viewPosition");
     glUniform3f(cameraPosLoc, camera->GetPosition().x, camera->GetPosition().y, camera->GetPosition().z);
@@ -200,13 +218,19 @@ void GameModel::Render()
     glBindVertexArray(0);
 }
 
-void GameModel::Rotate(glm::vec3 _axis)
+// Method Name: 
+// Description: 
+// author: Juan Alejandro Rodriguez Morais
+// return: 
+void GameModel::Rotate()
 {
-    this->angle.x += _axis.x * speed * 20;
-    this->angle.y += _axis.y * speed * 20;
-    this->angle.z += _axis.z * speed * 20;
+    this->angle += (this->rotationAxis * speed);
 }
 
+// Method Name: 
+// Description: 
+// author: Juan Alejandro Rodriguez Morais
+// return: 
 void GameModel::SetTexture(std::string _textureFile)
 {
     glGenTextures(1, &texture);
@@ -232,50 +256,74 @@ void GameModel::SetTexture(std::string _textureFile)
     isTextureSet = true;
 }
 
+// Method Name: 
+// Description: 
+// author: Juan Alejandro Rodriguez Morais
+// return: 
 void GameModel::SetScale(glm::vec3 _scale)
 {
     this->scale = _scale;
 }
 
+// Method Name: 
+// Description: 
+// author: Juan Alejandro Rodriguez Morais
+// return: 
 void GameModel::SetRotation(glm::vec3 angle)
 {
 	this->angle = angle;
 }
 
-//void GameModel::SetRotationAxis(glm::vec3 rotationAxis)
-//{
-//	this->rotationAxis = rotationAxis;
-//}
+// Method Name: 
+// Description: 
+// author: Juan Alejandro Rodriguez Morais
+// return: 
+void GameModel::SetRotationAxis(glm::vec3 _rotationAxis)
+{
+	this->rotationAxis = _rotationAxis;
+}
 
+// Method Name: 
+// Description: 
+// author: Juan Alejandro Rodriguez Morais
+// return: 
 void GameModel::SetPosition(glm::vec3 _position)
 {
     this->position = _position;
     this->startPosition = this->position;
 }
 
+// Method Name: 
+// Description: 
+// author: Juan Alejandro Rodriguez Morais
+// return: 
 void GameModel::SetColor(glm::vec3 _color)
 {
-    this->color = _color;
+    this->colour = _color;
 }
 
-void GameModel::SetCamera(Camera * camera)
-{}
-
+// Method Name: 
+// Description: 
+// author: Juan Alejandro Rodriguez Morais
+// return: 
 void GameModel::SetSpeed(float _speed)
 {
     this->speed = _speed;
 }
 
-void GameModel::SetProgram(GLuint program)
+// Method Name: 
+// Description: 
+// author: Juan Alejandro Rodriguez Morais
+// return: 
+void GameModel::SetProgram(GLuint _program)
 {
-    this->program = program;
+    this->program = _program;
 }
 
-//void GameModel::SetSpecularStrength(float strength)
-//{
-//	specularStrength = strength;
-//}
-
+// Method Name: 
+// Description: 
+// author: Juan Alejandro Rodriguez Morais
+// return: 
 void GameModel::SetMovementType(MovementType _type)
 {
     m_MovementType = _type;
@@ -295,32 +343,47 @@ void GameModel::SetMovementType(MovementType _type)
     }
 }
 
-glm::vec3 GameModel::GetPosition()
+// Method Name: 
+// Description: 
+// author: Juan Alejandro Rodriguez Morais
+// return: 
+glm::vec3 GameModel::GetPosition() const
 {
-    return position;
+    return this->position;
 }
 
-glm::vec3 GameModel::GetColor()
+// Method Name: 
+// Description: 
+// author: Juan Alejandro Rodriguez Morais
+// return: 
+glm::vec3 GameModel::GetColour() const
 {
-    return this->color;
+    return this->colour;
 }
 
-void GameModel::Move()
-{
-
-}
-
-glm::vec3 GameModel::GetScale()
+// Method Name: 
+// Description: 
+// author: Juan Alejandro Rodriguez Morais
+// return: 
+glm::vec3 GameModel::GetScale() const
 {
     return this->scale;
 }
 
-glm::vec3 GameModel::GetRotation()
+// Method Name: 
+// Description: 
+// author: Juan Alejandro Rodriguez Morais
+// return: 
+glm::vec3 GameModel::GetRotation() const
 {
     return this->angle;
 }
 
-//glm::vec3 GameModel::GetRotationAxis()
-//{
-//	return rotationAxis;
-//}
+// Method Name: 
+// Description: 
+// author: Juan Alejandro Rodriguez Morais
+// return: 
+glm::vec3 GameModel::GetRotationAxis() const
+{
+	return this->rotationAxis;
+}

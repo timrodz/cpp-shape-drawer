@@ -3,7 +3,13 @@
 //  Author: Juan Alejandro Rodriguez Morais
 //  Email: timrodz@icloud.com
 //
-// 
+//  Header file containing:
+// 1. External library definitions
+// 2. Internal library/file definitions
+// 3. Global defines
+// 4. Enums
+// 5. Vertex Format structs
+// 6. Utilities class
 //
 
 #pragma once
@@ -28,7 +34,7 @@
 #include "ShaderLoader.h"
 
 /* Constants */
-#define M_PI 3.14159265358979323846264338327950288f // Pi
+#define PI 3.14159265358979323846264338327950288f // Pi
 
 /* Enums */
 #pragma region Enums
@@ -140,7 +146,7 @@ public:
     static glm::vec3 BoxPositions[];
     static int GetBoxPositionLength();
 
-    static glm::vec3 RGBtoAlpha(int _r, int _g, int _b);
+    static glm::vec3 RGBtoAlpha(float _r, float _g, float _b);
     static glm::vec3 MoveTowards(glm::vec3 _currentPosition, glm::vec3 _targetPosition, float _maxDistanceDelta);
 
     static void SetSquareData(std::vector<VertexFormat>& _vertices, std::vector<GLuint>& _indices);
@@ -167,7 +173,7 @@ private:
 //  Author: Juan Alejandro Rodriguez Morais
 //  Email: timrodz@icloud.com
 //
-// 
+//  
 //
 
 /// Method header

@@ -1,9 +1,9 @@
 //
-//  File Name: 
+//  File Name: Utils.cpp
 //  Author: Juan Alejandro Rodriguez Morais
 //  Email: timrodz@icloud.com
 //
-// 
+//  Handles global utilities that are commonly used in the program
 //
 
 #include "Utils.h"
@@ -36,7 +36,7 @@ int Utils::GetBoxPositionLength()
 // author: Juan Alejandro Rodriguez Morais
 // param:
 // return:
-glm::vec3 Utils::RGBtoAlpha(int _r, int _g, int _b)
+glm::vec3 Utils::RGBtoAlpha(float _r, float _g, float _b)
 {
     return glm::vec3((float) _r / 255, (float) _g / 255, (float) _b / 255);
 }
@@ -248,7 +248,7 @@ void Utils::SetPolygonData(std::vector<VertexFormat>& _vertices, std::vector<GLu
     for (int i = 0; i < outerVertexCount; ++i)
     {
         float percent = (i / (float) (outerVertexCount - 1));
-        float rad = percent * 2.0f * M_PI;
+        float rad = percent * 2.0f * PI;
 
         //Vertex position
         float outer_x = center_x + radius * cos(rad);
@@ -295,6 +295,7 @@ void Utils::ToLower(std::string & _string)
 ModelType Utils::GetModelType(std::string _string)
 {
     ToLower(_string);
+
     if (_string == "square") return ModelType::Square;
     else if (_string == "triangle") return ModelType::Triangle;
     else if (_string == "circle") return ModelType::Circle;
@@ -302,16 +303,21 @@ ModelType Utils::GetModelType(std::string _string)
     else if (_string == "cube") return ModelType::Cube;
     else if (_string == "pentagon") return ModelType::Pentagon;
     else if (_string == "heptagon") return ModelType::Heptagon;
+
+    return ModelType::Triangle;
 }
 
 MovementType Utils::GetMovementType(std::string _string)
 {
     ToLower(_string);
+
     if (_string == "idle") return MovementType::Idle;
     else if (_string == "updown") return MovementType::UpDown;
     else if (_string == "leftright") return MovementType::LeftRight;
     else if (_string == "circular") return MovementType::Circular;
     else if (_string == "box") return MovementType::Box;
+
+    return MovementType::Idle;
 }
 
 glm::vec3 Utils::GetVector3(std::string _string)

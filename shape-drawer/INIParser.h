@@ -1,3 +1,11 @@
+//
+//  File Name: INIParser.h
+//  Author: Juan Alejandro Rodriguez Morais
+//  Email: timrodz@icloud.com
+//
+//  Header file for the .ini parser class
+//
+
 #pragma once
 
 #include <map>
@@ -16,26 +24,19 @@ public:
     INIParser();
     ~INIParser();
 
-    bool SaveIniFile();
-
     bool LoadIniFile(const char* _pcFilename);
-
+    bool SaveIniFile();
     bool AddValue(const char* _pcSection, const char* _pcKey, const char* _pcValue);
-
-    bool GetStringValue(const char* _pcSection, const char* _pcKey, std::string& _value);
-
-    bool GetIntValue(const char* _pcSection, const char* _pcKey, int& _value);
-
-    bool GetFloatValue(const char* _pcSection, const char* _pcKey, float& _value);
-
-    bool GetBoolValue(const char* _pcSection, const char* _pcKey, bool& _value);
-
     std::string GenerateMapKey(const char* _pcSection, const char* _pcKey);
 
     int GetSectionCount() const;
 
+    bool GetStringValue(const char* _pcSection, const char* _pcKey, std::string& _value);
+    bool GetIntValue(const char* _pcSection, const char* _pcKey, int& _value);
+    bool GetFloatValue(const char* _pcSection, const char* _pcKey, float& _value);
+    bool GetBoolValue(const char* _pcSection, const char* _pcKey, bool& _value);
+
 private:
-    //Create a map member variable to store the ini file.
-    std::map<std::string, std::string> m_mapPairs;
+    std::map<std::string, std::string> mapPairs;
     int sectionCount;
 };

@@ -55,7 +55,7 @@ int main(int argc, char **argv)
     Utils::movementIndex = 0;
 
     // Initialise the global camera at (0, 0, 10)
-    g_Camera = new Camera(vec3(0, 0, 10), Utils::WIDTH, Utils::HEIGHT);
+    g_Camera = new Camera(vec3(0, 0, 10), 45.0f, Utils::WIDTH, Utils::HEIGHT);
 
     // Skybox
     GLuint cubemapProgram = g_ShaderLoader.CreateProgram("shaders/skybox.vs", "shaders/skybox.fs");
@@ -66,7 +66,7 @@ int main(int argc, char **argv)
 
     // Get the scene instance. We will add a camera and models to it
     GameScene& gs = GameScene::GetInstance();
-    gs.AddCamera(g_Camera);
+    gs.SetCamera(g_Camera);
 
     //gs.CreateDefaultScene(g_shaderProgram);
     //LoadModelsFromFile(g_shaderProgram);
