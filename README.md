@@ -1,8 +1,6 @@
-d# Shape Drawer
+# Shape Drawer
 
 Welcome to Shape Drawer, a program that allows you to view different shapes with custom movement types.
-
-TODO: Insert a screenshot / GIF of the program.
 
 ## Features
 
