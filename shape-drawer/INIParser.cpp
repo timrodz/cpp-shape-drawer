@@ -9,7 +9,6 @@
 #include "INIParser.h"
 
 #include <algorithm>
-#include <direct.h>
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -27,8 +26,7 @@ INIParser::~INIParser() {}
 bool INIParser::SaveFile()
 {
     std::ofstream file;
-    _mkdir("../Resources");
-    file.open("../Resources/SaveFile.ini");
+    file.open("resources/SaveFile.ini");
 
     string currentSection = "";
     string lastSection = currentSection;
@@ -91,7 +89,7 @@ bool INIParser::LoadFile(const char* _file)
     std::ifstream file;
     string sFile = _file;
     string line;
-    file.open("../Resources/" + sFile + ".ini");
+    file.open("resources/" + sFile + ".ini");
 
     if (file.is_open())
     {

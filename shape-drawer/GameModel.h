@@ -21,21 +21,22 @@ public:
     void Update(GLfloat _time);
     void Render();
 
+    void SetProgram(GLuint _program);
+    void SetRotation(glm::vec3 _angle);
     void SetPosition(glm::vec3 _position);
     void SetStartPosition(glm::vec3 _position);
-    void SetMovementType(MovementType _type);
     void SetScale(glm::vec3 _scale);
     void SetColour(glm::vec3 _colour);
     void SetSpeed(float _speed);
-    void SetProgram(GLuint _program);
-    void SetRotation(glm::vec3 _angle);
-    void SetRotationAxis(glm::vec3 _rotationAxis);
+    void SetMovementType(MovementType _type);
 
     glm::vec3 GetPosition() const;
     glm::vec3 GetScale() const;
     glm::vec3 GetRotation() const;
-    glm::vec3 GetRotationAxis() const;
+    glm::vec3 GetStartPosition() const;
+    MovementType GetMovementType() const;
     glm::vec3 GetColour() const;
+    float GetSpeed() const;
 
 private:
     Camera* camera;
@@ -49,8 +50,7 @@ private:
     glm::vec3 startPosition;
     glm::vec3 position;
     glm::vec3 scale;
-    glm::vec3 angle;
-    glm::vec3 rotationAxis;
+    glm::vec3 rotation;
     glm::vec3 colour;
 
     GLuint vao;

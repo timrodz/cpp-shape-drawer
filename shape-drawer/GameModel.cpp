@@ -17,15 +17,12 @@
 // return: GameModel
 GameModel::GameModel(ModelType _modelType, Camera* _camera)
 {
-    camera = _camera;
-
-    scale = glm::vec3(1.0f, 1.0f, 1.0f);
-    position = glm::vec3(0.0, 0.0, 0.0);
-    colour = glm::vec3(1.0f, 1.0f, 1.0f);
-
-    speed = 0.0f;
-    rotationAxis = glm::vec3(0.0f, 0.0f, 1.0f);
-    movementType = MovementType::Idle;
+    this->camera = _camera;
+    this->scale = glm::vec3(1.0f, 1.0f, 1.0f);
+    this->position = glm::vec3(0.0, 0.0, 0.0);
+    this->colour = glm::vec3(1.0f, 1.0f, 1.0f);
+    this->speed = 0.0f;
+    this->movementType = MovementType::Idle;
 
     switch (_modelType)
     {
@@ -107,9 +104,9 @@ void GameModel::Render()
     model = glm::translate(model, position);
 
     model = glm::translate(model, glm::vec3(0.0f * this->scale.x, 0.0f * scale.y, 0.0f));
-    model = glm::rotate(model, glm::radians(angle.x), glm::vec3(1.0, 0.0, 0.0));
-    model = glm::rotate(model, glm::radians(angle.y), glm::vec3(0.0, 1.0, 0.0));
-    model = glm::rotate(model, glm::radians(angle.z), glm::vec3(0.0, 0.0, 1.0));
+    model = glm::rotate(model, glm::radians(rotation.x), glm::vec3(1.0, 0.0, 0.0));
+    model = glm::rotate(model, glm::radians(rotation.y), glm::vec3(0.0, 1.0, 0.0));
+    model = glm::rotate(model, glm::radians(rotation.z), glm::vec3(0.0, 0.0, 1.0));
     model = glm::translate(model, glm::vec3(-0.0f * scale.x, -0.0f * scale.y, 0.0f));
 
     model = glm::scale(model, scale);
@@ -188,6 +185,26 @@ void GameModel::Update(GLfloat _currentTime)
     glutPostRedisplay();
 }
 
+// Method Name: SetProgram
+// Description: Sets the shader that this object will be rendered with
+// author: Juan Alejandro Rodriguez Morais
+// param _program: The shader type
+// return: void
+void GameModel::SetProgram(GLuint _program)
+{
+    this->program = _program;
+}
+
+// Method Name: SetPosition
+// Description: Sets the position of the object
+// author: Juan Alejandro Rodriguez Morais
+// param _position: The desired position
+// return: void
+void GameModel::SetPosition(glm::vec3 _position)
+{
+    this->position = _position;
+}
+
 // Method Name: SetScale
 // Description: Sets the scale of the object
 // author: Juan Alejandro Rodriguez Morais
@@ -205,27 +222,7 @@ void GameModel::SetScale(glm::vec3 _scale)
 // return: void
 void GameModel::SetRotation(glm::vec3 _angle)
 {
-    this->angle = _angle;
-}
-
-// Method Name: SetRotationAxis
-// Description: Sets the rotation axis of the object
-// author: Juan Alejandro Rodriguez Morais
-// param _rotationAxis: The desired rotation axis
-// return: void
-void GameModel::SetRotationAxis(glm::vec3 _rotationAxis)
-{
-    this->rotationAxis = _rotationAxis;
-}
-
-// Method Name: SetPosition
-// Description: Sets the position of the object
-// author: Juan Alejandro Rodriguez Morais
-// param _position: The desired position
-// return: void
-void GameModel::SetPosition(glm::vec3 _position)
-{
-    this->position = _position;
+    this->rotation = _angle;
 }
 
 // Method Name: SetStartPosition
@@ -256,16 +253,6 @@ void GameModel::SetColour(glm::vec3 _colour)
 void GameModel::SetSpeed(float _speed)
 {
     this->speed = _speed;
-}
-
-// Method Name: SetProgram
-// Description: Sets the shader that this object will be rendered with
-// author: Juan Alejandro Rodriguez Morais
-// param _program: The shader type
-// return: void
-void GameModel::SetProgram(GLuint _program)
-{
-    this->program = _program;
 }
 
 // Method Name: SetMovementType
@@ -301,15 +288,6 @@ glm::vec3 GameModel::GetPosition() const
     return this->position;
 }
 
-// Method Name: GetColour
-// Description: Returns the colour of the object
-// author: Juan Alejandro Rodriguez Morais
-// return: glm::vec3
-glm::vec3 GameModel::GetColour() const
-{
-    return this->colour;
-}
-
 // Method Name: GetScale
 // Description: Returns the scale of the object
 // author: Juan Alejandro Rodriguez Morais
@@ -325,14 +303,30 @@ glm::vec3 GameModel::GetScale() const
 // return: glm::vec3
 glm::vec3 GameModel::GetRotation() const
 {
-    return this->angle;
+    return this->rotation;
 }
 
-// Method Name: GetRotationAxis
-// Description: Returns the rotation axis of the object
+glm::vec3 GameModel::GetStartPosition() const
+{
+    return this->startPosition;
+}
+
+MovementType GameModel::GetMovementType() const
+{
+    return this->movementType;
+}
+
+
+// Method Name: GetColour
+// Description: Returns the colour of the object
 // author: Juan Alejandro Rodriguez Morais
 // return: glm::vec3
-glm::vec3 GameModel::GetRotationAxis() const
+glm::vec3 GameModel::GetColour() const
 {
-    return this->rotationAxis;
+    return this->colour;
+}
+
+float GameModel::GetSpeed() const
+{
+    return this->speed;
 }
