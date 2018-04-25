@@ -16,6 +16,7 @@
 #include "INIParser.h"
 
 using std::cout;
+using std::endl;
 using glm::vec3;
 
 // Classes
@@ -106,22 +107,28 @@ void Update()
             GameScene::GetInstance().ClearScene();
             GameScene::GetInstance().CreateDefaultScene(g_shaderProgram);
             anyKeyDown = true;
-            cout << "Load Default Scene" << std::endl;
+            cout << "Load Default Scene" << endl;
         }
         if (KeyCode[(unsigned char)'2'] == KeyState::Pressed)
+        {
+            GameScene::GetInstance().ClearScene();
+            LoadModelsFromFile(g_shaderProgram);
+            anyKeyDown = true;
+            cout << "Load external files" << endl;
+        }
+        if (KeyCode[(unsigned char)'3'] == KeyState::Pressed)
         {
             GameScene::GetInstance().ClearScene();
             GameScene::GetInstance().CreateDefaultScene(g_shaderProgram);
             LoadModelsFromFile(g_shaderProgram);
             anyKeyDown = true;
-            cout << "Load Default Scene w/ External files" << std::endl;
+            cout << "Load default scene with external files" << endl;
         }
         if (KeyCode[(unsigned char)'r'] == KeyState::Pressed || KeyCode[(unsigned char)'R'] == KeyState::Pressed)
         {
             GameScene::GetInstance().ClearScene();
-            LoadModelsFromFile(g_shaderProgram);
             anyKeyDown = true;
-            cout << "Scene reloaded" << std::endl;
+            cout << "Scene cleared" << endl;
         }
     }
 }
@@ -129,20 +136,24 @@ void Update()
 void KeyDown(unsigned char key, int x, int y)
 {
     KeyCode[key] = KeyState::Pressed;
-    cout << "Key pressed: " << key << "\n";
+    cout << "Key pressed: " << key << endl;
 }
 
 void KeyUp(unsigned char key, int x, int y)
 {
     KeyCode[key] = KeyState::Released;
     anyKeyDown = false;
-    cout << "Key Released: " << key << "\n";
+    cout << "Key Released: " << key << endl;
 }
 
 void LoadModelsFromFile(GLuint _shaderProgram)
 {
     INIParser parser;
-    parser.LoadIniFile("shapes");
+    if (!parser.LoadIniFile("shapes"))
+    {
+        cout << "ERROR: shapes.ini is empty" << endl;
+        return;
+    }
 
     std::string line = "";
 
@@ -170,6 +181,10 @@ void LoadModelsFromFile(GLuint _shaderProgram)
         colour = Utils::RGBtoAlpha(colour.r, colour.g, colour.b);
 
         // Position
+        parser.GetStringValue(shape, "Scale", line);
+        glm::vec3 scale = Utils::GetVector3(line);
+
+        // Position
         parser.GetStringValue(shape, "Position", line);
         glm::vec3 position = Utils::GetVector3(line);
 
@@ -182,7 +197,7 @@ void LoadModelsFromFile(GLuint _shaderProgram)
         parser.GetFloatValue(shape, "Speed", speed);
 
         // Build the model
-        GameScene::GetInstance().CreateModel(mod, mov, _shaderProgram, texture, colour, position, rotation, speed);
+        GameScene::GetInstance().CreateModel(mod, mov, _shaderProgram, texture, colour, scale, position, rotation, speed);
     }
 
 }

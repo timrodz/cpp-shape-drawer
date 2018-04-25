@@ -104,6 +104,11 @@ bool INIParser::LoadIniFile(const char* _file)
             // Find the section
             std::getline(file, line);
 
+            if (line.empty())
+            {
+                return false;
+            }
+
             if (line.at(0) == '[' && line.at(line.length() - 1) == ']')
             {
                 std::size_t findSectionStart = line.find("[");
