@@ -76,8 +76,8 @@ Texture = string (Use NULL if you do not want to use a texture)
 Colour = (x, y, z) (int/float/double values are valid)
 Scale = (x, y, z) (int/float/double values are valid)
 Position = (x, y, z) (int/float/double values are valid)
-Rotation = (x, y, z) (int/float/double values are vali)]
-Speed = float value (Recommended: [0.05f for non-circular movement], [3-5 for circular movement])
+Rotation = (x, y, z) (int/float/double values are valid]
+Speed = float value (Use low values)
 [shapeN+1] (N is the number of the shape)
 ```
 

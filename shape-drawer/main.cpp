@@ -3,7 +3,7 @@
 //  Author: Juan Alejandro Rodriguez Morais
 //  Email: timrodz@icloud.com
 //
-// 
+//  Handles the main logic of the program
 //
 
 #include <iostream>
@@ -15,24 +15,30 @@
 #include "Cubemap.h"
 #include "INIParser.h"
 
+/* Avoid repetition of common code */
 using std::cout;
 using std::endl;
 using glm::vec3;
 
-// Classes
+/* Global variables (Scope is this file) */
+unsigned char KeyCode[255];
+bool anyKeyDown;
 ShaderLoader g_ShaderLoader;
 GLuint g_shaderProgram;
 Camera* g_Camera;
 Cubemap* g_Skybox;
 
+/* Functions */
 void Render();
 void Update();
 void KeyDown(unsigned char key, int x, int y);
 void KeyUp(unsigned char key, int x, int y);
-void LoadModelsFromFile(GLuint _shaderProgram);
-unsigned char KeyCode[255];
-bool anyKeyDown;
+void LoadModelsFromFile();
 
+// Method Name: main
+// Description: The main program entry loop
+// author: Juan Alejandro Rodriguez Morais
+// return: int
 int main(int argc, char **argv)
 {
     // Initialise Glut
@@ -41,14 +47,15 @@ int main(int argc, char **argv)
     glutInitWindowPosition(GLUT_WINDOW_WIDTH / 2, GLUT_WINDOW_HEIGHT / 2);
     glutInitWindowSize(Utils::WIDTH, Utils::HEIGHT);
     glutCreateWindow("PikPok Competency Test - Juan Rodriguez");
-
-    glClearColor(1.0f, 0.0f, 0.0f, 1.0f);               // Set background color to black and opaque
+    
+    // Initialise OpenGL
     glClearDepth(1.0f);                                 // Set background depth to farthest
     glEnable(GL_DEPTH_TEST);                            // Enable depth testing for z-culling
     glDepthFunc(GL_LEQUAL);                             // Set the type of depth-test
     glShadeModel(GL_SMOOTH);                            // Enable smooth shading
     glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);  // Nice perspective corrections
-
+    
+    // Initialise Glew
     glewInit();
 
     // Initialise the box movement index (Utils)
@@ -57,49 +64,59 @@ int main(int argc, char **argv)
     // Initialise the global camera at (0, 0, 10)
     g_Camera = new Camera(vec3(0, 0, 10), 45.0f, Utils::WIDTH, Utils::HEIGHT);
 
-    // Skybox
+    // Create the Cubemap
     GLuint cubemapProgram = g_ShaderLoader.CreateProgram("shaders/skybox.vs", "shaders/skybox.fs");
     g_Skybox = new Cubemap(cubemapProgram, g_Camera);
 
-    // Default shader program, most objects will use it.
+    // Create default shader program, most objects will use it.
     g_shaderProgram = g_ShaderLoader.CreateProgram("shaders/unlit.vs", "shaders/unlit.fs");
 
     // Get the scene instance. We will add a camera and models to it
-    GameScene& gs = GameScene::GetInstance();
-    gs.SetCamera(g_Camera);
-
+    GameScene::GetInstance().SetCamera(g_Camera);
+    GameScene::GetInstance().SetCubemap(g_Skybox);
+    
+    //
     //gs.CreateDefaultScene(g_shaderProgram);
-    //LoadModelsFromFile(g_shaderProgram);
+    //LoadModelsFromFile();
 
     // Main loop functions
     glutDisplayFunc(Render);
     glutKeyboardFunc(KeyDown);
     glutKeyboardUpFunc(KeyUp);
     glutIdleFunc(Update);
-
+    
+    // Run the main Glut loop
     glutMainLoop();
 
     return (EXIT_SUCCESS);
 }
 
+// Method Name: Render
+// Description: Handles the main rendering logic
+// author: Juan Alejandro Rodriguez Morais
+// return: void
 void Render()
 {
     glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    g_Skybox->Render();
     GameScene::GetInstance().Render();
 
     glutSwapBuffers();
 }
 
+// Method Name: Update
+// Description: Handles the main update logic
+// author: Juan Alejandro Rodriguez Morais
+// return: void
 void Update()
 {
     GLfloat deltaTime = (GLfloat) glutGet(GLUT_ELAPSED_TIME);
     deltaTime *= 0.001f;
 
     GameScene::GetInstance().Update(deltaTime);
-
+    
+    // Handle key inputs (Menu)
     if (!anyKeyDown)
     {
         if (KeyCode[(unsigned char)'1'] == KeyState::Pressed)
@@ -133,12 +150,20 @@ void Update()
     }
 }
 
+// Method Name: KeyDown
+// Description: Handles key state when a key is pressed
+// author: Juan Alejandro Rodriguez Morais
+// return: void
 void KeyDown(unsigned char key, int x, int y)
 {
     KeyCode[key] = KeyState::Pressed;
     cout << "Key pressed: " << key << endl;
 }
 
+// Method Name: KeyUp
+// Description: Handles key state when a key is released
+// author: Juan Alejandro Rodriguez Morais
+// return: void
 void KeyUp(unsigned char key, int x, int y)
 {
     KeyCode[key] = KeyState::Released;
@@ -146,7 +171,11 @@ void KeyUp(unsigned char key, int x, int y)
     cout << "Key Released: " << key << endl;
 }
 
-void LoadModelsFromFile(GLuint _shaderProgram)
+// Method Name: LoadModelsFromFile
+// Description: Loads the shapes.ini file and creates models based on the settings input there
+// author: Juan Alejandro Rodriguez Morais
+// return: void
+void LoadModelsFromFile()
 {
     INIParser parser;
     if (!parser.LoadIniFile("shapes"))
@@ -197,7 +226,7 @@ void LoadModelsFromFile(GLuint _shaderProgram)
         parser.GetFloatValue(shape, "Speed", speed);
 
         // Build the model
-        GameScene::GetInstance().CreateModel(mod, mov, _shaderProgram, texture, colour, scale, position, rotation, speed);
+        GameScene::GetInstance().CreateModel(mod, mov, g_shaderProgram, texture, colour, scale, position, rotation, speed);
     }
 
 }

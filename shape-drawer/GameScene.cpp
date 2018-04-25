@@ -1,9 +1,9 @@
 //
-//  File Name: 
+//  File Name: GameScene.cpp
 //  Author: Juan Alejandro Rodriguez Morais
 //  Email: timrodz@icloud.com
 //
-// 
+//  Renders and updates objects inside the scene.
 //
 
 #include "GameScene.h"
@@ -38,6 +38,16 @@ void GameScene::SetCamera(Camera* _camera)
     this->camera = _camera;
 }
 
+// Method Name: SetCubemap
+// Description: Sets the main cubemap of the scene
+// author: Juan Alejandro Rodriguez Morais
+// param _cubemap: The main cubemap to show at the scene
+// return: void
+void GameScene::SetCubemap(Cubemap* _cubemap)
+{
+    this->cubemap = _cubemap;
+}
+
 // Method Name: CreateModel
 // Description: Creates a model based on user defined parameters
 // author: Juan Alejandro Rodriguez Morais
@@ -66,15 +76,12 @@ void GameScene::CreateModel(
     GameModel* tempModel = new GameModel(_model, this->camera);
     tempModel->SetProgram(_program);
     tempModel->SetMovementType(_movement);
+    tempModel->SetTexture(_texture);
     tempModel->SetColor(_colour);
     tempModel->SetScale(_scale);
     tempModel->SetPosition(_position);
     tempModel->SetRotation(_rotation);
     tempModel->SetSpeed(_speed);
-    if (_texture != "" || _texture != "NULL")
-    {
-        tempModel->SetTexture(_texture);
-    }
     gameModelVector.push_back(tempModel);
 }
 
@@ -95,6 +102,8 @@ std::vector<GameModel*> GameScene::GetModels() const
 // return: 
 void GameScene::Render()
 {
+    cubemap->Render();
+    
     for (auto it = gameModelVector.begin(); it < gameModelVector.end(); it++)
     {
         (*it)->Render();
@@ -107,7 +116,7 @@ void GameScene::Render()
 // param: 
 // return: 
 void GameScene::Update(float _deltaTime)
-{
+{   
     for (auto it = gameModelVector.begin(); it < gameModelVector.end(); it++)
     {
         (*it)->Update(_deltaTime);

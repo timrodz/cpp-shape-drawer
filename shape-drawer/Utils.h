@@ -138,16 +138,21 @@ class Utils
 public:
     const static int WIDTH = 1280;
     const static int HEIGHT = 720;
-
     const static int VERTICAL_LIMIT = 2;
     const static int HORIZONTAL_LIMIT = 2;
     const static int CIRCULAR_RADIUS = 1;
-    static int movementIndex;
+    
     static glm::vec3 BoxPositions[];
     static int GetBoxPositionLength();
+    static int movementIndex;
 
+    static void ToLower(std::string& _string);
     static glm::vec3 RGBtoAlpha(float _r, float _g, float _b);
     static glm::vec3 MoveTowards(glm::vec3 _currentPosition, glm::vec3 _targetPosition, float _maxDistanceDelta);
+
+    static ModelType GetModelType(std::string _string);
+    static MovementType GetMovementType(std::string _string);
+    static glm::vec3 GetVector3(std::string _string);
 
     static void SetSquareData(std::vector<VertexFormat>& _vertices, std::vector<GLuint>& _indices);
     static void SetTriangleData(std::vector<VertexFormat>& _vertices, std::vector<GLuint>& _indices);
@@ -156,12 +161,6 @@ public:
     static void SetCubeData(std::vector<VertexFormat>& _vertices, std::vector<GLuint>& _indices);
     static void SetPentagonData(std::vector<VertexFormat>& _vertices, std::vector<GLuint>& _indices);
     static void SetHeptagonData(std::vector<VertexFormat>& _vertices, std::vector<GLuint>& _indices);
-
-    static void ToLower(std::string& _string);
-
-    static ModelType GetModelType(std::string _string);
-    static MovementType GetMovementType(std::string _string);
-    static glm::vec3 GetVector3(std::string _string);
 
 private:
     static void SetPolygonData(std::vector<VertexFormat>& _vertices, std::vector<GLuint>&_indices, int _polygonCount);

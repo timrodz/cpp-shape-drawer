@@ -1,19 +1,20 @@
 //
-//  File Name: 
+//  File Name: GameModel.cpp
 //  Author: Juan Alejandro Rodriguez Morais
 //  Email: timrodz@icloud.com
 //
-// 
+//  Handles the main logic for GameModel drawing, updating and their creation
 //
 
 #include "GameModel.h"
 #include "Camera.h"
 
-// Method Name: 
-// Description: 
+// Method Name: GameModel
+// Description: Constructor for the GameModel
 // author: Juan Alejandro Rodriguez Morais
-// param: 
-// return: 
+// param _modelType: The type of model to create
+// param _camera: The camera that will render the model
+// return: GameModel
 GameModel::GameModel(ModelType _modelType, Camera* _camera)
 {
     camera = _camera;
@@ -25,10 +26,6 @@ GameModel::GameModel(ModelType _modelType, Camera* _camera)
     speed = 0.0f;
     rotationAxis = glm::vec3(0.0f, 0.0f, 1.0f);
     m_MovementType = MovementType::Idle;
-
-    //glEnable(GL_DEPTH_TEST);
-    //glDepthMask(GL_FALSE);//if enabled, disables writing to depth
-    //glDepthFunc(GL_LESS);//passes if the fragment depth value is less than stored depth value
 
     switch (_modelType)
     {
@@ -80,8 +77,6 @@ GameModel::GameModel(ModelType _modelType, Camera* _camera)
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * indices.size(), &indices[0], GL_STATIC_DRAW);
 
-    //this->SetTexture(texFileName);
-
     // Position
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(VertexFormat), (GLvoid*)0);
@@ -100,58 +95,10 @@ GameModel::GameModel(ModelType _modelType, Camera* _camera)
 
 GameModel::~GameModel() {}
 
-// Method Name: 
-// Description: 
+// Method Name: Render
+// Description: Draws the model based on its settings
 // author: Juan Alejandro Rodriguez Morais
-// param: 
-// return: 
-void GameModel::Update(GLfloat _currentTime)
-{
-    switch (m_MovementType)
-    {
-        case (MovementType::UpDown):
-        {
-            position += direction * speed;
-            if (position.y >= (startPosition.y + Utils::VERTICAL_LIMIT) || position.y <= (startPosition.y - Utils::VERTICAL_LIMIT))
-            {
-                direction *= -1;
-            }
-        }
-        break;
-        case (MovementType::LeftRight):
-        {
-            position += direction * speed;
-            if (position.x >= (startPosition.x + Utils::HORIZONTAL_LIMIT) || position.x <= (startPosition.x - Utils::HORIZONTAL_LIMIT))
-            {
-                direction *= -1;
-            }
-        }
-        break;
-        case (MovementType::Circular):
-        {
-            position.x = (Utils::CIRCULAR_RADIUS * cos(_currentTime * speed) + startPosition.x);
-            position.y = (Utils::CIRCULAR_RADIUS * sin(_currentTime * speed) + startPosition.y);
-        }
-        break;
-        case (MovementType::Box):
-        {
-            position = Utils::MoveTowards(position, startPosition + Utils::BoxPositions[Utils::movementIndex], speed);
-
-            if (position == (startPosition + Utils::BoxPositions[Utils::movementIndex]))
-            {
-                Utils::movementIndex = (Utils::movementIndex + 1) % (Utils::GetBoxPositionLength());
-            }
-        }
-        break;
-    }
-    glutPostRedisplay();
-}
-
-// Method Name: 
-// Description: 
-// author: Juan Alejandro Rodriguez Morais
-// param: 
-// return: 
+// return: void
 void GameModel::Render()
 {
     glUseProgram(this->program);
@@ -201,36 +148,74 @@ void GameModel::Render()
     GLuint cameraPosLoc = glGetUniformLocation(program, "viewPosition");
     glUniform3f(cameraPosLoc, camera->GetPosition().x, camera->GetPosition().y, camera->GetPosition().z);
 
-    /*GLuint lightPosLoc = glGetUniformLocation(program, "lightPosition");
-    glUniform3f(lightPosLoc, this->light->GetPosition().x, this->light->GetPosition().y, this->light->GetPosition().z);
-
-    GLuint lightColorLoc = glGetUniformLocation(program, "lightColor");
-    glUniform3f(lightColorLoc, this->light->GetColor().x, this->light->GetColor().y, this->light->GetColor().z);*/
-
-    /*GLuint specularStrengthLoc = glGetUniformLocation(program, "specularStrength");
-    glUniform1f(specularStrengthLoc, specularStrength);
-
-    GLuint ambientStrengthLoc = glGetUniformLocation(program, "ambientStrength");
-    glUniform1f(ambientStrengthLoc, ambientStrength);*/
-
     glBindVertexArray(vao);
     glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
 }
 
-// Method Name: 
-// Description: 
+// Method Name: Update
+// Description: Updates the model based on current time
 // author: Juan Alejandro Rodriguez Morais
-// return: 
+// param _currentTime: The elapsed time since start TODO: Check if this is correct
+// return: void
+void GameModel::Update(GLfloat _currentTime)
+{
+    switch (m_MovementType)
+    {
+        case (MovementType::UpDown):
+        {
+            position += direction * speed;
+            if (position.y >= (startPosition.y + Utils::VERTICAL_LIMIT) || position.y <= (startPosition.y - Utils::VERTICAL_LIMIT))
+            {
+                direction *= -1;
+            }
+        }
+        break;
+        case (MovementType::LeftRight):
+        {
+            position += direction * speed;
+            if (position.x >= (startPosition.x + Utils::HORIZONTAL_LIMIT) || position.x <= (startPosition.x - Utils::HORIZONTAL_LIMIT))
+            {
+                direction *= -1;
+            }
+        }
+        break;
+        case (MovementType::Circular):
+        {
+            position.x = (Utils::CIRCULAR_RADIUS * cos(_currentTime * speed) + startPosition.x);
+            position.y = (Utils::CIRCULAR_RADIUS * sin(_currentTime * speed) + startPosition.y);
+        }
+        break;
+        case (MovementType::Box):
+        {
+            position = Utils::MoveTowards(position, startPosition + Utils::BoxPositions[Utils::movementIndex], speed);
+
+            if (position == (startPosition + Utils::BoxPositions[Utils::movementIndex]))
+            {
+                Utils::movementIndex = (Utils::movementIndex + 1) % (Utils::GetBoxPositionLength());
+            }
+        }
+        break;
+    }
+    
+    glutPostRedisplay();
+}
+
+// TODO: Check if it works or just remove
+// Method Name: Rotate
+// Description: Rotates the object around its rotation axis
+// author: Juan Alejandro Rodriguez Morais
+// return: void
 void GameModel::Rotate()
 {
     this->angle += (this->rotationAxis * speed);
 }
 
-// Method Name: 
-// Description: 
+// Method Name: SetTexture
+// Description: Sets and binds the model's texture
 // author: Juan Alejandro Rodriguez Morais
-// return: 
+// param _texture: The texture file to use
+// return: void
 void GameModel::SetTexture(std::string _textureFile)
 {
     glGenTextures(1, &texture);
@@ -239,91 +224,108 @@ void GameModel::SetTexture(std::string _textureFile)
     // Set texture wrapping to GL_REPEAT (usually basic wrapping method)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    
     // Set texture filtering parameters
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-    // Load image, create texture and generate mipmaps
-    int width, height;
-    unsigned char* image = SOIL_load_image(_textureFile.c_str(), &width, &height, 0, SOIL_LOAD_RGB);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
-    glGenerateMipmap(GL_TEXTURE_2D);
-    SOIL_free_image_data(image);
-    glBindTexture(GL_TEXTURE_2D, 0);
-
-    printf("fileName %s \n", _textureFile.c_str());
+    
+    // No texture - Load a 1x1 Image to only display the colour
+    if (_textureFile == "" || _textureFile == "NULL")
+    {
+        GLubyte data[] = { 255, 255, 255, 255 };
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+    }
+    // Texture is set
+    else 
+    {
+        // Load image, create texture and generate mipmaps
+        int width, height;
+        unsigned char* image = SOIL_load_image(_textureFile.c_str(), &width, &height, 0, SOIL_LOAD_RGB);
+        glGenerateMipmap(GL_TEXTURE_2D);
+        SOIL_free_image_data(image);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+        glBindTexture(GL_TEXTURE_2D, 0);
+    }
 
     isTextureSet = true;
 }
 
-// Method Name: 
-// Description: 
+// Method Name: SetScale
+// Description: Sets the scale of the object
 // author: Juan Alejandro Rodriguez Morais
-// return: 
+// param _scale: The desired scale
+// return: void
 void GameModel::SetScale(glm::vec3 _scale)
 {
     this->scale = _scale;
 }
 
-// Method Name: 
-// Description: 
+// Method Name: SetRotation
+// Description: Sets the rotation (euler angles) of the object
 // author: Juan Alejandro Rodriguez Morais
-// return: 
-void GameModel::SetRotation(glm::vec3 angle)
+// param _angle: The desired angle
+// return: void
+void GameModel::SetRotation(glm::vec3 _angle)
 {
-	this->angle = angle;
+	this->angle = _angle;
 }
 
-// Method Name: 
-// Description: 
+// Method Name: SetRotationAxis
+// Description: Sets the rotation axis of the object
 // author: Juan Alejandro Rodriguez Morais
-// return: 
+// param _rotationAxis: The desired rotation axis
+// return: void
 void GameModel::SetRotationAxis(glm::vec3 _rotationAxis)
 {
 	this->rotationAxis = _rotationAxis;
 }
 
-// Method Name: 
-// Description: 
+// Method Name: SetPosition
+// Description: Sets the position of the object
 // author: Juan Alejandro Rodriguez Morais
-// return: 
+// param _position: The desired position
+// return: void
 void GameModel::SetPosition(glm::vec3 _position)
 {
     this->position = _position;
-    this->startPosition = this->position;
+    this->startPosition = this->position; // TODO: Separate start position to another method
 }
 
-// Method Name: 
-// Description: 
+// Method Name: SetColour
+// Description: Sets the colour of the object (ALPHA values)
 // author: Juan Alejandro Rodriguez Morais
-// return: 
-void GameModel::SetColor(glm::vec3 _color)
+// param _colour: The desired color
+// return: void
+void GameModel::SetColor(glm::vec3 _colour)
 {
-    this->colour = _color;
+    this->colour = _colour;
 }
 
-// Method Name: 
-// Description: 
+// Method Name: SetSpeed
+// Description: Sets the speed of the object
 // author: Juan Alejandro Rodriguez Morais
-// return: 
+// param _speed: The desired speed
+// return: void
 void GameModel::SetSpeed(float _speed)
 {
     this->speed = _speed;
 }
 
-// Method Name: 
-// Description: 
+// Method Name: SetProgram
+// Description: Sets the shader that this object will be rendered with
 // author: Juan Alejandro Rodriguez Morais
-// return: 
+// param _program: The shader type
+// return: void
 void GameModel::SetProgram(GLuint _program)
 {
     this->program = _program;
 }
 
-// Method Name: 
-// Description: 
+// Method Name: SetMovementType
+// Description: Sets the movement type and direction accordingly
 // author: Juan Alejandro Rodriguez Morais
-// return: 
+// param _type: The type of movement
+// return: void
 void GameModel::SetMovementType(MovementType _type)
 {
     m_MovementType = _type;
@@ -343,46 +345,46 @@ void GameModel::SetMovementType(MovementType _type)
     }
 }
 
-// Method Name: 
-// Description: 
+// Method Name: GetPosition
+// Description: Returns the current position of the object
 // author: Juan Alejandro Rodriguez Morais
-// return: 
+// return: glm::vec3
 glm::vec3 GameModel::GetPosition() const
 {
     return this->position;
 }
 
-// Method Name: 
-// Description: 
+// Method Name: GetColour
+// Description: Returns the colour of the object
 // author: Juan Alejandro Rodriguez Morais
-// return: 
+// return: glm::vec3
 glm::vec3 GameModel::GetColour() const
 {
     return this->colour;
 }
 
-// Method Name: 
-// Description: 
+// Method Name: GetScale
+// Description: Returns the scale of the object
 // author: Juan Alejandro Rodriguez Morais
-// return: 
+// return: glm::vec3
 glm::vec3 GameModel::GetScale() const
 {
     return this->scale;
 }
 
-// Method Name: 
-// Description: 
+// Method Name: GetRotation
+// Description: Returns the rotation of the object
 // author: Juan Alejandro Rodriguez Morais
-// return: 
+// return: glm::vec3
 glm::vec3 GameModel::GetRotation() const
 {
     return this->angle;
 }
 
-// Method Name: 
-// Description: 
+// Method Name: GetRotationAxis
+// Description: Returns the rotation axis of the object
 // author: Juan Alejandro Rodriguez Morais
-// return: 
+// return: glm::vec3
 glm::vec3 GameModel::GetRotationAxis() const
 {
 	return this->rotationAxis;
