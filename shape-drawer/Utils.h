@@ -46,8 +46,7 @@ enum ModelType
     Hexagon = 3,
     Cube = 4,
     Pentagon = 5,
-    Heptagon = 6,
-    Sphere = 7
+    Heptagon = 6
 };
 
 enum MovementType
@@ -137,24 +136,29 @@ public:
     const static int VERTICAL_LIMIT = 2;
     const static int HORIZONTAL_LIMIT = 2;
     const static int CIRCULAR_RADIUS = 1;
-	static glm::vec3 BOX_POSITIONS[];
     static int movementIndex;
+    static glm::vec3 BoxPositions[];
+    static int GetBoxPositionLength();
 
     static glm::vec3 RGBtoAlpha(int _r, int _g, int _b);
     static glm::vec3 MoveTowards(glm::vec3 _currentPosition, glm::vec3 _targetPosition, float _maxDistanceDelta);
-    
+
     static void SetSquareData(std::vector<VertexFormat>& _vertices, std::vector<GLuint>& _indices);
     static void SetTriangleData(std::vector<VertexFormat>& _vertices, std::vector<GLuint>& _indices);
-	static void SetCircleData(std::vector<VertexFormat>& _vertices, std::vector<GLuint>& _indices);
-	static void SetHexagonData(std::vector<VertexFormat>& _vertices, std::vector<GLuint>& _indices);
+    static void SetCircleData(std::vector<VertexFormat>& _vertices, std::vector<GLuint>& _indices);
+    static void SetHexagonData(std::vector<VertexFormat>& _vertices, std::vector<GLuint>& _indices);
     static void SetCubeData(std::vector<VertexFormat>& _vertices, std::vector<GLuint>& _indices);
     static void SetPentagonData(std::vector<VertexFormat>& _vertices, std::vector<GLuint>& _indices);
     static void SetHeptagonData(std::vector<VertexFormat>& _vertices, std::vector<GLuint>& _indices);
-    // TODO: Remove sphere
-    static void SetSphereData(std::vector<VertexFormat>& _vertices, std::vector<GLuint>& _indices);
+
+    static void ToLower(std::string& _string);
+
+    static ModelType GetModelType(std::string _string);
+    static MovementType GetMovementType(std::string _string);
+    static glm::vec3 GetVector3(std::string _string);
 
 private:
-	static void SetPolygonData(std::vector<VertexFormat>& _vertices, std::vector<GLuint>&_indices, int _polygonCount);
+    static void SetPolygonData(std::vector<VertexFormat>& _vertices, std::vector<GLuint>&_indices, int _polygonCount);
 };
 
 /// File header
@@ -167,8 +171,8 @@ private:
 //
 
 /// Method header
-// Method Name:
-// Description:
+// Method Name: 
+// Description: 
 // author: Juan Alejandro Rodriguez Morais
-// param:
-// return:
+// param: 
+// return: 
