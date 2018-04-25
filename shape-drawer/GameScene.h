@@ -4,6 +4,8 @@
 //  Email: timrodz@icloud.com
 //
 //  Header file for the GameScene class
+//  The GameScene is a singleton, to use:
+//  GameScene::GetInstance() will return the existing instance.
 //
 
 #pragma once
@@ -14,7 +16,8 @@
 #include "Camera.h"
 #include "Cubemap.h"
 
-class GameScene {
+class GameScene
+{
 public:
     virtual ~GameScene();
     static GameScene& GetInstance();

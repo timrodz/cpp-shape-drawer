@@ -21,50 +21,56 @@ glm::vec3 Utils::BoxPositions[] = {
     glm::vec3(0, 0, 0)
 };
 
-// Method Name:
-// Description:
+// Method Name: GetBoxPositionsLength
+// Description: Returns the length of the BoxPositions array
 // author: Juan Alejandro Rodriguez Morais
-// param:
 // return: int
-int Utils::GetBoxPositionLength()
+int Utils::GetBoxPositionsLength()
 {
-    return sizeof(BoxPositions) / sizeof(BoxPositions[0]);
+    return (sizeof(BoxPositions) / sizeof(BoxPositions[0]));
 }
 
-// Method Name:
-// Description:
+// Method Name: RGBtoAlpha
+// Description: Creates an Alpha colour (0-1) based off an RGB value
 // author: Juan Alejandro Rodriguez Morais
-// param:
-// return:
+// param _r: The red colour channel
+// param _g: The green colour channel
+// param _b: The blue colour channel
+// return: glm::vec3
 glm::vec3 Utils::RGBtoAlpha(float _r, float _g, float _b)
 {
     return glm::vec3((float) _r / 255, (float) _g / 255, (float) _b / 255);
 }
 
-// Method Name: 
-// Description: 
+// Method Name: MoveTowards
+// Description: Moves a vector towards a desired target in a given time
 // author: Juan Alejandro Rodriguez Morais
-// param: 
+// param _currentPosition: The current vector
+// param _targetPosition: The target vector
+// param _distance: The distance delta
 // return: glm::vec3
-glm::vec3 Utils::MoveTowards(glm::vec3 _currentPosition, glm::vec3 _targetPosition, float _maxDistanceDelta)
+glm::vec3 Utils::MoveTowards(glm::vec3 _currentPosition, glm::vec3 _targetPosition, float _distance)
 {
-    glm::vec3 a = _targetPosition - _currentPosition;
-    float magnitude = glm::length(a); // Length of vector (http://glm.g-truc.net/0.9.8/api/a00148.html#ga18d45e3d4c7705e67ccfabd99e521604)
+    glm::vec3 vector = _targetPosition - _currentPosition;
 
-    if (magnitude <= _maxDistanceDelta || magnitude == 0.0f)
+    // Length of vector (http://glm.g-truc.net/0.9.8/api/a00148.html#ga18d45e3d4c7705e67ccfabd99e521604)
+    float magnitude = glm::length(vector);
+
+    if (magnitude <= _distance || magnitude == 0.0f)
     {
         return _targetPosition;
     }
 
-    return (_currentPosition + a / magnitude * _maxDistanceDelta);
+    return (_currentPosition + vector / magnitude * _distance);
 }
 
 #pragma region DataFill
 
-// Method Name:
-// Description:
+// Method Name: SetSquareData
+// Description: Populates vertex format and index data for a square
 // author: Juan Alejandro Rodriguez Morais
-// param:
+// param _vertices: The VertexFormat structure
+// param _indices: The GLuint index structure
 // return: void
 void Utils::SetSquareData(std::vector<VertexFormat>& _vertices, std::vector<GLuint>& _indices)
 {
@@ -85,10 +91,11 @@ void Utils::SetSquareData(std::vector<VertexFormat>& _vertices, std::vector<GLui
     _indices = Indices;
 }
 
-// Method Name: 
-// Description: 
+// Method Name: SetTriangleData
+// Description: Populates vertex format and index data for a triangle
 // author: Juan Alejandro Rodriguez Morais
-// param: 
+// param _vertices: The VertexFormat structure
+// param _indices: The GLuint index structure
 // return: void
 void Utils::SetTriangleData(std::vector<VertexFormat>& vertices, std::vector<GLuint>&indices)
 {
@@ -110,30 +117,33 @@ void Utils::SetTriangleData(std::vector<VertexFormat>& vertices, std::vector<GLu
     indices = Indices;
 }
 
-// Method Name: 
-// Description: 
+// Method Name: SetCircleData
+// Description: Populates vertex format and index data for a circle
 // author: Juan Alejandro Rodriguez Morais
-// param: 
+// param _vertices: The VertexFormat structure
+// param _indices: The GLuint index structure
 // return: void
 void Utils::SetCircleData(std::vector<VertexFormat>& _vertices, std::vector<GLuint>& _indices)
 {
     Utils::SetPolygonData(_vertices, _indices, 30);
 }
 
-// Method Name: 
-// Description: 
+// Method Name: SethexagonData
+// Description: Populates vertex format and index data for a hexagon
 // author: Juan Alejandro Rodriguez Morais
-// param: 
+// param _vertices: The VertexFormat structure
+// param _indices: The GLuint index structure
 // return: void
 void Utils::SetHexagonData(std::vector<VertexFormat>& _vertices, std::vector<GLuint>& _indices)
 {
     Utils::SetPolygonData(_vertices, _indices, 6);
 }
 
-// Method Name: 
-// Description: 
+// Method Name: SetCubeData
+// Description: Populates vertex format and index data for a cube
 // author: Juan Alejandro Rodriguez Morais
-// param: 
+// param _vertices: The VertexFormat structure
+// param _indices: The GLuint index structure
 // return: void
 void Utils::SetCubeData(std::vector<VertexFormat>& _vertices, std::vector<GLuint>& _indices)
 {
@@ -200,20 +210,22 @@ void Utils::SetCubeData(std::vector<VertexFormat>& _vertices, std::vector<GLuint
     _indices = Indices;
 }
 
-// Method Name: 
-// Description: 
+// Method Name: SetPentagonData
+// Description: Populates vertex format and index data for a pentagon
 // author: Juan Alejandro Rodriguez Morais
-// param: 
-// return: 
+// param _vertices: The VertexFormat structure
+// param _indices: The GLuint index structure
+// return: void
 void Utils::SetPentagonData(std::vector<VertexFormat>& _vertices, std::vector<GLuint>& _indices)
 {
     Utils::SetPolygonData(_vertices, _indices, 5);
 }
 
-// Method Name: 
-// Description: 
+// Method Name: SetHeptagonData
+// Description: Populates vertex format and index data for a heptagon
 // author: Juan Alejandro Rodriguez Morais
-// param: 
+// param _vertices: The VertexFormat structure
+// param _indices: The GLuint index structure
 // return: void
 void Utils::SetHeptagonData(std::vector<VertexFormat>& _vertices, std::vector<GLuint>& _indices)
 {
@@ -287,12 +299,23 @@ void Utils::SetPolygonData(std::vector<VertexFormat>& _vertices, std::vector<GLu
 }
 #pragma endregion
 
-void Utils::ToLower(std::string & _string)
+// Method Name: ToLower
+// Description: Converts a string to lowercase
+// This is useful for comparing strings
+// author: Juan Alejandro Rodriguez Morais
+// param _string: The string to convert
+// return: void
+void Utils::ToLower(std::string& _string)
 {
     std::transform(_string.begin(), _string.end(), _string.begin(), ::tolower);
 }
 
-ModelType Utils::GetModelType(std::string _string)
+// Method Name: GetModelTypeFromString
+// Description: Returns a model type based on a given string
+// author: Juan Alejandro Rodriguez Morais
+// param _string: The string that contains the text
+// return: ModelType
+ModelType Utils::GetModelTypeFromString(std::string _string)
 {
     ToLower(_string);
 
@@ -307,7 +330,12 @@ ModelType Utils::GetModelType(std::string _string)
     return ModelType::Triangle;
 }
 
-MovementType Utils::GetMovementType(std::string _string)
+// Method Name: GetMovementTypeFromString
+// Description: Returns a movement type based on a given string
+// author: Juan Alejandro Rodriguez Morais
+// param _string: The string that contains the text
+// return: MovementType
+MovementType Utils::GetMovementTypeFromString(std::string _string)
 {
     ToLower(_string);
 
@@ -320,10 +348,16 @@ MovementType Utils::GetMovementType(std::string _string)
     return MovementType::Idle;
 }
 
-glm::vec3 Utils::GetVector3(std::string _string)
+// Method Name: GetVector3FromString
+// Description: Returns a vector3 based on a given string
+// It must follow this format: (x, y, z)
+// author: Juan Alejandro Rodriguez Morais
+// param _string: The string that contains the text
+// return: glm::vec3
+glm::vec3 Utils::GetVector3FromString(std::string _string)
 {
     float x, y, z;
-    
+
     std::size_t first = _string.find("(");
     std::size_t second = _string.find(",");
     std::string tempStr = _string.substr(first + 1, second - 1);

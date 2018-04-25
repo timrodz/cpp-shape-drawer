@@ -21,7 +21,7 @@
 // GLUT
 #include <freeglut\freeglut.h>
 
-// SOIL - TODO: remove
+// SOIL
 #include <soil\SOIL.h>
 
 // MATH
@@ -118,18 +118,6 @@ struct VertexFormat
 
     VertexFormat() {}
 };
-
-struct IndexFormat
-{
-    int x, y, z;
-
-    IndexFormat(int _x, int _y, int _z)
-    {
-        x = _x; y = _y; z = _z;
-    }
-
-    IndexFormat() {}
-};
 #pragma endregion
 
 /* Utilities class */
@@ -141,18 +129,18 @@ public:
     const static int VERTICAL_LIMIT = 2;
     const static int HORIZONTAL_LIMIT = 2;
     const static int CIRCULAR_RADIUS = 1;
-    
+
     static glm::vec3 BoxPositions[];
-    static int GetBoxPositionLength();
+    static int GetBoxPositionsLength();
     static int movementIndex;
 
     static void ToLower(std::string& _string);
     static glm::vec3 RGBtoAlpha(float _r, float _g, float _b);
-    static glm::vec3 MoveTowards(glm::vec3 _currentPosition, glm::vec3 _targetPosition, float _maxDistanceDelta);
+    static glm::vec3 MoveTowards(glm::vec3 _currentPosition, glm::vec3 _targetPosition, float _distance);
 
-    static ModelType GetModelType(std::string _string);
-    static MovementType GetMovementType(std::string _string);
-    static glm::vec3 GetVector3(std::string _string);
+    static ModelType GetModelTypeFromString(std::string _string);
+    static MovementType GetMovementTypeFromString(std::string _string);
+    static glm::vec3 GetVector3FromString(std::string _string);
 
     static void SetSquareData(std::vector<VertexFormat>& _vertices, std::vector<GLuint>& _indices);
     static void SetTriangleData(std::vector<VertexFormat>& _vertices, std::vector<GLuint>& _indices);

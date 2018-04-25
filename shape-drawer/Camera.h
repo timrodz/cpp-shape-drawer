@@ -10,22 +10,23 @@
 
 #include "Utils.h"
 
-class Camera {
+class Camera
+{
 public:
-	//Camera();
-	Camera(glm::vec3 _position, float _fieldOfView, int _width, int _height);
-	~Camera();
+    //Camera();
+    Camera(glm::vec3 _position, float _fieldOfView, int _width, int _height);
+    ~Camera();
 
-	glm::mat4 GetViewMatrix() const;
-	glm::mat4 GetProjectionMatrix() const;
-	glm::vec3 GetPosition() const;
+    glm::mat4 GetViewMatrix() const;
+    glm::mat4 GetProjectionMatrix() const;
+    glm::vec3 GetPosition() const;
 
 private:
-	int width, height;
+    int width, height;
 
     float fieldOfView;
 
-	glm::vec3 position, up, forward;
+    glm::vec3 position, up, forward;
 
-	glm::mat4 viewMatrix, projectionMatrix;
+    glm::mat4 viewMatrix, projectionMatrix;
 };

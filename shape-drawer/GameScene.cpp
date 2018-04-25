@@ -77,57 +77,55 @@ void GameScene::CreateModel(
     tempModel->SetProgram(_program);
     tempModel->SetMovementType(_movement);
     tempModel->SetTexture(_texture);
-    tempModel->SetColor(_colour);
+    tempModel->SetColour(_colour);
     tempModel->SetScale(_scale);
     tempModel->SetPosition(_position);
+    tempModel->SetStartPosition(_position);
     tempModel->SetRotation(_rotation);
     tempModel->SetSpeed(_speed);
     gameModelVector.push_back(tempModel);
 }
 
-// Method Name: 
-// Description: 
+// Method Name: GetModels
+// Description: Returns the model vector
 // author: Juan Alejandro Rodriguez Morais
-// param: 
-// return: 
+// return: std::vector<GameModel*>
 std::vector<GameModel*> GameScene::GetModels() const
 {
     return (gameModelVector);
 }
 
-// Method Name: 
-// Description: 
+// Method Name: Render
+// Description: Renders all objects, including the skybox
 // author: Juan Alejandro Rodriguez Morais
-// param: 
-// return: 
+// return: void
 void GameScene::Render()
 {
     cubemap->Render();
-    
+
     for (auto it = gameModelVector.begin(); it < gameModelVector.end(); it++)
     {
         (*it)->Render();
     }
 }
 
-// Method Name: 
-// Description: 
+// Method Name: Update
+// Description: Updates all objects
 // author: Juan Alejandro Rodriguez Morais
-// param: 
-// return: 
+// param _deltaTime: The time it took to render last frame
+// return: void
 void GameScene::Update(float _deltaTime)
-{   
+{
     for (auto it = gameModelVector.begin(); it < gameModelVector.end(); it++)
     {
         (*it)->Update(_deltaTime);
     }
 }
 
-// Method Name: 
-// Description: 
+// Method Name: ClearScene
+// Description: Clears the gameModelVector objects
 // author: Juan Alejandro Rodriguez Morais
-// param: 
-// return: 
+// return: void
 void GameScene::ClearScene()
 {
     gameModelVector.clear();
@@ -137,7 +135,7 @@ void GameScene::ClearScene()
 // Description: Creates a scene with all shapes/movements
 // author: Juan Alejandro Rodriguez Morais
 // param _shaderProgram: The shader to use for all objects
-// return: 
+// return: void
 void GameScene::CreateDefaultScene(GLuint _shaderProgram)
 {
     CreateModel(ModelType::Triangle, MovementType::LeftRight, _shaderProgram, "", Utils::RGBtoAlpha(51, 153, 51), glm::vec3(1, 1, 1), glm::vec3(-4, -0.5, 0), glm::vec3(0, 0, 0), 0.05f);

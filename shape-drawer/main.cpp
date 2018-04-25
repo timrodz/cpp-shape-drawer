@@ -45,14 +45,14 @@ int main(int argc, char **argv)
     glutInitWindowPosition(GLUT_WINDOW_WIDTH / 2, GLUT_WINDOW_HEIGHT / 2);
     glutInitWindowSize(Utils::WIDTH, Utils::HEIGHT);
     glutCreateWindow("PikPok Competency Test - Juan Rodriguez");
-    
+
     // Initialise OpenGL
     glClearDepth(1.0f);                                 // Set background depth to farthest
     glEnable(GL_DEPTH_TEST);                            // Enable depth testing for z-culling
     glDepthFunc(GL_LEQUAL);                             // Set the type of depth-test
     glShadeModel(GL_SMOOTH);                            // Enable smooth shading
     glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);  // Nice perspective corrections
-    
+
     // Initialise Glew
     glewInit();
 
@@ -72,10 +72,10 @@ int main(int argc, char **argv)
     // Get the scene instance. We will add a camera and models to it
     GameScene::GetInstance().SetCamera(g_Camera);
     GameScene::GetInstance().SetCubemap(g_Skybox);
-    
+
     // Load default scene
     //gs.CreateDefaultScene(g_shaderProgram);
-    
+
     // Load models from external file
     //LoadModelsFromFile();
 
@@ -84,7 +84,7 @@ int main(int argc, char **argv)
     glutKeyboardFunc(KeyDown);
     glutKeyboardUpFunc(KeyUp);
     glutIdleFunc(Update);
-    
+
     // Run the main Glut loop
     glutMainLoop();
 
@@ -115,7 +115,7 @@ void Update()
     deltaTime *= 0.001f;
 
     GameScene::GetInstance().Update(deltaTime);
-    
+
     // Handle key inputs (Menu)
     if (!anyKeyDown)
     {
@@ -153,6 +153,8 @@ void Update()
 // Method Name: KeyDown
 // Description: Handles key state when a key is pressed
 // author: Juan Alejandro Rodriguez Morais
+// param key: The key to check
+// param x, y: Not used, but Glut requires them
 // return: void
 void KeyDown(unsigned char key, int x, int y)
 {
@@ -163,6 +165,8 @@ void KeyDown(unsigned char key, int x, int y)
 // Method Name: KeyUp
 // Description: Handles key state when a key is released
 // author: Juan Alejandro Rodriguez Morais
+// param key: The key to check
+// param x, y: Not used, but Glut requires them
 // return: void
 void KeyUp(unsigned char key, int x, int y)
 {
@@ -178,7 +182,7 @@ void KeyUp(unsigned char key, int x, int y)
 void LoadModelsFromFile()
 {
     INIParser parser;
-    if (!parser.LoadIniFile("shapes"))
+    if (!parser.LoadFile("shapes"))
     {
         cout << "ERROR: shapes.ini is empty" << endl;
         return;
@@ -190,43 +194,43 @@ void LoadModelsFromFile()
     for (int i = 1; i <= parser.GetSectionCount(); ++i)
     {
         std::string s = "shape" + std::to_string(i);
-        const char* shape = s.c_str();
+        const char* section = s.c_str();
 
         // Model Type
-        parser.GetStringValue(shape, "ModelType", line);
-        ModelType mod = Utils::GetModelType(line);
+        parser.GetValue<std::string>(section, "ModelType", line);
+        ModelType mod = Utils::GetModelTypeFromString(line);
 
         // Movement Type
-        parser.GetStringValue(shape, "MovementType", line);
-        MovementType mov = Utils::GetMovementType(line);
+        parser.GetValue<std::string>(section, "MovementType", line);
+        MovementType mov = Utils::GetMovementTypeFromString(line);
 
         // Movement Type
-        parser.GetStringValue(shape, "Texture", line);
-        const char* texture = line.c_str();
+        std::string texture = "";
+        parser.GetValue<std::string>(section, "MovementType", texture);
 
         // Colour
-        parser.GetStringValue(shape, "Colour", line);
-        glm::vec3 colour = Utils::GetVector3(line);
+        parser.GetValue<std::string>(section, "Colour", line);
+        glm::vec3 colour = Utils::GetVector3FromString(line);
         colour = Utils::RGBtoAlpha(colour.r, colour.g, colour.b);
 
         // Position
-        parser.GetStringValue(shape, "Scale", line);
-        glm::vec3 scale = Utils::GetVector3(line);
+        parser.GetValue<std::string>(section, "Scale", line);
+        glm::vec3 scale = Utils::GetVector3FromString(line);
 
         // Position
-        parser.GetStringValue(shape, "Position", line);
-        glm::vec3 position = Utils::GetVector3(line);
+        parser.GetValue<std::string>(section, "Position", line);
+        glm::vec3 position = Utils::GetVector3FromString(line);
 
         // Rotation
-        parser.GetStringValue(shape, "Rotation", line);
-        glm::vec3 rotation = Utils::GetVector3(line);
+        parser.GetValue<std::string>(section, "Rotation", line);
+        glm::vec3 rotation = Utils::GetVector3FromString(line);
 
         // Speed
         float speed = 0.0f;
-        parser.GetFloatValue(shape, "Speed", speed);
+        parser.GetValue<float>(section, "Speed", speed);
 
         // Build the model
-        GameScene::GetInstance().CreateModel(mod, mov, g_shaderProgram, texture, colour, scale, position, rotation, speed);
+        GameScene::GetInstance().CreateModel(mod, mov, g_shaderProgram, texture.c_str(), colour, scale, position, rotation, speed);
     }
 
 }

@@ -25,7 +25,7 @@ GameModel::GameModel(ModelType _modelType, Camera* _camera)
 
     speed = 0.0f;
     rotationAxis = glm::vec3(0.0f, 0.0f, 1.0f);
-    m_MovementType = MovementType::Idle;
+    movementType = MovementType::Idle;
 
     switch (_modelType)
     {
@@ -79,15 +79,15 @@ GameModel::GameModel(ModelType _modelType, Camera* _camera)
 
     // Position
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(VertexFormat), (GLvoid*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(VertexFormat), (GLvoid*) 0);
 
     // Texture Coordinates
     glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(VertexFormat), (void*)(offsetof(VertexFormat, VertexFormat::texCoord)));
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(VertexFormat), (void*) (offsetof(VertexFormat, VertexFormat::texCoord)));
 
     // Normals
     glEnableVertexAttribArray(2);
-    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(VertexFormat), (void*)(offsetof(VertexFormat, VertexFormat::normal)));
+    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(VertexFormat), (void*) (offsetof(VertexFormat, VertexFormat::normal)));
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
@@ -103,13 +103,9 @@ void GameModel::Render()
 {
     glUseProgram(this->program);
 
-    // TODO: Check for a way to draw textures and colors
-    if (isTextureSet)
-    {
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, texture);
-        glUniform1i(glGetUniformLocation(program, "Texture"), 0);
-    }
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glUniform1i(glGetUniformLocation(program, "Texture"), 0);
 
     glm::mat4 model, view, projection;
     model = glm::translate(model, position);
@@ -156,11 +152,11 @@ void GameModel::Render()
 // Method Name: Update
 // Description: Updates the model based on current time
 // author: Juan Alejandro Rodriguez Morais
-// param _currentTime: The elapsed time since start TODO: Check if this is correct
+// param _currentTime: The elapsed time since start
 // return: void
 void GameModel::Update(GLfloat _currentTime)
 {
-    switch (m_MovementType)
+    switch (movementType)
     {
         case (MovementType::UpDown):
         {
@@ -192,12 +188,12 @@ void GameModel::Update(GLfloat _currentTime)
 
             if (position == (startPosition + Utils::BoxPositions[Utils::movementIndex]))
             {
-                Utils::movementIndex = (Utils::movementIndex + 1) % (Utils::GetBoxPositionLength());
+                Utils::movementIndex = (Utils::movementIndex + 1) % (Utils::GetBoxPositionsLength());
             }
         }
         break;
     }
-    
+
     glutPostRedisplay();
 }
 
@@ -224,30 +220,28 @@ void GameModel::SetTexture(std::string _textureFile)
     // Set texture wrapping to GL_REPEAT (usually basic wrapping method)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    
+
     // Set texture filtering parameters
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    
+
     // No texture - Load a 1x1 Image to only display the colour
     if (_textureFile == "" || _textureFile == "NULL")
     {
-        GLubyte data[] = { 255, 255, 255, 255 };
+        GLubyte data[] = {255, 255, 255, 255};
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
     }
     // Texture is set
-    else 
+    else
     {
         // Load image, create texture and generate mipmaps
         int width, height;
         unsigned char* image = SOIL_load_image(_textureFile.c_str(), &width, &height, 0, SOIL_LOAD_RGB);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
         glGenerateMipmap(GL_TEXTURE_2D);
         SOIL_free_image_data(image);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
         glBindTexture(GL_TEXTURE_2D, 0);
     }
-
-    isTextureSet = true;
 }
 
 // Method Name: SetScale
@@ -267,7 +261,7 @@ void GameModel::SetScale(glm::vec3 _scale)
 // return: void
 void GameModel::SetRotation(glm::vec3 _angle)
 {
-	this->angle = _angle;
+    this->angle = _angle;
 }
 
 // Method Name: SetRotationAxis
@@ -277,7 +271,7 @@ void GameModel::SetRotation(glm::vec3 _angle)
 // return: void
 void GameModel::SetRotationAxis(glm::vec3 _rotationAxis)
 {
-	this->rotationAxis = _rotationAxis;
+    this->rotationAxis = _rotationAxis;
 }
 
 // Method Name: SetPosition
@@ -288,7 +282,16 @@ void GameModel::SetRotationAxis(glm::vec3 _rotationAxis)
 void GameModel::SetPosition(glm::vec3 _position)
 {
     this->position = _position;
-    this->startPosition = this->position; // TODO: Separate start position to another method
+}
+
+// Method Name: SetStartPosition
+// Description: Sets the start position of the object
+// author: Juan Alejandro Rodriguez Morais
+// param _position: The desired position
+// return: void
+void GameModel::SetStartPosition(glm::vec3 _position)
+{
+    this->startPosition = _position;
 }
 
 // Method Name: SetColour
@@ -296,7 +299,7 @@ void GameModel::SetPosition(glm::vec3 _position)
 // author: Juan Alejandro Rodriguez Morais
 // param _colour: The desired color
 // return: void
-void GameModel::SetColor(glm::vec3 _colour)
+void GameModel::SetColour(glm::vec3 _colour)
 {
     this->colour = _colour;
 }
@@ -328,9 +331,9 @@ void GameModel::SetProgram(GLuint _program)
 // return: void
 void GameModel::SetMovementType(MovementType _type)
 {
-    m_MovementType = _type;
+    this->movementType = _type;
 
-    switch (m_MovementType)
+    switch (movementType)
     {
         case (MovementType::UpDown):
         {
@@ -387,5 +390,5 @@ glm::vec3 GameModel::GetRotation() const
 // return: glm::vec3
 glm::vec3 GameModel::GetRotationAxis() const
 {
-	return this->rotationAxis;
+    return this->rotationAxis;
 }

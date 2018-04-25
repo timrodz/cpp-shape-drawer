@@ -16,9 +16,6 @@
 // return: Cubemap
 Cubemap::Cubemap(GLuint _cubemapProgram, Camera* _camera)
 {
-    //glEnable(GL_DEPTH_TEST);
-    //glDepthFunc(GL_LESS);
-
     GLfloat skyboxVertices[] = 
     {
         // Positions          
@@ -131,8 +128,6 @@ GLuint Cubemap::CreateCubemap(std::vector<const GLchar*> _faces)
 // return: void
 void Cubemap::Render()
 {
-    // glDepthMask(GL_FALSE);
-
     glUseProgram(program);
 
     glBindVertexArray(vao);
@@ -149,8 +144,5 @@ void Cubemap::Render()
     glUniformMatrix4fv(glGetUniformLocation(program, "mvp"), 1, GL_FALSE, glm::value_ptr(mvp));
 
     glDrawArrays(GL_TRIANGLES, 0, 36);
-    //glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
-
-    //glDepthMask(GL_TRUE);
 }
