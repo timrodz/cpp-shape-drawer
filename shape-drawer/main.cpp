@@ -204,10 +204,6 @@ void LoadModelsFromFile()
         parser.GetValue<std::string>(section, "MovementType", line);
         MovementType mov = Utils::GetMovementTypeFromString(line);
 
-        // Movement Type
-        std::string texture = "";
-        parser.GetValue<std::string>(section, "MovementType", texture);
-
         // Colour
         parser.GetValue<std::string>(section, "Colour", line);
         glm::vec3 colour = Utils::GetVector3FromString(line);
@@ -230,7 +226,7 @@ void LoadModelsFromFile()
         parser.GetValue<float>(section, "Speed", speed);
 
         // Build the model
-        GameScene::GetInstance().CreateModel(mod, mov, g_shaderProgram, texture.c_str(), colour, scale, position, rotation, speed);
+        GameScene::GetInstance().CreateModel(mod, mov, g_shaderProgram, colour, scale, position, rotation, speed);
     }
 
 }

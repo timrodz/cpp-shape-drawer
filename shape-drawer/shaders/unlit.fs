@@ -14,7 +14,4 @@ void main()
 {
 	// Color only
 	color = vec4(objectColor, 1.0f);
-
-	// Color + Texture (Not working at the moment)
-    color = texture(Texture, TexCoord) * vec4(objectColor,  1.0f);
 }

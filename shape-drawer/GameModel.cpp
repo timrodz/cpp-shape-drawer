@@ -103,10 +103,6 @@ void GameModel::Render()
 {
     glUseProgram(this->program);
 
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, texture);
-    glUniform1i(glGetUniformLocation(program, "Texture"), 0);
-
     glm::mat4 model, view, projection;
     model = glm::translate(model, position);
 
@@ -117,11 +113,6 @@ void GameModel::Render()
     model = glm::translate(model, glm::vec3(-0.0f * scale.x, -0.0f * scale.y, 0.0f));
 
     model = glm::scale(model, scale);
-
-    //glm::mat4 vp = camera->GetProjectionMatrix() * camera->GetViewMatrix();
-    //GLint vpLoc = glGetUniformLocation(program, "vp");
-    //glUniformMatrix4fv(vpLoc, 1, GL_FALSE, glm::value_ptr(vp));
-    // Transformation matrices
 
     view = this->camera->GetViewMatrix();
     projection = this->camera->GetProjectionMatrix();
@@ -195,43 +186,6 @@ void GameModel::Update(GLfloat _currentTime)
     }
 
     glutPostRedisplay();
-}
-
-// Method Name: SetTexture
-// Description: Sets and binds the model's texture
-// author: Juan Alejandro Rodriguez Morais
-// param _texture: The texture file to use
-// return: void
-void GameModel::SetTexture(std::string _textureFile)
-{
-    glGenTextures(1, &texture);
-    glBindTexture(GL_TEXTURE_2D, texture);
-
-    // Set texture wrapping to GL_REPEAT (usually basic wrapping method)
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-
-    // Set texture filtering parameters
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-    // No texture - Load a 1x1 Image to only display the colour
-    if (_textureFile == "" || _textureFile == "NULL")
-    {
-        GLubyte data[] = {255, 255, 255, 255};
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
-    }
-    // Texture is set
-    else
-    {
-        // Load image, create texture and generate mipmaps
-        int width, height;
-        unsigned char* image = SOIL_load_image(_textureFile.c_str(), &width, &height, 0, SOIL_LOAD_RGB);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
-        glGenerateMipmap(GL_TEXTURE_2D);
-        SOIL_free_image_data(image);
-        glBindTexture(GL_TEXTURE_2D, 0);
-    }
 }
 
 // Method Name: SetScale

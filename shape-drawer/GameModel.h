@@ -25,7 +25,6 @@ public:
     void SetStartPosition(glm::vec3 _position);
     void SetMovementType(MovementType _type);
     void SetScale(glm::vec3 _scale);
-    void SetTexture(std::string _texture);
     void SetColour(glm::vec3 _colour);
     void SetSpeed(float _speed);
     void SetProgram(GLuint _program);
@@ -57,7 +56,6 @@ private:
     GLuint vao;
     GLuint vbo;
     GLuint ebo;
-    GLuint texture;
     GLuint program;
 
     glm::vec3 direction;

@@ -54,7 +54,6 @@ void GameScene::SetCubemap(Cubemap* _cubemap)
 // param _model: The type of model
 // param _movement: The type of movemnt
 // param _program: The shader to apply
-// param _texture: The file that contains the texture image
 // param _colour: The colour of the object
 // param _scale: The dimensions of the object
 // param _position: the position vector to place the model at
@@ -65,7 +64,6 @@ void GameScene::CreateModel(
     ModelType _model,
     MovementType _movement,
     GLuint _program,
-    const char* _texture,
     glm::vec3 _colour,
     glm::vec3 _scale,
     glm::vec3 _position,
@@ -76,7 +74,6 @@ void GameScene::CreateModel(
     GameModel* tempModel = new GameModel(_model, this->camera);
     tempModel->SetProgram(_program);
     tempModel->SetMovementType(_movement);
-    tempModel->SetTexture(_texture);
     tempModel->SetColour(_colour);
     tempModel->SetScale(_scale);
     tempModel->SetPosition(_position);
@@ -138,13 +135,13 @@ void GameScene::ClearScene()
 // return: void
 void GameScene::CreateDefaultScene(GLuint _shaderProgram)
 {
-    CreateModel(ModelType::Triangle, MovementType::LeftRight, _shaderProgram, "", Utils::RGBtoAlpha(51, 153, 51), glm::vec3(1, 1, 1), glm::vec3(-4, -0.5, 0), glm::vec3(0, 0, 0), 0.05f);
-    CreateModel(ModelType::Square, MovementType::UpDown, _shaderProgram, "", Utils::RGBtoAlpha(227, 181, 5), glm::vec3(1, 1, 1), glm::vec3(6, 0, 0), glm::vec3(0, 0, 0), 0.05f);
-    CreateModel(ModelType::Circle, MovementType::Box, _shaderProgram, "", Utils::RGBtoAlpha(86, 163, 166), glm::vec3(1, 1, 1), glm::vec3(0, -2, 0), glm::vec3(0, 0, 0), 0.05f);
-    CreateModel(ModelType::Hexagon, MovementType::Circular, _shaderProgram, "", Utils::RGBtoAlpha(219, 80, 74), glm::vec3(1, 1, 1), glm::vec3(0, 2, 0), glm::vec3(0, 0, 0), 3.0f);
-    CreateModel(ModelType::Cube, MovementType::Box, _shaderProgram, "", Utils::RGBtoAlpha(224, 74, 153), glm::vec3(1, 1, 1), glm::vec3(-5, 3.5, 0), glm::vec3(0, 0, 0), 0.05f);
-    CreateModel(ModelType::Pentagon, MovementType::Idle, _shaderProgram, "", Utils::RGBtoAlpha(242, 134, 58), glm::vec3(1, 1, 1), glm::vec3(-6, -3.5, 0), glm::vec3(0, 0, 17.5), 3.0f);
-    CreateModel(ModelType::Heptagon, MovementType::Circular, _shaderProgram, "", Utils::RGBtoAlpha(86, 56, 237), glm::vec3(1, 1, 1), glm::vec3(5, 3.5, 0), glm::vec3(0, 0, 0), 5);
+    CreateModel(ModelType::Triangle, MovementType::LeftRight, _shaderProgram, Utils::RGBtoAlpha(51, 153, 51), glm::vec3(1, 1, 1), glm::vec3(-4, -0.5, 0), glm::vec3(0, 0, 0), 0.05f);
+    CreateModel(ModelType::Square, MovementType::UpDown, _shaderProgram, Utils::RGBtoAlpha(227, 181, 5), glm::vec3(1, 1, 1), glm::vec3(6, 0, 0), glm::vec3(0, 0, 0), 0.05f);
+    CreateModel(ModelType::Circle, MovementType::Box, _shaderProgram, Utils::RGBtoAlpha(86, 163, 166), glm::vec3(1, 1, 1), glm::vec3(0, -2, 0), glm::vec3(0, 0, 0), 0.05f);
+    CreateModel(ModelType::Hexagon, MovementType::Circular, _shaderProgram, Utils::RGBtoAlpha(219, 80, 74), glm::vec3(1, 1, 1), glm::vec3(0, 2, 0), glm::vec3(0, 0, 0), 3.0f);
+    CreateModel(ModelType::Cube, MovementType::Box, _shaderProgram, Utils::RGBtoAlpha(224, 74, 153), glm::vec3(1, 1, 1), glm::vec3(-5, 3.5, 0), glm::vec3(0, 0, 0), 0.05f);
+    CreateModel(ModelType::Pentagon, MovementType::Idle, _shaderProgram, Utils::RGBtoAlpha(242, 134, 58), glm::vec3(1, 1, 1), glm::vec3(-6, -3.5, 0), glm::vec3(0, 0, 17.5), 3.0f);
+    CreateModel(ModelType::Heptagon, MovementType::Circular, _shaderProgram, Utils::RGBtoAlpha(86, 56, 237), glm::vec3(1, 1, 1), glm::vec3(5, 3.5, 0), glm::vec3(0, 0, 0), 5);
 }
 
 // Method Name: Operator=

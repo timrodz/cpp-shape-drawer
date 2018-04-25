@@ -1,4 +1,4 @@
-# Shape Drawer
+d# Shape Drawer
 
 Welcome to Shape Drawer, a program that allows you to view different shapes with custom movement types.
 
@@ -47,7 +47,7 @@ The following are systems I implemented to create Shape Drawer.
 - *GameModel*: The model to be drawn.
 - *GameScene*: Holds the models to be displayed.
 - *INIParser*: The file reader that creates models.
-- *Shader Loader*: Load any type of you want. I have included a texture unlit shader as well as a cubemap shader.
+- *Shader Loader*: Load any type of you want. I have included an unlit shader as well as a cubemap shader.
 - *Utilities*: Provides constant definitions and static members/methods that ease up on common tasks e.g. Filling up vertices/indices as well as custom polygon shapes, Converting from RGB to Alpha, Vector3.MoveTowards, etc.
 
 ## Getting started
@@ -72,7 +72,6 @@ To run Shape Drawer, simply open ShapeDrawer.exe and enjoy! You will find yourse
 [shapeN] (N is the number of the shape)
 ModelType = enum (Refer to Model Types enum)
 MovementType = enum (Refer to Movement Types enum)
-Texture = string (Use NULL if you do not want to use a texture)
 Colour = (x, y, z) (int/float/double values are valid)
 Scale = (x, y, z) (int/float/double values are valid)
 Position = (x, y, z) (int/float/double values are valid)
@@ -84,7 +83,7 @@ Speed = float value (Use low values)
 Requirements for smooth **.ini** file loading:
 
 - No empty lines
-- No missing entries / characters that should not be used, especially for textures.
+- No missing entries / characters that should not be used, especially for cubemap textures.
 
 ### Settings
 
@@ -115,7 +114,7 @@ Shape Drawer is a 32-bit program that was built with Windows 10 and Visual Studi
 4. Click on the "Local Windows Debugger" or press F5 to run.
 5. Enjoy!
 
-## Known problems
+## Known problems and workarounds
 
 1. Having empty lines inside **.ini** files crashes the program. To avoid this: Remove unnecessary empty lines.
 2. Duplicate headers inside **.ini** files crash the program. To avoid this: Use different names.

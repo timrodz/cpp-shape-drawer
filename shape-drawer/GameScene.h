@@ -22,7 +22,7 @@ public:
     virtual ~GameScene();
     static GameScene& GetInstance();
 
-    void CreateModel(ModelType _model, MovementType _movement, GLuint _program, const char* _texture, glm::vec3 _colour, glm::vec3 _scale, glm::vec3 _position, glm::vec3 _rotation, float _speed);
+    void CreateModel(ModelType _model, MovementType _movement, GLuint _program, glm::vec3 _colour, glm::vec3 _scale, glm::vec3 _position, glm::vec3 _rotation, float _speed);
     void SetCamera(Camera* _camera);
     void SetCubemap(Cubemap* cubemap);
     std::vector<GameModel*> GetModels() const;
