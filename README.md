@@ -8,7 +8,9 @@ TODO: Insert a screenshot / GIF of the program.
 
 - *Draw shapes such as*: Square (Quad), Triangle, Circle, Hexagon, Pentagon, Heptagon and Cube.
 - *Customise your shapes with*: Dimensions (Scale), Colour, Movement Type and Movement rate.
-- *Load shapes through a file*: Read below for more instructions.
+- *Load shapes through a file*: Create custom shapes from an **.ini** file (More information below).
+- *Cubemap*: Got a skybox with .jpg? Load it in! Just remember the image order.
+- *Live-reloading*: Press R to reload your program.
 
 ### Key Design Decisions
 
@@ -46,31 +48,39 @@ The following enums dictate the types of model that can be drawn (and expanded u
 
 ## Getting started
 
-To run Shape Drawer, simply open ShapeDrawer.exe and enjoy!
+To run Shape Drawer, simply open ShapeDrawer.exe and enjoy! You will find yourself in a clear background. Please refer to the `Controls` Menu below for navigation.
 
 ## Controls
 
 - `1`: Load default game scene with all shapes.
 - `2`: Load game scene with shapes loaded from an external file.
-- `R`: Reload the scene. This automatically finds any new entries inside the shapes.ini file.
+- `3`: Load default game scene with external shapes.
+- `R`: Clear the scene.
 
 ### Loading custom shapes from external files
 
 1. Go to the Resources folder located in the root. If it does not exist, create one.
 2. Locate the file "shapes.ini". If it does not exist, create a .txt file and rename it to shapes.ini. Make sure the extension is **.ini**. Alternatively, you can change the file's name, just make sure you also do this in code!
 
-**.ini** file formatting must adhere to the following standards:
+**IMPORTANT**: Your **.ini** must adhere to the following standards:
 
 ``` text
 [shapeN] (N is the number of the shape)
 ModelType = enum (Refer to Model Types enum)
 MovementType = enum (Refer to Movement Types enum)
 Texture = string (Use NULL if you do not want to use a texture)
-Colour = (x, y, z)
-Position = (x, y, z)
-Rotation = (x, y, z)
+Colour = (x, y, z) (int/float/double values are valid)
+Scale = (x, y, z) (int/float/double values are valid)
+Position = (x, y, z) (int/float/double values are valid)
+Rotation = (x, y, z) (int/float/double values are vali)]
 Speed = float value (Recommended: [0.05f for non-circular movement], [3-5 for circular movement])
+[shapeN+1] (N is the number of the shape)
 ```
+
+Requirements for smooth **.ini** file loading:
+
+- No empty lines
+- No missing entries / characters that should not be used, especially for textures.
 
 ## Source code
 
