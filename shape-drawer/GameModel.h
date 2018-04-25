@@ -38,8 +38,6 @@ public:
     glm::vec3 GetRotationAxis() const;
     glm::vec3 GetColour() const;
 
-    void Rotate();
-
 private:
     Camera* camera;
     MovementType movementType;

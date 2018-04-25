@@ -197,16 +197,6 @@ void GameModel::Update(GLfloat _currentTime)
     glutPostRedisplay();
 }
 
-// TODO: Check if it works or just remove
-// Method Name: Rotate
-// Description: Rotates the object around its rotation axis
-// author: Juan Alejandro Rodriguez Morais
-// return: void
-void GameModel::Rotate()
-{
-    this->angle += (this->rotationAxis * speed);
-}
-
 // Method Name: SetTexture
 // Description: Sets and binds the model's texture
 // author: Juan Alejandro Rodriguez Morais
