@@ -25,8 +25,6 @@ unsigned char KeyCode[255];
 bool anyKeyDown;
 ShaderLoader g_ShaderLoader;
 GLuint g_shaderProgram;
-Camera* g_Camera;
-Cubemap* g_Skybox;
 
 /* Functions */
 void Render();
@@ -62,11 +60,11 @@ int main(int argc, char **argv)
     Utils::movementIndex = 0;
 
     // Initialise the global camera at (0, 0, 10)
-    g_Camera = new Camera(vec3(0, 0, 10), 45.0f, Utils::WIDTH, Utils::HEIGHT);
+    Camera* g_Camera = new Camera(vec3(0, 0, 10), 45.0f, Utils::WIDTH, Utils::HEIGHT);
 
     // Create the Cubemap
     GLuint cubemapProgram = g_ShaderLoader.CreateProgram("shaders/skybox.vs", "shaders/skybox.fs");
-    g_Skybox = new Cubemap(cubemapProgram, g_Camera);
+    Cubemap* g_Skybox = new Cubemap(cubemapProgram, g_Camera);
 
     // Create default shader program, most objects will use it.
     g_shaderProgram = g_ShaderLoader.CreateProgram("shaders/unlit.vs", "shaders/unlit.fs");
@@ -75,8 +73,10 @@ int main(int argc, char **argv)
     GameScene::GetInstance().SetCamera(g_Camera);
     GameScene::GetInstance().SetCubemap(g_Skybox);
     
-    //
+    // Load default scene
     //gs.CreateDefaultScene(g_shaderProgram);
+    
+    // Load models from external file
     //LoadModelsFromFile();
 
     // Main loop functions
@@ -129,7 +129,7 @@ void Update()
         if (KeyCode[(unsigned char)'2'] == KeyState::Pressed)
         {
             GameScene::GetInstance().ClearScene();
-            LoadModelsFromFile(g_shaderProgram);
+            LoadModelsFromFile();
             anyKeyDown = true;
             cout << "Load external files" << endl;
         }
@@ -137,7 +137,7 @@ void Update()
         {
             GameScene::GetInstance().ClearScene();
             GameScene::GetInstance().CreateDefaultScene(g_shaderProgram);
-            LoadModelsFromFile(g_shaderProgram);
+            LoadModelsFromFile();
             anyKeyDown = true;
             cout << "Load default scene with external files" << endl;
         }

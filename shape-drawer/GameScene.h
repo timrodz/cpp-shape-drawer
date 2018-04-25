@@ -12,6 +12,7 @@
 
 #include "GameModel.h"
 #include "Camera.h"
+#include "Cubemap.h"
 
 class GameScene {
 public:
