@@ -76,10 +76,10 @@ void Utils::SetSquareData(std::vector<VertexFormat>& _vertices, std::vector<GLui
 {
     std::vector<VertexFormat> Vertices;
 
-    Vertices.push_back(VertexFormat(Position(-1.0, 1.0, 0.0), TexCoord(-1.0, 1.0), Normal(0.0f, 0.0f, 1.0))); // Top-left
-    Vertices.push_back(VertexFormat(Position(1.0, 1.0, 0.0), TexCoord(1.0, 1.0), Normal(0.0f, 0.0f, 1.0))); // Top-right
-    Vertices.push_back(VertexFormat(Position(1.0, -1.0, 0.0), TexCoord(1.0, -1.0), Normal(0.0f, 0.0f, 1.0))); // Bottom-right
-    Vertices.push_back(VertexFormat(Position(-1.0f, -1.0, 0.0), TexCoord(-1.0, -1.0), Normal(0.0f, 0.0f, 1.0))); // Bottom-left
+    Vertices.push_back(VertexFormat(Position(-1.0, 1.0, 0.0))); // Top-left
+    Vertices.push_back(VertexFormat(Position(1.0, 1.0, 0.0))); // Top-right
+    Vertices.push_back(VertexFormat(Position(1.0, -1.0, 0.0))); // Bottom-right
+    Vertices.push_back(VertexFormat(Position(-1.0f, -1.0, 0.0))); // Bottom-left
 
     std::vector<GLuint> Indices;
 
@@ -101,9 +101,9 @@ void Utils::SetTriangleData(std::vector<VertexFormat>& vertices, std::vector<GLu
 {
     std::vector<VertexFormat> Vertices;
 
-    Vertices.push_back(VertexFormat(Position(0.0f, 1.0f, 0.0f), TexCoord(1, 1), Normal(0.0f, 0.0f, 1.0))); // Top
-    Vertices.push_back(VertexFormat(Position(1.0, 0.0, 0.0), TexCoord(0, 1), Normal(0.0f, 0.0f, 1.0))); // Right
-    Vertices.push_back(VertexFormat(Position(-1.0, 0.0, 0.0), TexCoord(1, 0), Normal(0.0f, 0.0f, 1.0))); // Left
+    Vertices.push_back(VertexFormat(Position(0.0f, 1.0f, 0.0f))); // Top
+    Vertices.push_back(VertexFormat(Position(1.0, 0.0, 0.0))); // Right
+    Vertices.push_back(VertexFormat(Position(-1.0, 0.0, 0.0))); // Left
 
     std::vector<GLuint>Indices;
 
@@ -150,40 +150,40 @@ void Utils::SetCubeData(std::vector<VertexFormat>& _vertices, std::vector<GLuint
     std::vector<VertexFormat> Vertices;
 
     //back
-    Vertices.push_back(VertexFormat(Position(-1.0f, -1.0, -1.0), TexCoord(0.0, 1.0), Normal(0.0f, 0.0f, -1.0)));
-    Vertices.push_back(VertexFormat(Position(1.0, -1.0, -1.0), TexCoord(0.0, 0.0), Normal(0.0f, 0.0f, -1.0)));
-    Vertices.push_back(VertexFormat(Position(1.0, 1.0, -1.0), TexCoord(1.0, 0.0), Normal(0.0f, 0.0f, -1.0)));
-    Vertices.push_back(VertexFormat(Position(-1.0, 1.0, -1.0), TexCoord(1.0, 1.0), Normal(0.0f, 0.0f, -1.0)));
+    Vertices.push_back(VertexFormat(Position(-1.0f, -1.0, -1.0)));
+    Vertices.push_back(VertexFormat(Position(1.0, -1.0, -1.0)));
+    Vertices.push_back(VertexFormat(Position(1.0, 1.0, -1.0)));
+    Vertices.push_back(VertexFormat(Position(-1.0, 1.0, -1.0)));
 
     //front
-    Vertices.push_back(VertexFormat(Position(-1.0f, -1.0f, 1.0f), TexCoord(1.0, 1.0), Normal(0.0f, 0.0f, 1.0)));
-    Vertices.push_back(VertexFormat(Position(1.0f, -1.0f, 1.0f), TexCoord(0.0, 1.0), Normal(0.0f, 0.0f, 1.0)));
-    Vertices.push_back(VertexFormat(Position(1.0f, 1.0f, 1.0f), TexCoord(0.0, 0.0), Normal(0.0f, 0.0f, 1.0)));
-    Vertices.push_back(VertexFormat(Position(-1.0f, 1.0f, 1.0f), TexCoord(1.0, 0.0), Normal(0.0f, 0.0f, 1.0)));
+    Vertices.push_back(VertexFormat(Position(-1.0, -1.0, 1.0)));
+    Vertices.push_back(VertexFormat(Position(1.0, -1.0, 1.0)));
+    Vertices.push_back(VertexFormat(Position(1.0, 1.0, 1.0)));
+    Vertices.push_back(VertexFormat(Position(-1.0, 1.0, 1.0)));
 
     //left
-    Vertices.push_back(VertexFormat(Position(-1.0, 1.0, 1.0), TexCoord(0.0, 0.0), Normal(-1.0f, 0.0f, 0.0)));
-    Vertices.push_back(VertexFormat(Position(-1.0, 1.0, -1.0), TexCoord(1.0, 0.0), Normal(-1.0f, 0.0f, 0.0)));
-    Vertices.push_back(VertexFormat(Position(-1.0, -1.0, -1.0), TexCoord(1.0, 1.0), Normal(-1.0f, 0.0f, 0.0)));
-    Vertices.push_back(VertexFormat(Position(-1.0f, -1.0, 1.0), TexCoord(0.0, 1.0), Normal(-1.0f, 0.0f, 0.0)));
+    Vertices.push_back(VertexFormat(Position(-1.0, 1.0, 1.0)));
+    Vertices.push_back(VertexFormat(Position(-1.0, 1.0, -1.0)));
+    Vertices.push_back(VertexFormat(Position(-1.0, -1.0, -1.0)));
+    Vertices.push_back(VertexFormat(Position(-1.0f, -1.0, 1.0)));
 
     //right
-    Vertices.push_back(VertexFormat(Position(1.0, 1.0, 1.0), TexCoord(1.0, 0.0), Normal(1.0f, 0.0f, 0.0)));
-    Vertices.push_back(VertexFormat(Position(1.0, 1.0, -1.0), TexCoord(0.0, 0.0), Normal(1.0f, 0.0f, 0.0)));
-    Vertices.push_back(VertexFormat(Position(1.0f, -1.0, -1.0), TexCoord(0.0, 1.0), Normal(1.0f, 0.0f, 0.0)));
-    Vertices.push_back(VertexFormat(Position(1.0, -1.0, 1.0), TexCoord(1.0, 1.0), Normal(1.0f, 0.0f, 0.0)));
+    Vertices.push_back(VertexFormat(Position(1.0, 1.0, 1.0)));
+    Vertices.push_back(VertexFormat(Position(1.0, 1.0, -1.0)));
+    Vertices.push_back(VertexFormat(Position(1.0f, -1.0, -1.0)));
+    Vertices.push_back(VertexFormat(Position(1.0, -1.0, 1.0)));
 
     //bottom
-    Vertices.push_back(VertexFormat(Position(-1.0f, -1.0, -1.0), TexCoord(1.0, 1.0), Normal(0.0f, -1.0f, 0.0)));
-    Vertices.push_back(VertexFormat(Position(1.0, -1.0, -1.0), TexCoord(0.0, 1.0), Normal(0.0f, -1.0f, 0.0)));
-    Vertices.push_back(VertexFormat(Position(1.0, -1.0, 1.0), TexCoord(0.0, 0.0), Normal(0.0f, -1.0f, 0.0)));
-    Vertices.push_back(VertexFormat(Position(-1.0, -1.0, 1.0), TexCoord(1.0, 0.0), Normal(0.0f, -1.0f, 0.0)));
+    Vertices.push_back(VertexFormat(Position(-1.0f, -1.0, -1.0)));
+    Vertices.push_back(VertexFormat(Position(1.0, -1.0, -1.0)));
+    Vertices.push_back(VertexFormat(Position(1.0, -1.0, 1.0)));
+    Vertices.push_back(VertexFormat(Position(-1.0, -1.0, 1.0)));
 
     //top
-    Vertices.push_back(VertexFormat(Position(-1.0f, 1.0f, -1.0f), TexCoord(0.0, 1.0), Normal(0.0f, 1.0f, 0.0)));
-    Vertices.push_back(VertexFormat(Position(1.0f, 1.0f, -1.0f), TexCoord(1.0, 1.0), Normal(0.0f, 1.0f, 0.0)));
-    Vertices.push_back(VertexFormat(Position(1.0f, 1.0f, 1.0f), TexCoord(1.0, 0.0), Normal(0.0f, 1.0f, 0.0)));
-    Vertices.push_back(VertexFormat(Position(-1.0f, 1.0f, 1.0f), TexCoord(0.0, 0.0), Normal(0.0f, 1.0f, 0.0)));
+    Vertices.push_back(VertexFormat(Position(-1.0, 1.0, -1.0)));
+    Vertices.push_back(VertexFormat(Position(1.0, 1.0, -1.0)));
+    Vertices.push_back(VertexFormat(Position(1.0, 1.0, 1.0)));
+    Vertices.push_back(VertexFormat(Position(-1.0, 1.0, 1.0)));
 
     std::vector<GLuint> Indices;
 
@@ -244,7 +244,7 @@ void Utils::SetPolygonData(std::vector<VertexFormat>& _vertices, std::vector<GLu
     std::vector<VertexFormat> Vertices;
 
     // Add the origin
-    Vertices.push_back(VertexFormat(Position(0.0, 0.0, 0.0), TexCoord(1.0, 1.0), Normal(0.0f, 0.0f, 1.0)));
+    Vertices.push_back(VertexFormat(Position(0.0, 0.0, 0.0)));
 
     int vertexCount = _polygonCount + 2;
     float radius = 1.0f;

@@ -80,41 +80,13 @@ struct Position
     Position() {}
 };
 
-struct TexCoord
-{
-    float u, v;
-
-    TexCoord(float _u, float _v)
-    {
-        u = _u; v = _v;
-    }
-
-    TexCoord() {}
-};
-
-struct Normal
-{
-    float x, y, z;
-
-    Normal(float _x, float _y, float _z)
-    {
-        x = _x; y = _y; z = _z;
-    }
-
-    Normal() {}
-};
-
 struct VertexFormat
 {
     Position pos;
-    TexCoord texCoord;
-    Normal normal;
 
-    VertexFormat(Position _pos, TexCoord _texCoord, Normal _normal)
+    VertexFormat(Position _pos)
     {
         pos = _pos;
-        texCoord = _texCoord;
-        normal = _normal;
     }
 
     VertexFormat() {}
