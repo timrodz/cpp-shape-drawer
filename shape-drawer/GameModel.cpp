@@ -148,20 +148,12 @@ void GameModel::Update(GLfloat _currentTime)
     {
         case (MovementType::UpDown):
         {
-            position += direction * speed;
-            if (position.y >= (startPosition.y + Utils::VERTICAL_LIMIT) || position.y <= (startPosition.y - Utils::VERTICAL_LIMIT))
-            {
-                direction *= -1;
-            }
+            position.y = (Utils::VERTICAL_LIMIT * sin(_currentTime * speed) + startPosition.y);
         }
         break;
         case (MovementType::LeftRight):
         {
-            position += direction * speed;
-            if (position.x >= (startPosition.x + Utils::HORIZONTAL_LIMIT) || position.x <= (startPosition.x - Utils::HORIZONTAL_LIMIT))
-            {
-                direction *= -1;
-            }
+            position.x = (Utils::HORIZONTAL_LIMIT * cos(_currentTime * speed) + startPosition.x);
         }
         break;
         case (MovementType::Circular):
@@ -171,8 +163,9 @@ void GameModel::Update(GLfloat _currentTime)
         }
         break;
         case (MovementType::Box):
+        case (MovementType::BoxInverted):
         {
-            position = Utils::MoveTowards(position, startPosition + Utils::BoxPositions[Utils::movementIndex], speed);
+            position = Utils::MoveTowards(position, startPosition + Utils::BoxPositions[Utils::movementIndex], (MovementType::Box) ? speed : -speed);
 
             if (position == (startPosition + Utils::BoxPositions[Utils::movementIndex]))
             {
@@ -263,20 +256,6 @@ void GameModel::SetSpeed(float _speed)
 void GameModel::SetMovementType(MovementType _type)
 {
     this->movementType = _type;
-
-    switch (movementType)
-    {
-        case (MovementType::UpDown):
-        {
-            direction = glm::vec3(0, 1, 0);
-        }
-        break;
-        case (MovementType::LeftRight):
-        {
-            direction = glm::vec3(1, 0, 0);
-        }
-        break;
-    }
 }
 
 // Method Name: GetPosition
