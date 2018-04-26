@@ -41,7 +41,6 @@ public:
 private:
     Camera* camera;
     MovementType movementType;
-
     float speed;
 
     std::vector<VertexFormat> vertices;
@@ -55,7 +54,6 @@ private:
 
     GLuint vao;
     GLuint vbo;
-    GLuint ebo;
     GLuint program;
 
     glm::vec3 direction;
