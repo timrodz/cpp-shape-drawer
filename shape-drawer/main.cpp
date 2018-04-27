@@ -31,7 +31,7 @@ void Render();
 void Update();
 void KeyDown(unsigned char key, int x, int y);
 void KeyUp(unsigned char key, int x, int y);
-void LoadModelsFromFile();
+void LoadModelsFromFile(const char* _file);
 
 // Method Name: main
 // Description: The main program entry loop
@@ -129,7 +129,7 @@ void Update()
         if (KeyCode[(unsigned char)'2'] == KeyState::Pressed)
         {
             GameScene::GetInstance().ClearScene();
-            LoadModelsFromFile();
+            LoadModelsFromFile("shapes");
             anyKeyDown = true;
             cout << "Load external files" << endl;
         }
@@ -137,7 +137,7 @@ void Update()
         {
             GameScene::GetInstance().ClearScene();
             GameScene::GetInstance().CreateDefaultScene(g_shaderProgram);
-            LoadModelsFromFile();
+            LoadModelsFromFile("shapes");
             anyKeyDown = true;
             cout << "Load default scene with external files" << endl;
         }
@@ -179,16 +179,18 @@ void KeyUp(unsigned char key, int x, int y)
 // Description: Loads the shapes.ini file and creates models based on the settings input there
 // author: Juan Alejandro Rodriguez Morais
 // return: void
-void LoadModelsFromFile()
+void LoadModelsFromFile(const char* _file)
 {
     INIParser parser;
-    if (!parser.LoadFile("shapes"))
+    if (!parser.LoadFile(_file))
     {
-        cout << "ERROR: shapes.ini is empty" << endl;
+        cout << "ERROR: " << _file << ".ini is empty" << endl;
         return;
     }
 
     std::string line = "";
+    GameModelOptions options;
+    options.shaderProgram = g_shaderProgram;
 
     // Populate shapes
     for (int i = 1; i <= parser.GetSectionCount(); ++i)
