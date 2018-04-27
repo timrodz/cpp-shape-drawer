@@ -5,10 +5,10 @@ Welcome to Shape Drawer, a program that allows you to view different shapes with
 ## Features
 
 - **Drawing of 2d/3D primitives**: Square (Quad), Triangle, Circle, Hexagon, Pentagon, Heptagon and Cube.
-- **Customise your shapes with**: Dimensions (Scale), Colour, Movement Type and Movement rate.
+- **Customise your shapes with**: Dimensions (Scale), Colour, Movement Type, Movement rate, Position, Rotation.
 - **Load shapes through a file**: Create custom shapes from an **.ini** file (More information below).
 - **Cubemap**: Got a skybox with .jpg? Load it in! Just remember the image order.
-- **Live-reloading**: Clears every object in the scene, with exception to the cubemap.
+- **Scene clearing**: Clears every object in the scene, with exception to the cubemap.
 
 ### Key Design Decisions
 
@@ -36,15 +36,17 @@ The following enums dictate the types of model that can be drawn (and expanded u
 - Circular
 - Box
 
-**Recommendation**: Circular movement speed should be set to a value between *2.0f* and *10.0f*. UpDown, LeftRight and Box should have a very small value such as *0.05f*.
+**Recommendation**: Movement rates for types that are not Box should be set to a value between *1.0f* and *10.0f*. For Box, try to stick with *0.5f*.
 
 ### Systems
 
 - **Camera**: Creates a camera that displays object in the scene. Options:
   - Dimensions (Width, Height). Default is window size.
-  - Field Of View. Defaults at 45.
+  - Field Of View. Defaults at 45. **Be careful**: this value can render the scene very from far away!
 - **Cubemap**: Creates a cubemap that works as a skybox.
-- **GameModel**: Creates the object that will be drawn. Options:
+- **Model**: Holds basic functionality for models (Camera, Position, Scale, Rotation).
+- **GameModel**: Holds basic functionality for mode advanced models (Cubemap, GameObject).
+- **GameObject**: Creates the object that will be drawn. Options:
   - Model Type: See enum above.
   - Movement Type: See enum above.
   - Colour: Vector3(1, 1, 1). Alpha value is always 1.
@@ -55,8 +57,8 @@ The following enums dictate the types of model that can be drawn (and expanded u
 - **GameScene**: Handles creation, rendering and updating of objects. Options:
   - LoadDefaultGameScene: Creates a game scene with all the available models/movement types.
 - **INIParser**: The file reader that creates models. Options:
-  - SaveFile: Saves **shapes.ini** to an **.ini** file. Can be used as backup.
-  - LoadFile: Loads **shapes.ini** and generates a map with appropiate keys.
+  - SaveFile: Saves current map keys to **SaveFile.ini**. Can be used as backup.
+  - LoadFile: Loads and generates a map with appropiate keys.
 - **Shader Loader**: Load any type of you want. Options:
   - Skybox vs/fs: Holds the cubemap textures.
   - Unlit vs/fs: Draws unlit polygons.
@@ -74,22 +76,23 @@ To run Shape Drawer, simply open ShapeDrawer.exe and enjoy! You will find yourse
 ### Controls
 
 - `1`: Load default game scene with all shapes.
-- `2`: Load game scene with shapes loaded from an external file. Automatically detects new shapes added to **shapes.ini**.
+- `2`: Load game scene with shapes loaded from an external file. Automatically detects new shapes added to your **.ini** file.
 - `3`: Load default game scene with external shapes.
 - `R`: Clear the scene.
+- `Q`: Quit the program.
 
 Options `1`, `2`, and `3` automatically clear the scene before adding any new elements.
 
 ### Loading shapes from .ini files
 
 1. Go to the Resources folder located in the root. If it does not exist, create one.
-2. Locate the file "shapes.ini". If it does not exist, create a .txt file and rename it to shapes.ini. Make sure the extension is **.ini**.
+2. Locate the file "shapes.ini". If it does not exist, create a .txt file, give it a name and make sure the extension is **.ini**. e.g.: **shapes.ini**.
 3. Edit the file with the desired information.
 
 **IMPORTANT**: Your **.ini** file *must* adhere to the following standards:
 
 ```text
-[shapeN] (N is the shape number - Starts from 1 upwards)
+[sectionN] (N is the shape number - Starts from 1 upwards, section can be any string)
 ModelType = enum (Refer to Model Types enum)
 MovementType = enum (Refer to Movement Types enum)
 Colour = (x, y, z) (int/float/double values are valid)
@@ -102,9 +105,8 @@ Speed = float value (Use low values)
 Requirements for successful **.ini** file loading:
 
 - Make sure there are no empty lines in the file.
-- No missing entries / characters that should not be used, especially for cubemap textures.
 - Speed must either be set to an integer number (5) or a float number (5.0f). *5f* will return an error.
-- If you want to leave a field set to default values, refer to the **Systems** section to see default values.
+- Please adhere to the format if the program breaks. In the case of leaving any fields blank, they will be populated with default data.
 
 #### Example of correct usage
 
@@ -112,10 +114,9 @@ Requirements for successful **.ini** file loading:
 [shape1]
 ModelType = Triangle
 MovementType = Box
-Colour = (255, 255, 255)
 Scale = (1, 1, 1)
 Position = (3, -3, 0)
-Rotation = (0, 0, 0)
+Rotation = (15, 15, 0)
 Speed = 0.05f
 [shape2]
 ModelType = Hexagon
@@ -123,9 +124,10 @@ MovementType = Circular
 Colour = (124, 64, 105)
 Scale = (1, 1, 1)
 Position = (-3, -3.0, 0)
-Rotation = (15, 15, 0)
 Speed = 5
 ```
+
+In the above case, **shape1** does not have a colour, so it defaults to white (255, 255, 255). Same goes for the rotation of **shape2**, where it defaults to (0, 0, 0).
 
 ## Source code
 
