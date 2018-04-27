@@ -105,6 +105,7 @@ bool INIParser::LoadFile(const char* _file)
             // Find the section
             std::getline(file, line);
 
+            // If the line is empty, return - File is corrupted
             if (line.empty())
             {
                 return false;
@@ -118,8 +119,26 @@ bool INIParser::LoadFile(const char* _file)
                 {
                     tempSection = line.substr(findSectionStart + 1, findSectionEnd - 1);
                     currentSection = tempSection;
-                    std::getline(file, line);
                     sectionCount++;
+
+                    std::streampos previousLinePosition = file.tellg();
+
+                    std::getline(file, line);
+
+                    // If line is another section, Find a new one
+                    if (line.at(0) == '[' && line.at(line.length() - 1) == ']')
+                    {
+                        // Check for duplicate sections, this occurs at the end of the file
+                        size_t duplicateSection = line.find(tempSection);
+                        if (duplicateSection == std::string::npos)
+                        {
+                            sectionCount++;
+                        }
+                    }
+                    else
+                    {
+                        file.seekg(previousLinePosition);
+                    }
                 }
             }
             else
