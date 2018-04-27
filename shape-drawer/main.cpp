@@ -195,19 +195,18 @@ void LoadModelsFromFile(const char* _file, const char* _sectionName)
         cout << "ERROR: " << _file << ".ini is empty" << endl;
         return;
     }
-
-    // Initialise default options
-    ModelOptions modelOptions;
-
-    GameObjectOptions options;
-    options.modelOptions = modelOptions;
-    options.shaderProgram = g_shaderProgram;
     
     std::string line = "";
 
     // Populate shapes
     for (int i = 1; i <= parser.GetSectionCount(); ++i)
     {
+        // Initialise default options
+        ModelOptions modelOptions;
+        GameObjectOptions options;
+        options.modelOptions = modelOptions;
+        options.shaderProgram = g_shaderProgram;
+
         std::string s = _sectionName + std::to_string(i);
         const char* section = s.c_str();
 
