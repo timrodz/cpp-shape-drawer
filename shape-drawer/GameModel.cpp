@@ -135,8 +135,7 @@ void GameModel::Render()
     GLint modelLoc = glGetUniformLocation(this->shaderProgram, "model");
     glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 
-    // lighting calculations
-    GLint objColorLoc = glGetUniformLocation(this->shaderProgram, "objectColor");
+    GLint objColorLoc = glGetUniformLocation(this->shaderProgram, "colour");
     glUniform3f(objColorLoc, this->colour.x, this->colour.y, this->colour.z);
 
     GLuint cameraPosLoc = glGetUniformLocation(this->shaderProgram, "viewPosition");
