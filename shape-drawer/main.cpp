@@ -91,27 +91,13 @@ int main(int argc, char **argv)
     return (EXIT_SUCCESS);
 }
 
-// Method Name: Render
-// Description: Handles the main rendering logic
-// author: Juan Alejandro Rodriguez Morais
-// return: void
-void Render()
-{
-    glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-    GameScene::GetInstance().Render();
-
-    glutSwapBuffers();
-}
-
 // Method Name: Update
 // Description: Handles the main update logic
 // author: Juan Alejandro Rodriguez Morais
 // return: void
 void Update()
 {
-    GLfloat deltaTime = (GLfloat) glutGet(GLUT_ELAPSED_TIME);
+    GLfloat deltaTime = (GLfloat)glutGet(GLUT_ELAPSED_TIME);
     deltaTime *= 0.001f;
 
     GameScene::GetInstance().Update(deltaTime);
@@ -148,6 +134,20 @@ void Update()
             cout << "Scene cleared" << endl;
         }
     }
+}
+
+// Method Name: Render
+// Description: Handles the main rendering logic
+// author: Juan Alejandro Rodriguez Morais
+// return: void
+void Render()
+{
+    glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    GameScene::GetInstance().Render();
+
+    glutSwapBuffers();
 }
 
 // Method Name: KeyDown
@@ -196,7 +196,7 @@ void LoadModelsFromFile(const char* _file, const char* _sectionName)
     GameModelOptions options;
     options.modelOptions = modelOptions;
     options.shaderProgram = g_shaderProgram;
-
+    
     std::string line = "";
 
     // Populate shapes
@@ -208,51 +208,51 @@ void LoadModelsFromFile(const char* _file, const char* _sectionName)
         // Model Type
         if (parser.GetValue<std::string>(section, "ModelType", line))
         {
-        ModelType mod = Utils::GetModelTypeFromString(line);
-        options.modelType = mod;
+            ModelType mod = Utils::GetModelTypeFromString(line);
+            options.modelType = mod;
         }
 
         // Movement Type
         if (parser.GetValue<std::string>(section, "MovementType", line))
         {
-        MovementType mov = Utils::GetMovementTypeFromString(line);
-        options.movementType = mov;
+            MovementType mov = Utils::GetMovementTypeFromString(line);
+            options.movementType = mov;
         }
 
         // Colour
         if (parser.GetValue<std::string>(section, "Colour", line))
         {
-        glm::vec3 colour = Utils::GetVector3FromString(line);
-        colour = Utils::RGBtoAlpha(colour.r, colour.g, colour.b);
-        options.colour = colour;
+            glm::vec3 colour = Utils::GetVector3FromString(line);
+            colour = Utils::RGBtoAlpha(colour.r, colour.g, colour.b);
+            options.colour = colour;
         }
 
         // Position
         if (parser.GetValue<std::string>(section, "Position", line))
         {
-        glm::vec3 position = Utils::GetVector3FromString(line);
-        options.modelOptions.position = position;
+            glm::vec3 position = Utils::GetVector3FromString(line);
+            options.modelOptions.position = position;
         }
 
         // Scale
         if (parser.GetValue<std::string>(section, "Scale", line))
         {
-        glm::vec3 scale = Utils::GetVector3FromString(line);
-        options.modelOptions.scale = scale;
+            glm::vec3 scale = Utils::GetVector3FromString(line);
+            options.modelOptions.scale = scale;
         }
 
         // Rotation
         if (parser.GetValue<std::string>(section, "Rotation", line))
         {
-        glm::vec3 rotation = Utils::GetVector3FromString(line);
-        options.modelOptions.rotation = rotation;
+            glm::vec3 rotation = Utils::GetVector3FromString(line);
+            options.modelOptions.rotation = rotation;
         }
 
         // Speed
         float speed = 0.0f;
         if (parser.GetValue<float>(section, "Speed", speed))
         {
-        options.speed = speed;
+            options.speed = speed;
         }
 
         // Build the model
