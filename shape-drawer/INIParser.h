@@ -19,7 +19,6 @@
 
 class INIParser
 {
-
 public:
     INIParser();
     ~INIParser();

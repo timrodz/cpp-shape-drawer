@@ -1,23 +1,21 @@
 //
-//  File Name: 
+//  File Name: GameModel.cpp
 //  Author: Juan Alejandro Rodriguez Morais
 //  Email: timrodz@icloud.com
 //
-//  
+//  Functionality for the GameModel class
+//  GameModel is a 
 //
 
 #include "GameModel.h"
 
-GameModel::GameModel()
-{}
+GameModel::GameModel() {}
 
 GameModel::GameModel(ModelOptions _options) :
     Model(_options)
 {}
 
-
-GameModel::~GameModel()
-{}
+GameModel::~GameModel() {}
 
 // Method Name: SetProgram
 // Description: Sets the shader that this object will be rendered with

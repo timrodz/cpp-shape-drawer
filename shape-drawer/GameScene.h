@@ -4,8 +4,8 @@
 //  Email: timrodz@icloud.com
 //
 //  Header file for the GameScene class
-//  The GameScene is a singleton, to use:
-//  GameScene::GetInstance() will return the existing instance.
+//  The GameScene is a singleton
+//  To get instance, call GameScene::GetInstance()
 //
 
 #pragma once

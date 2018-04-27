@@ -10,8 +10,7 @@
 
 #include "Model.h"
 
-Model::Model()
-{}
+Model::Model() {}
 
 Model::Model(ModelOptions _options) :
     position(_options.position),

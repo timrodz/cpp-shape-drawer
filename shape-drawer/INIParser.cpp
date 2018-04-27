@@ -20,7 +20,7 @@ INIParser::INIParser() {}
 INIParser::~INIParser() {}
 
 // Method Name: SaveFile
-// Description: Saves a file
+// Description: Saves the generated map keys into a file
 // author: Juan Alejandro Rodriguez Morais
 // return: boolean
 bool INIParser::SaveFile()
@@ -36,17 +36,17 @@ bool INIParser::SaveFile()
         std::cout << "Ini file saved\n";
 
         std::map<string, string>::const_iterator it;
-        it = mapPairs.begin();
+        it = this->mapPairs.begin();
 
-        for (unsigned int i = 0; i < mapPairs.size(); ++i)
+        for (unsigned int i = 0; i < this->mapPairs.size(); ++i)
         {
             std::cout << it->first << " = " << it->second << "\n";
             it++;
         }
 
-        it = mapPairs.begin();
+        it = this->mapPairs.begin();
 
-        while (it != mapPairs.end())
+        while (it != this->mapPairs.end())
         {
             string tempSection = "";
             string tempKey = "";
@@ -119,7 +119,7 @@ bool INIParser::LoadFile(const char* _file)
                 {
                     tempSection = line.substr(findSectionStart + 1, findSectionEnd - 1);
                     currentSection = tempSection;
-                    sectionCount++;
+                    this->sectionCount++;
 
                     std::streampos previousLinePosition = file.tellg();
 
@@ -132,7 +132,7 @@ bool INIParser::LoadFile(const char* _file)
                         size_t duplicateSection = line.find(tempSection);
                         if (duplicateSection == std::string::npos)
                         {
-                            sectionCount++;
+                            this->sectionCount++;
                         }
                     }
                     else
@@ -185,7 +185,7 @@ bool INIParser::AddValue(const char* _section, const char* _key, const char* _va
 
     if (GetValue<string>(_section, _key, string(_value)) == false)
     {
-        mapPairs.insert(std::make_pair(mapKey, _value));
+        this->mapPairs.insert(std::make_pair(mapKey, _value));
         return true;
     }
 
@@ -212,7 +212,7 @@ std::string INIParser::GenerateMapKey(const char* _section, const char* _key)
 // return: int
 int INIParser::GetSectionCount() const
 {
-    return (sectionCount);
+    return this->sectionCount;
 }
 
 // Method Name: FillValue

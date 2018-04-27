@@ -198,7 +198,7 @@ void LoadModelsFromFile(const char* _file, const char* _sectionName)
     
     std::string line = "";
 
-    // Populate shapes
+    // Populate the shapes
     for (int i = 1; i <= parser.GetSectionCount(); ++i)
     {
         // Initialise default options

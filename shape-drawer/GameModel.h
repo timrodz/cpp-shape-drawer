@@ -1,9 +1,10 @@
 //
-//  File Name: 
+//  File Name: GameModel.h
 //  Author: Juan Alejandro Rodriguez Morais
 //  Email: timrodz@icloud.com
 //
-//  
+//  Header file containing the GameModel class, which acts like a Transform.
+//  GameModel derives from Model
 //
 
 #pragma once

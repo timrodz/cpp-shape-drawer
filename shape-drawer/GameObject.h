@@ -3,7 +3,8 @@
 //  Author: Juan Alejandro Rodriguez Morais
 //  Email: timrodz@icloud.com
 //
-//  Header file for the GameModel class
+//  Header file for the GameObject class
+//  GameObject derives from GameModel
 //
 
 #pragma once

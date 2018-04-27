@@ -62,7 +62,7 @@ void GameScene::CreateModel(GameObjectOptions _options)
 
     // Create the model with our options
     GameObject* model = new GameObject(_options);
-    gameModelVector.push_back(model);
+    this->gameModelVector.push_back(model);
 }
 
 // Method Name: GetModels
@@ -71,7 +71,7 @@ void GameScene::CreateModel(GameObjectOptions _options)
 // return: std::vector<GameModel*>
 std::vector<GameObject*> GameScene::GetModels() const
 {
-    return (gameModelVector);
+    return this->gameModelVector;
 }
 
 // Method Name: Update
@@ -81,7 +81,7 @@ std::vector<GameObject*> GameScene::GetModels() const
 // return: void
 void GameScene::Update(float _currentTime)
 {
-    for (auto it = gameModelVector.begin(); it < gameModelVector.end(); ++it)
+    for (auto it = this->gameModelVector.begin(); it < this->gameModelVector.end(); ++it)
     {
         (*it)->Update(_currentTime);
     }
@@ -93,9 +93,13 @@ void GameScene::Update(float _currentTime)
 // return: void
 void GameScene::Render()
 {
-    cubemap->Render();
+    // Only render the cubemap if it exists (or has been set)
+    if (nullptr != cubemap)
+    {
+        cubemap->Render();
+    }
 
-    for (auto it = gameModelVector.begin(); it < gameModelVector.end(); ++it)
+    for (auto it = this->gameModelVector.begin(); it < this->gameModelVector.end(); ++it)
     {
         (*it)->Render();
     }
@@ -107,7 +111,7 @@ void GameScene::Render()
 // return: void
 void GameScene::ClearScene()
 {
-    gameModelVector.clear();
+    this->gameModelVector.clear();
 }
 
 // Method Name: CreateDefaultScene

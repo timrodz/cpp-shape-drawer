@@ -3,7 +3,7 @@
 //  Author: Juan Alejandro Rodriguez Morais
 //  Email: timrodz@icloud.com
 //
-//  Handles the main logic for GameModel drawing, updating and their creation
+//  Handles the main logic for GameObject drawing, updating and their creation
 //
 
 #include "GameObject.h"
@@ -17,7 +17,7 @@ GameObject::GameObject() {}
 // Description: Constructor for the GameModel
 // author: Juan Alejandro Rodriguez Morais
 // param _options: The options to create the game model with
-// return: GameModel
+// return: GameObject
 GameObject::GameObject(GameObjectOptions _options) :
     GameModel(_options.modelOptions), // Set all default model options
     modelType(_options.modelType),
@@ -25,7 +25,6 @@ GameObject::GameObject(GameObjectOptions _options) :
     colour(_options.colour),
     speed(_options.speed)
 {
-    
     SetShaderProgram(_options.shaderProgram);
     this->startPosition = this->position;
 
@@ -52,7 +51,6 @@ GameObject::GameObject(GameObjectOptions _options) :
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->elementBufferObject);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * this->indices.size(), &this->indices[0], GL_STATIC_DRAW);
 
-    // Store the position
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(VertexFormat), (GLvoid*)0);
     glEnableVertexAttribArray(0);
 
@@ -138,9 +136,6 @@ void GameObject::Render()
 
     GLint objColorLoc = glGetUniformLocation(this->shaderProgram, "colour");
     glUniform3f(objColorLoc, this->colour.x, this->colour.y, this->colour.z);
-
-    GLuint cameraPosLoc = glGetUniformLocation(this->shaderProgram, "viewPosition");
-    glUniform3f(cameraPosLoc, camera->GetPosition().x, camera->GetPosition().y, camera->GetPosition().z);
 
     glBindVertexArray(this->vertexArrayObject);
     glDrawElements(GL_TRIANGLES, this->indices.size(), GL_UNSIGNED_INT, 0);
