@@ -23,7 +23,14 @@ struct GameModelOptions
     glm::vec3 colour;
     float speed;
 
-    GameModelOptions() {}
+    // Defaults
+    GameModelOptions()
+    {
+        modelType = ModelType::Triangle;
+        movementType = MovementType::Idle;
+        colour = glm::vec3(1, 1, 1);
+        speed = 0.0f;
+    }
     GameModelOptions(ModelOptions _options, GLuint _shaderProgram, ModelType _modelType, MovementType _movementType, glm::vec3 _colour, float _speed)
     {
         modelOptions = _options;
@@ -50,7 +57,7 @@ public:
     void SetMovementType(MovementType _type);
     void SetColour(glm::vec3 _colour);
     void SetSpeed(float _speed);
-    
+
     GLuint GetProgram() const;
     glm::vec3 GetStartPosition() const;
     ModelType GetModelType() const;

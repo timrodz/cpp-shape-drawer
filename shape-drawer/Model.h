@@ -20,10 +20,20 @@ struct ModelOptions
     glm::vec3 scale;
     glm::vec3 rotation;
 
-    ModelOptions() {}
+    // Defaults
+    ModelOptions()
+    {
+        position = glm::vec3(0, 0, 0);
+        scale = glm::vec3(1, 1, 1);
+        rotation = glm::vec3(0, 0, 0);
+    }
+    // Defaults with a camera
     ModelOptions(Camera* _camera)
     {
         camera = _camera;
+        position = glm::vec3(0, 0, 0);
+        scale = glm::vec3(1, 1, 1);
+        rotation = glm::vec3(0, 0, 0);
     }
     ModelOptions(Camera* _camera, glm::vec3 _position, glm::vec3 _scale, glm::vec3 _rotation)
     {
