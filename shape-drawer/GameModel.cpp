@@ -89,7 +89,7 @@ void GameModel::Update(GLfloat _currentTime)
         case (MovementType::Box):
         {
             vec3 targetPosition = this->startPosition + Utils::BoxPositions[Utils::movementIndex];
-            this->position = Utils::MoveTowards(this->position, targetPosition, this->speed);
+            this->position = Utils::MoveTowards(this->position, targetPosition, abs(this->speed));
 
             if (this->position == targetPosition)
             {
