@@ -136,7 +136,7 @@
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Cubemap.cpp" />
-    <ClCompile Include="GameModel.cpp" />
+    <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="INIParser.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="GameScene.cpp" />
@@ -147,7 +147,7 @@
   <ItemGroup>
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Cubemap.h" />
-    <ClInclude Include="GameModel.h" />
+    <ClInclude Include="GameObject.h" />
     <ClInclude Include="INIParser.h" />
     <ClInclude Include="GameScene.h" />
     <ClInclude Include="Model.h" />

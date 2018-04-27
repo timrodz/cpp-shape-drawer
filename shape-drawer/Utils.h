@@ -10,6 +10,7 @@
 // 4. Enums
 // 5. Vertex Format structs
 // 6. Utilities class
+// 7. Documentation templates
 //
 
 #pragma once
@@ -65,7 +66,7 @@ enum MovementType
 };
 #pragma endregion
 
-/* Vertex Formats */
+/* Vertex Format */
 #pragma region VertexFormat
 struct Position
 {
@@ -126,6 +127,7 @@ private:
     static void SetPolygonData(std::vector<VertexFormat>& _vertices, std::vector<GLuint>&_indices, int _polygonCount);
 };
 
+#pragma region Documentation
 /// File header
 //
 //  File Name: 
@@ -141,3 +143,4 @@ private:
 // author: Juan Alejandro Rodriguez Morais
 // param: 
 // return: 
+#pragma endregion

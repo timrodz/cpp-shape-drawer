@@ -10,12 +10,11 @@
 
 #include "Utils.h"
 #include "GameScene.h"
-#include "GameModel.h"
+#include "GameObject.h"
 #include "Camera.h"
 #include "Cubemap.h"
 #include "INIParser.h"
 
-/* Avoid repetition of common code */
 using std::cout;
 using std::endl;
 using glm::vec3;
@@ -193,7 +192,7 @@ void LoadModelsFromFile(const char* _file, const char* _sectionName)
     // Initialise default options
     ModelOptions modelOptions;
 
-    GameModelOptions options;
+    GameObjectOptions options;
     options.modelOptions = modelOptions;
     options.shaderProgram = g_shaderProgram;
     

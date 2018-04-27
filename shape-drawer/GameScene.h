@@ -12,7 +12,7 @@
 
 #include <vector>
 
-#include "GameModel.h"
+#include "GameObject.h"
 #include "Camera.h"
 #include "Cubemap.h"
 
@@ -22,10 +22,10 @@ public:
     virtual ~GameScene();
     static GameScene& GetInstance();
 
-    void CreateModel(GameModelOptions _options);
+    void CreateModel(GameObjectOptions _options);
     void SetCamera(Camera* _camera);
     void SetCubemap(Cubemap* cubemap);
-    std::vector<GameModel*> GetModels() const;
+    std::vector<GameObject*> GetModels() const;
 
     void Update(float _currentTime);
     void Render();
@@ -41,7 +41,7 @@ private:
 
 protected:
     static GameScene* Instance;
-    std::vector<GameModel*> gameModelVector;
+    std::vector<GameObject*> gameModelVector;
     Camera* camera;
     Cubemap* cubemap;
 };

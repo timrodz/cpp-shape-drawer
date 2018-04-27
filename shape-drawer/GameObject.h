@@ -14,7 +14,7 @@
 class Camera;
 
 /* Game Model Options */
-struct GameModelOptions
+struct GameObjectOptions
 {
     ModelOptions modelOptions;
     GLuint shaderProgram;
@@ -24,14 +24,14 @@ struct GameModelOptions
     float speed;
 
     // Defaults
-    GameModelOptions()
+    GameObjectOptions()
     {
         modelType = ModelType::Triangle;
         movementType = MovementType::Idle;
         colour = glm::vec3(1, 1, 1);
         speed = 0.0f;
     }
-    GameModelOptions(ModelOptions _options, GLuint _shaderProgram, ModelType _modelType, MovementType _movementType, glm::vec3 _colour, float _speed)
+    GameObjectOptions(ModelOptions _options, GLuint _shaderProgram, ModelType _modelType, MovementType _movementType, glm::vec3 _colour, float _speed)
     {
         modelOptions = _options;
         shaderProgram = _shaderProgram;
@@ -42,12 +42,12 @@ struct GameModelOptions
     }
 };
 
-class GameModel : Model
+class GameObject : Model
 {
 public:
-    GameModel();
-    GameModel(GameModelOptions _options);
-    ~GameModel();
+    GameObject();
+    GameObject(GameObjectOptions _options);
+    ~GameObject();
 
     virtual void Update(GLfloat _currentTime) override;
     virtual void Render() override;

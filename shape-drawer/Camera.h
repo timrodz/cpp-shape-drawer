@@ -13,7 +13,6 @@
 class Camera
 {
 public:
-    //Camera();
     Camera(glm::vec3 _position, float _fieldOfView, int _width, int _height);
     ~Camera();
 

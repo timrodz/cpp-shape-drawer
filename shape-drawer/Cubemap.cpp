@@ -62,15 +62,15 @@ Cubemap::Cubemap(GLuint _cubemapProgram, Camera* _camera)
         1.0f, -1.0f,  1.0f
     };
 
-    this->program = _cubemapProgram;
+    this->shaderProgram = _cubemapProgram;
     this->camera = _camera;
 
     //Set up skybox VAO
-    glGenVertexArrays(1, &vao);
-    glBindVertexArray(vao);
+    glGenVertexArrays(1, &vertexArrayObject);
+    glBindVertexArray(vertexArrayObject);
 
-    glGenBuffers(1, &vbo);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    glGenBuffers(1, &vertexBufferObject);
+    glBindBuffer(GL_ARRAY_BUFFER, vertexBufferObject);
     glBufferData(GL_ARRAY_BUFFER, sizeof(skyboxVertices), &skyboxVertices[0], GL_STATIC_DRAW);
 
     glEnableVertexAttribArray(0);
@@ -130,12 +130,12 @@ GLuint Cubemap::CreateCubemap(std::vector<const GLchar*> _faces)
 // return: void
 void Cubemap::Render()
 {
-    glUseProgram(program);
+    glUseProgram(shaderProgram);
 
-    glBindVertexArray(vao);
+    glBindVertexArray(vertexArrayObject);
 
     glActiveTexture(GL_TEXTURE0);
-    glUniform1i(glGetUniformLocation(program, "cubeSampler"), 0);
+    glUniform1i(glGetUniformLocation(shaderProgram, "cubeSampler"), 0);
     glBindTexture(GL_TEXTURE_CUBE_MAP, texture);
 
     glm::mat4 world;
@@ -143,7 +143,7 @@ void Cubemap::Render()
 
     glm::mat4 mvp;
     mvp = camera->GetProjectionMatrix() * camera->GetViewMatrix() * world;
-    glUniformMatrix4fv(glGetUniformLocation(program, "mvp"), 1, GL_FALSE, glm::value_ptr(mvp));
+    glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "mvp"), 1, GL_FALSE, glm::value_ptr(mvp));
 
     glDrawArrays(GL_TRIANGLES, 0, 36);
     glBindVertexArray(0);

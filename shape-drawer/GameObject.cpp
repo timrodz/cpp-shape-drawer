@@ -6,19 +6,19 @@
 //  Handles the main logic for GameModel drawing, updating and their creation
 //
 
-#include "GameModel.h"
+#include "GameObject.h"
 #include "Camera.h"
 
 using glm::vec3;
 
-GameModel::GameModel() {}
+GameObject::GameObject() {}
 
 // Method Name: GameModel
 // Description: Constructor for the GameModel
 // author: Juan Alejandro Rodriguez Morais
 // param _options: The options to create the game model with
 // return: GameModel
-GameModel::GameModel(GameModelOptions _options) :
+GameObject::GameObject(GameObjectOptions _options) :
     Model(_options.modelOptions), // Set all default model options
     shaderProgram(_options.shaderProgram),
     modelType(_options.modelType),
@@ -59,14 +59,14 @@ GameModel::GameModel(GameModelOptions _options) :
     glBindVertexArray(0);
 }
 
-GameModel::~GameModel() {}
+GameObject::~GameObject() {}
 
 // Method Name: Update
 // Description: Updates the model based on current time
 // author: Juan Alejandro Rodriguez Morais
 // param _currentTime: The elapsed time since start
 // return: void
-void GameModel::Update(GLfloat _currentTime)
+void GameObject::Update(GLfloat _currentTime)
 {
     switch (movementType)
     {
@@ -106,7 +106,7 @@ void GameModel::Update(GLfloat _currentTime)
 // Description: Draws the model based on its settings
 // author: Juan Alejandro Rodriguez Morais
 // return: void
-void GameModel::Render()
+void GameObject::Render()
 {
     glUseProgram(this->shaderProgram);
 
@@ -151,7 +151,7 @@ void GameModel::Render()
 // author: Juan Alejandro Rodriguez Morais
 // param _program: The shader type
 // return: void
-void GameModel::SetProgram(GLuint _program)
+void GameObject::SetProgram(GLuint _program)
 {
     this->shaderProgram = _program;
 }
@@ -161,7 +161,7 @@ void GameModel::SetProgram(GLuint _program)
 // author: Juan Alejandro Rodriguez Morais
 // param _position: The desired position
 // return: void
-void GameModel::SetStartPosition(vec3 _position)
+void GameObject::SetStartPosition(vec3 _position)
 {
     this->startPosition = _position;
 }
@@ -171,7 +171,7 @@ void GameModel::SetStartPosition(vec3 _position)
 // author: Juan Alejandro Rodriguez Morais
 // param _colour: The desired color
 // return: void
-void GameModel::SetColour(vec3 _colour)
+void GameObject::SetColour(vec3 _colour)
 {
     this->colour = _colour;
 }
@@ -181,7 +181,7 @@ void GameModel::SetColour(vec3 _colour)
 // author: Juan Alejandro Rodriguez Morais
 // param _speed: The desired speed
 // return: void
-void GameModel::SetSpeed(float _speed)
+void GameObject::SetSpeed(float _speed)
 {
     this->speed = _speed;
 }
@@ -191,7 +191,7 @@ void GameModel::SetSpeed(float _speed)
 // author: Juan Alejandro Rodriguez Morais
 // param _type: The type of movement
 // return: void
-void GameModel::SetMovementType(MovementType _type)
+void GameObject::SetMovementType(MovementType _type)
 {
     this->movementType = _type;
 }
@@ -200,7 +200,7 @@ void GameModel::SetMovementType(MovementType _type)
 // Description: Returns the program of the object
 // author: Juan Alejandro Rodriguez Morais
 // return: GLuint
-GLuint GameModel::GetProgram() const
+GLuint GameObject::GetProgram() const
 {
     return this->shaderProgram;
 }
@@ -209,7 +209,7 @@ GLuint GameModel::GetProgram() const
 // Description: Returns the colour of the object
 // author: Juan Alejandro Rodriguez Morais
 // return: glm::vec3
-vec3 GameModel::GetStartPosition() const
+vec3 GameObject::GetStartPosition() const
 {
     return this->startPosition;
 }
@@ -218,7 +218,7 @@ vec3 GameModel::GetStartPosition() const
 // Description: Returns the model type of the object
 // author: Juan Alejandro Rodriguez Morais
 // return: ModelType
-ModelType GameModel::GetModelType() const
+ModelType GameObject::GetModelType() const
 {
     return this->modelType;
 }
@@ -227,7 +227,7 @@ ModelType GameModel::GetModelType() const
 // Description: Returns the movement type of the object
 // author: Juan Alejandro Rodriguez Morais
 // return: MovementType
-MovementType GameModel::GetMovementType() const
+MovementType GameObject::GetMovementType() const
 {
     return this->movementType;
 }
@@ -236,7 +236,7 @@ MovementType GameModel::GetMovementType() const
 // Description: Returns the colour of the object
 // author: Juan Alejandro Rodriguez Morais
 // return: glm::vec3
-vec3 GameModel::GetColour() const
+vec3 GameObject::GetColour() const
 {
     return this->colour;
 }
@@ -245,7 +245,7 @@ vec3 GameModel::GetColour() const
 // Description: Returns the colour of the object
 // author: Juan Alejandro Rodriguez Morais
 // return: float
-float GameModel::GetSpeed() const
+float GameObject::GetSpeed() const
 {
     return this->speed;
 }

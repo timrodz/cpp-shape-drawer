@@ -55,13 +55,13 @@ void GameScene::SetCubemap(Cubemap* _cubemap)
 // author: Juan Alejandro Rodriguez Morais
 // param _options: The options to create the Game Model with
 // return: void
-void GameScene::CreateModel(GameModelOptions _options)
+void GameScene::CreateModel(GameObjectOptions _options)
 {
     // Set the camera to be the current
     _options.modelOptions.camera = this->camera;
 
     // Create the model with our options
-    GameModel* model = new GameModel(_options);
+    GameObject* model = new GameObject(_options);
     gameModelVector.push_back(model);
 }
 
@@ -69,7 +69,7 @@ void GameScene::CreateModel(GameModelOptions _options)
 // Description: Returns the model vector
 // author: Juan Alejandro Rodriguez Morais
 // return: std::vector<GameModel*>
-std::vector<GameModel*> GameScene::GetModels() const
+std::vector<GameObject*> GameScene::GetModels() const
 {
     return (gameModelVector);
 }
@@ -117,7 +117,7 @@ void GameScene::ClearScene()
 // return: void
 void GameScene::CreateDefaultScene(GLuint _shaderProgram)
 {
-    GameModelOptions options;
+    GameObjectOptions options;
     options.modelOptions = ModelOptions(camera, vec3(0, 0, 0), vec3(1, 1, 1), vec3(0, 0, 0));
     options.shaderProgram = _shaderProgram;
 

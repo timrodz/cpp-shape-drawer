@@ -31,9 +31,9 @@ private:
     std::vector<VertexFormat> vertices;
 	std::vector<GLuint> indices;
 
-	GLuint vao;
-	GLuint vbo;
-	GLuint ebo;
+	GLuint vertexArrayObject;
+	GLuint vertexBufferObject;
+	GLuint elementBufferObject;
+	GLuint shaderProgram;
 	GLuint texture;
-	GLuint program;
 };
