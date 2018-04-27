@@ -38,7 +38,7 @@ Camera::Camera(glm::vec3 _position, float _fieldofView, int _width, int _height)
 // return: glm::mat4
 glm::mat4 Camera::GetViewMatrix() const
 {
-    return (glm::lookAt(position, position + forward, up));
+    return (glm::lookAt(this->position, this->position + this->forward, this->up));
 }
 
 // Method Name: GetProjectionMatrix
@@ -47,7 +47,7 @@ glm::mat4 Camera::GetViewMatrix() const
 // return: glm::mat4
 glm::mat4 Camera::GetProjectionMatrix() const
 {
-    return (glm::perspective(fieldOfView, (GLfloat) width / (GLfloat) height, 0.1f, 1000.0f));
+    return (glm::perspective(this->fieldOfView, (GLfloat) this->width / (GLfloat) this->height, 0.1f, 1000.0f));
 }
 
 // Method Name: GetPosition
