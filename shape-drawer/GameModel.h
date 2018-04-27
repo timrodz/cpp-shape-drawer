@@ -8,55 +8,68 @@
 
 #pragma once
 
+#include "Model.h"
 #include "Utils.h"
 
 class Camera;
 
-class GameModel
+/* Game Model Options */
+struct GameModelOptions
+{
+    ModelOptions modelOptions;
+    GLuint shaderProgram;
+    ModelType modelType;
+    MovementType movementType;
+    glm::vec3 colour;
+    float speed;
+
+    GameModelOptions() {}
+    GameModelOptions(ModelOptions _options, GLuint _shaderProgram, ModelType _modelType, MovementType _movementType, glm::vec3 _colour, float _speed)
+    {
+        modelOptions = _options;
+        shaderProgram = _shaderProgram;
+        modelType = _modelType;
+        movementType = _movementType;
+        colour = _colour;
+        speed = _speed;
+    }
+};
+
+class GameModel : Model
 {
 public:
-    GameModel(ModelType _modelType, Camera* _camera);
+    GameModel();
+    GameModel(GameModelOptions _options);
     ~GameModel();
 
-    void Update(GLfloat _time);
-    void Render();
+    virtual void Update(GLfloat _currentTime) override;
+    virtual void Render() override;
 
     void SetProgram(GLuint _program);
-    void SetRotation(glm::vec3 _angle);
-    void SetPosition(glm::vec3 _position);
     void SetStartPosition(glm::vec3 _position);
-    void SetScale(glm::vec3 _scale);
+    void SetMovementType(MovementType _type);
     void SetColour(glm::vec3 _colour);
     void SetSpeed(float _speed);
-    void SetMovementType(MovementType _type);
-
-    glm::vec3 GetPosition() const;
-    glm::vec3 GetScale() const;
-    glm::vec3 GetRotation() const;
+    
+    GLuint GetProgram() const;
     glm::vec3 GetStartPosition() const;
+    ModelType GetModelType() const;
     MovementType GetMovementType() const;
     glm::vec3 GetColour() const;
     float GetSpeed() const;
 
 private:
-    Camera* camera;
-    MovementType movementType;
-
-    float speed;
-
     std::vector<VertexFormat> vertices;
     std::vector<GLuint> indices;
 
+    GLuint vertexArrayObject;
+    GLuint vertexBufferObject;
+    GLuint elementBufferObject;
+
+    GLuint shaderProgram;
     glm::vec3 startPosition;
-    glm::vec3 position;
-    glm::vec3 scale;
-    glm::vec3 rotation;
+    ModelType modelType;
+    MovementType movementType;
     glm::vec3 colour;
-
-    GLuint vao;
-    GLuint vbo;
-    GLuint ebo;
-    GLuint program;
-
-    glm::vec3 direction;
+    float speed;
 };

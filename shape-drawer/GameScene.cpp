@@ -8,6 +8,8 @@
 
 #include "GameScene.h"
 
+using glm::vec3;
+
 GameScene* GameScene::Instance = 0;
 
 GameScene::GameScene() {}
@@ -51,36 +53,16 @@ void GameScene::SetCubemap(Cubemap* _cubemap)
 // Method Name: CreateModel
 // Description: Creates a model based on user defined parameters
 // author: Juan Alejandro Rodriguez Morais
-// param _model: The type of model
-// param _movement: The type of movemnt
-// param _program: The shader to apply
-// param _colour: The colour of the object
-// param _scale: The dimensions of the object
-// param _position: the position vector to place the model at
-// param _rotation: the rotation vector to rotate the model towards
-// param _speed: The desired movement speed of the object
+// param _options: The options to create the Game Model with
 // return: void
-void GameScene::CreateModel(
-    ModelType _model,
-    MovementType _movement,
-    GLuint _program,
-    glm::vec3 _colour,
-    glm::vec3 _scale,
-    glm::vec3 _position,
-    glm::vec3 _rotation,
-    float _speed
-)
+void GameScene::CreateModel(GameModelOptions _options)
 {
-    GameModel* tempModel = new GameModel(_model, this->camera);
-    tempModel->SetProgram(_program);
-    tempModel->SetMovementType(_movement);
-    tempModel->SetColour(_colour);
-    tempModel->SetScale(_scale);
-    tempModel->SetPosition(_position);
-    tempModel->SetStartPosition(_position);
-    tempModel->SetRotation(_rotation);
-    tempModel->SetSpeed(_speed);
-    gameModelVector.push_back(tempModel);
+    // Set the camera to be the current
+    _options.modelOptions.camera = this->camera;
+
+    // Create the model with our options
+    GameModel* model = new GameModel(_options);
+    gameModelVector.push_back(model);
 }
 
 // Method Name: GetModels
@@ -90,6 +72,19 @@ void GameScene::CreateModel(
 std::vector<GameModel*> GameScene::GetModels() const
 {
     return (gameModelVector);
+}
+
+// Method Name: Update
+// Description: Updates all objects
+// author: Juan Alejandro Rodriguez Morais
+// param _currentTime: The elapsed time of the application
+// return: void
+void GameScene::Update(float _currentTime)
+{
+    for (auto it = gameModelVector.begin(); it < gameModelVector.end(); it++)
+    {
+        (*it)->Update(_currentTime);
+    }
 }
 
 // Method Name: Render
@@ -103,19 +98,6 @@ void GameScene::Render()
     for (auto it = gameModelVector.begin(); it < gameModelVector.end(); it++)
     {
         (*it)->Render();
-    }
-}
-
-// Method Name: Update
-// Description: Updates all objects
-// author: Juan Alejandro Rodriguez Morais
-// param _deltaTime: The time it took to render last frame
-// return: void
-void GameScene::Update(float _deltaTime)
-{
-    for (auto it = gameModelVector.begin(); it < gameModelVector.end(); it++)
-    {
-        (*it)->Update(_deltaTime);
     }
 }
 
@@ -135,19 +117,76 @@ void GameScene::ClearScene()
 // return: void
 void GameScene::CreateDefaultScene(GLuint _shaderProgram)
 {
-    CreateModel(ModelType::Triangle, MovementType::LeftRight, _shaderProgram, Utils::RGBtoAlpha(51, 153, 51), glm::vec3(1, 1, 1), glm::vec3(-4, -0.5, 0), glm::vec3(0, 0, 0), 3.0f);
-    CreateModel(ModelType::Square, MovementType::UpDown, _shaderProgram, Utils::RGBtoAlpha(227, 181, 5), glm::vec3(1, 1, 1), glm::vec3(6, 0, 0), glm::vec3(0, 0, 0), 3);
-    CreateModel(ModelType::Circle, MovementType::Box, _shaderProgram, Utils::RGBtoAlpha(86, 163, 166), glm::vec3(1, 1, 1), glm::vec3(0, -2, 0), glm::vec3(0, 0, 0), 0.05f);
-    CreateModel(ModelType::Hexagon, MovementType::Circular, _shaderProgram, Utils::RGBtoAlpha(219, 80, 74), glm::vec3(1, 1, 1), glm::vec3(0, 2, 0), glm::vec3(0, 0, 0), 3.0f);
-    CreateModel(ModelType::Cube, MovementType::BoxInverted, _shaderProgram, Utils::RGBtoAlpha(224, 74, 153), glm::vec3(1, 1, 1), glm::vec3(-5, 3.5, 0), glm::vec3(0, 0, 0), 0.05f);
-    CreateModel(ModelType::Pentagon, MovementType::LeftRight, _shaderProgram, Utils::RGBtoAlpha(242, 134, 58), glm::vec3(1, 1, 1), glm::vec3(-6, -3.5, 0), glm::vec3(0, 0, 17.5), 3.0f);
-    CreateModel(ModelType::Heptagon, MovementType::Circular, _shaderProgram, Utils::RGBtoAlpha(86, 56, 237), glm::vec3(1, 1, 1), glm::vec3(5, 3.5, 0), glm::vec3(0, 0, 0), 5);
+    GameModelOptions options;
+    options.modelOptions = ModelOptions(camera, vec3(0, 0, 0), vec3(1, 1, 1), vec3(0, 0, 0));
+    options.shaderProgram = _shaderProgram;
+
+    // Triangle w/ LeftRight movement
+    options.modelType = ModelType::Triangle;
+    options.movementType = MovementType::LeftRight;
+    options.modelOptions.position = vec3(-4, -0.5, 0);
+    options.colour = Utils::RGBtoAlpha(51, 153, 51);
+    options.speed = 3.0f;
+    CreateModel(options);
+
+    // Square w/ Updown movement
+    options.modelType = ModelType::Square;
+    options.movementType = MovementType::UpDown;
+    options.modelOptions.position = vec3(6, 0, 0);
+    options.colour = Utils::RGBtoAlpha(227, 181, 5);
+    options.speed = 2.0f;
+
+    CreateModel(options);
+
+    // Circle with Box movement
+    options.modelType = ModelType::Circle;
+    options.movementType = MovementType::Box;
+    options.modelOptions.position = vec3(0, -2, 0);
+    options.colour = Utils::RGBtoAlpha(86, 163, 166);
+    options.speed = 0.05f;
+
+    CreateModel(options);
+
+    // Hexagon with Circular movement
+    options.modelType = ModelType::Hexagon;
+    options.movementType = MovementType::Circular;
+    options.modelOptions.position = vec3(0, 2, 0);
+    options.colour = Utils::RGBtoAlpha(219, 80, 74);
+    options.speed = 4.5f;
+
+    CreateModel(options);
+
+    // Cube with Box movement
+    options.modelType = ModelType::Cube;
+    options.movementType = MovementType::Box;
+    options.modelOptions.position = vec3(-5, 3.5, 0);
+    options.colour = Utils::RGBtoAlpha(224, 74, 153);
+    options.speed = 0.05f;
+
+    CreateModel(options);
+
+    // Pentagon with LeftRight movement
+    options.modelType = ModelType::Pentagon;
+    options.movementType = MovementType::UpDown;
+    options.modelOptions.position = vec3(-6, -3, 0);
+    options.colour = Utils::RGBtoAlpha(242, 134, 58);
+    options.speed = 2.75f;
+
+    CreateModel(options);
+
+    // Heptagon with Circular movement
+    options.modelType = ModelType::Heptagon;
+    options.movementType = MovementType::Circular;
+    options.modelOptions.position = vec3(5.5, 3, 0);
+    options.colour = Utils::RGBtoAlpha(86, 56, 237);
+    options.speed = 6.5f;
+
+    CreateModel(options);
 }
 
 // Method Name: Operator=
 // Description: Prevents the object from being initialised
 // author: Juan Alejandro Rodriguez Morais
-// return: Current GameScene instance
 GameScene GameScene::operator=(GameScene const &)
 {
     return GameScene();

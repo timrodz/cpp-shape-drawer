@@ -9,24 +9,28 @@
 #include "GameModel.h"
 #include "Camera.h"
 
+using glm::vec3;
+
+GameModel::GameModel() {}
+
 // Method Name: GameModel
 // Description: Constructor for the GameModel
 // author: Juan Alejandro Rodriguez Morais
-// param _modelType: The type of model to create
-// param _camera: The camera that will render the model
+// param _options: The options to create the game model with
 // return: GameModel
-GameModel::GameModel(ModelType _modelType, Camera* _camera)
+GameModel::GameModel(GameModelOptions _options) :
+    Model(_options.modelOptions), // Set all default model options
+    shaderProgram(_options.shaderProgram),
+    modelType(_options.modelType),
+    movementType(_options.movementType),
+    colour(_options.colour),
+    speed(_options.speed)
 {
-    this->camera = _camera;
-    this->scale = glm::vec3(1.0f, 1.0f, 1.0f);
-    this->position = glm::vec3(0.0, 0.0, 0.0);
-    this->colour = glm::vec3(1.0f, 1.0f, 1.0f);
-    this->speed = 0.0f;
-    this->movementType = MovementType::Idle;
+    this->startPosition = this->position;
 
-    switch (_modelType)
+    switch (modelType)
     {
-        case Triangle:Utils::SetTriangleData(vertices, indices);break;
+        case Triangle:Utils::SetTriangleData(vertices, indices); break;
         case Square: Utils::SetSquareData(vertices, indices); break;
         case Circle: Utils::SetCircleData(vertices, indices); break;
         case Hexagon: Utils::SetHexagonData(vertices, indices); break;
@@ -35,72 +39,27 @@ GameModel::GameModel(ModelType _modelType, Camera* _camera)
         case Heptagon: Utils::SetHeptagonData(vertices, indices); break;
     }
 
-    glGenVertexArrays(1, &vao);
-    glBindVertexArray(vao);
+    // Initialise VAO, VBO and EBO (Graphics)
+    glGenVertexArrays(1, &this->vertexArrayObject);
+    glBindVertexArray(this->vertexArrayObject);
 
-    glGenBuffers(1, &vbo);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(VertexFormat) * vertices.size(), &vertices[0], GL_STATIC_DRAW);
+    glGenBuffers(1, &this->vertexBufferObject);
+    glBindBuffer(GL_ARRAY_BUFFER, this->vertexBufferObject);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(VertexFormat) * this->vertices.size(), &this->vertices[0], GL_STATIC_DRAW);
 
-    glGenBuffers(1, &ebo);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * indices.size(), &indices[0], GL_STATIC_DRAW);
+    glGenBuffers(1, &this->elementBufferObject);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->elementBufferObject);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * this->indices.size(), &this->indices[0], GL_STATIC_DRAW);
 
+    // Store the position
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(VertexFormat), (GLvoid*)0);
     glEnableVertexAttribArray(0);
-
-    // Position
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(VertexFormat), (GLvoid*) 0);
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
 }
 
 GameModel::~GameModel() {}
-
-// Method Name: Render
-// Description: Draws the model based on its settings
-// author: Juan Alejandro Rodriguez Morais
-// return: void
-void GameModel::Render()
-{
-    glUseProgram(this->program);
-
-    glm::mat4 model, view, projection;
-    model = glm::translate(model, position);
-
-    model = glm::translate(model, glm::vec3(0.0f * this->scale.x, 0.0f * scale.y, 0.0f));
-    model = glm::rotate(model, glm::radians(rotation.x), glm::vec3(1.0, 0.0, 0.0));
-    model = glm::rotate(model, glm::radians(rotation.y), glm::vec3(0.0, 1.0, 0.0));
-    model = glm::rotate(model, glm::radians(rotation.z), glm::vec3(0.0, 0.0, 1.0));
-    model = glm::translate(model, glm::vec3(-0.0f * scale.x, -0.0f * scale.y, 0.0f));
-
-    model = glm::scale(model, scale);
-
-    view = this->camera->GetViewMatrix();
-    projection = this->camera->GetProjectionMatrix();
-
-    // Get their uniform location
-    GLint viewLoc = glGetUniformLocation(program, "view");
-    GLint projLoc = glGetUniformLocation(program, "projection");
-
-    // Pass them to the shaders
-    glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
-    glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
-
-    GLint modelLoc = glGetUniformLocation(program, "model");
-    glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-
-    // lighting calculations
-    GLint objColorLoc = glGetUniformLocation(program, "objectColor");
-    glUniform3f(objColorLoc, colour.x, colour.y, colour.z);
-
-    GLuint cameraPosLoc = glGetUniformLocation(program, "viewPosition");
-    glUniform3f(cameraPosLoc, camera->GetPosition().x, camera->GetPosition().y, camera->GetPosition().z);
-
-    glBindVertexArray(vao);
-    glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
-    glBindVertexArray(0);
-}
 
 // Method Name: Update
 // Description: Updates the model based on current time
@@ -113,26 +72,26 @@ void GameModel::Update(GLfloat _currentTime)
     {
         case (MovementType::UpDown):
         {
-            position.y = (Utils::VERTICAL_LIMIT * sin(_currentTime * speed) + startPosition.y);
+            this->position.y = (Utils::VERTICAL_LIMIT * sin(_currentTime * this->speed) + this->startPosition.y);
         }
         break;
         case (MovementType::LeftRight):
         {
-            position.x = (Utils::HORIZONTAL_LIMIT * cos(_currentTime * speed) + startPosition.x);
+            this->position.x = (Utils::HORIZONTAL_LIMIT * cos(_currentTime * this->speed) + this->startPosition.x);
         }
         break;
         case (MovementType::Circular):
         {
-            position.x = (Utils::CIRCULAR_RADIUS * cos(_currentTime * speed) + startPosition.x);
-            position.y = (Utils::CIRCULAR_RADIUS * sin(_currentTime * speed) + startPosition.y);
+            this->position.x = (Utils::CIRCULAR_RADIUS * cos(_currentTime * this->speed) + this->startPosition.x);
+            this->position.y = (Utils::CIRCULAR_RADIUS * sin(_currentTime * this->speed) + this->startPosition.y);
         }
         break;
         case (MovementType::Box):
-        case (MovementType::BoxInverted):
         {
-            position = Utils::MoveTowards(position, startPosition + Utils::BoxPositions[Utils::movementIndex], (MovementType::Box) ? speed : -speed);
+            vec3 targetPosition = this->startPosition + Utils::BoxPositions[Utils::movementIndex];
+            this->position = Utils::MoveTowards(this->position, targetPosition, this->speed);
 
-            if (position == (startPosition + Utils::BoxPositions[Utils::movementIndex]))
+            if (this->position == targetPosition)
             {
                 Utils::movementIndex = (Utils::movementIndex + 1) % (Utils::GetBoxPositionsLength());
             }
@@ -143,6 +102,51 @@ void GameModel::Update(GLfloat _currentTime)
     glutPostRedisplay();
 }
 
+// Method Name: Render
+// Description: Draws the model based on its settings
+// author: Juan Alejandro Rodriguez Morais
+// return: void
+void GameModel::Render()
+{
+    glUseProgram(this->shaderProgram);
+
+    glm::mat4 model, view, projection;
+    model = glm::translate(model, this->position);
+
+    model = glm::translate(model, vec3(0.0, 0.0, 0.0));
+    model = glm::rotate(model, glm::radians(this->rotation.x), vec3(1.0, 0.0, 0.0));
+    model = glm::rotate(model, glm::radians(this->rotation.y), vec3(0.0, 1.0, 0.0));
+    model = glm::rotate(model, glm::radians(this->rotation.z), vec3(0.0, 0.0, 1.0));
+    model = glm::translate(model, vec3(0.0, 0.0, 0.0));
+
+    model = glm::scale(model, this->scale);
+
+    view = this->camera->GetViewMatrix();
+    projection = this->camera->GetProjectionMatrix();
+
+    // Get their uniform location
+    GLint viewLoc = glGetUniformLocation(this->shaderProgram, "view");
+    GLint projLoc = glGetUniformLocation(this->shaderProgram, "projection");
+
+    // Pass them to the shaders
+    glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+    glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
+
+    GLint modelLoc = glGetUniformLocation(this->shaderProgram, "model");
+    glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+
+    // lighting calculations
+    GLint objColorLoc = glGetUniformLocation(this->shaderProgram, "objectColor");
+    glUniform3f(objColorLoc, this->colour.x, this->colour.y, this->colour.z);
+
+    GLuint cameraPosLoc = glGetUniformLocation(this->shaderProgram, "viewPosition");
+    glUniform3f(cameraPosLoc, camera->GetPosition().x, camera->GetPosition().y, camera->GetPosition().z);
+
+    glBindVertexArray(this->vertexArrayObject);
+    glDrawElements(GL_TRIANGLES, this->indices.size(), GL_UNSIGNED_INT, 0);
+    glBindVertexArray(0);
+}
+
 // Method Name: SetProgram
 // Description: Sets the shader that this object will be rendered with
 // author: Juan Alejandro Rodriguez Morais
@@ -150,37 +154,7 @@ void GameModel::Update(GLfloat _currentTime)
 // return: void
 void GameModel::SetProgram(GLuint _program)
 {
-    this->program = _program;
-}
-
-// Method Name: SetPosition
-// Description: Sets the position of the object
-// author: Juan Alejandro Rodriguez Morais
-// param _position: The desired position
-// return: void
-void GameModel::SetPosition(glm::vec3 _position)
-{
-    this->position = _position;
-}
-
-// Method Name: SetScale
-// Description: Sets the scale of the object
-// author: Juan Alejandro Rodriguez Morais
-// param _scale: The desired scale
-// return: void
-void GameModel::SetScale(glm::vec3 _scale)
-{
-    this->scale = _scale;
-}
-
-// Method Name: SetRotation
-// Description: Sets the rotation (euler angles) of the object
-// author: Juan Alejandro Rodriguez Morais
-// param _angle: The desired angle
-// return: void
-void GameModel::SetRotation(glm::vec3 _angle)
-{
-    this->rotation = _angle;
+    this->shaderProgram = _program;
 }
 
 // Method Name: SetStartPosition
@@ -188,7 +162,7 @@ void GameModel::SetRotation(glm::vec3 _angle)
 // author: Juan Alejandro Rodriguez Morais
 // param _position: The desired position
 // return: void
-void GameModel::SetStartPosition(glm::vec3 _position)
+void GameModel::SetStartPosition(vec3 _position)
 {
     this->startPosition = _position;
 }
@@ -198,7 +172,7 @@ void GameModel::SetStartPosition(glm::vec3 _position)
 // author: Juan Alejandro Rodriguez Morais
 // param _colour: The desired color
 // return: void
-void GameModel::SetColour(glm::vec3 _colour)
+void GameModel::SetColour(vec3 _colour)
 {
     this->colour = _colour;
 }
@@ -223,53 +197,55 @@ void GameModel::SetMovementType(MovementType _type)
     this->movementType = _type;
 }
 
-// Method Name: GetPosition
-// Description: Returns the current position of the object
+// Method Name: GetProgram
+// Description: Returns the program of the object
 // author: Juan Alejandro Rodriguez Morais
-// return: glm::vec3
-glm::vec3 GameModel::GetPosition() const
+// return: GLuint
+GLuint GameModel::GetProgram() const
 {
-    return this->position;
+    return this->shaderProgram;
 }
 
-// Method Name: GetScale
-// Description: Returns the scale of the object
+// Method Name: GetStartPosition
+// Description: Returns the colour of the object
 // author: Juan Alejandro Rodriguez Morais
 // return: glm::vec3
-glm::vec3 GameModel::GetScale() const
-{
-    return this->scale;
-}
-
-// Method Name: GetRotation
-// Description: Returns the rotation of the object
-// author: Juan Alejandro Rodriguez Morais
-// return: glm::vec3
-glm::vec3 GameModel::GetRotation() const
-{
-    return this->rotation;
-}
-
-glm::vec3 GameModel::GetStartPosition() const
+vec3 GameModel::GetStartPosition() const
 {
     return this->startPosition;
 }
 
+// Method Name: GetModelType
+// Description: Returns the model type of the object
+// author: Juan Alejandro Rodriguez Morais
+// return: ModelType
+ModelType GameModel::GetModelType() const
+{
+    return this->modelType;
+}
+
+// Method Name: GetMovementType
+// Description: Returns the movement type of the object
+// author: Juan Alejandro Rodriguez Morais
+// return: MovementType
 MovementType GameModel::GetMovementType() const
 {
     return this->movementType;
 }
 
-
 // Method Name: GetColour
 // Description: Returns the colour of the object
 // author: Juan Alejandro Rodriguez Morais
 // return: glm::vec3
-glm::vec3 GameModel::GetColour() const
+vec3 GameModel::GetColour() const
 {
     return this->colour;
 }
 
+// Method Name: GetSpeed
+// Description: Returns the colour of the object
+// author: Juan Alejandro Rodriguez Morais
+// return: float
 float GameModel::GetSpeed() const
 {
     return this->speed;

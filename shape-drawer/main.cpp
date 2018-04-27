@@ -199,34 +199,41 @@ void LoadModelsFromFile()
         // Model Type
         parser.GetValue<std::string>(section, "ModelType", line);
         ModelType mod = Utils::GetModelTypeFromString(line);
+        options.modelType = mod;
 
         // Movement Type
         parser.GetValue<std::string>(section, "MovementType", line);
         MovementType mov = Utils::GetMovementTypeFromString(line);
+        options.movementType = mov;
 
         // Colour
         parser.GetValue<std::string>(section, "Colour", line);
         glm::vec3 colour = Utils::GetVector3FromString(line);
         colour = Utils::RGBtoAlpha(colour.r, colour.g, colour.b);
-
-        // Position
-        parser.GetValue<std::string>(section, "Scale", line);
-        glm::vec3 scale = Utils::GetVector3FromString(line);
+        options.colour = colour;
 
         // Position
         parser.GetValue<std::string>(section, "Position", line);
         glm::vec3 position = Utils::GetVector3FromString(line);
+        options.modelOptions.position = position;
+
+        // Scale
+        parser.GetValue<std::string>(section, "Scale", line);
+        glm::vec3 scale = Utils::GetVector3FromString(line);
+        options.modelOptions.scale = scale;
 
         // Rotation
         parser.GetValue<std::string>(section, "Rotation", line);
         glm::vec3 rotation = Utils::GetVector3FromString(line);
+        options.modelOptions.rotation = rotation;
 
         // Speed
         float speed = 0.0f;
         parser.GetValue<float>(section, "Speed", speed);
+        options.speed = speed;
 
         // Build the model
-        GameScene::GetInstance().CreateModel(mod, mov, g_shaderProgram, colour, scale, position, rotation, speed);
+        GameScene::GetInstance().CreateModel(options);
     }
 
 }

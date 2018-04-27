@@ -22,13 +22,13 @@ public:
     virtual ~GameScene();
     static GameScene& GetInstance();
 
-    void CreateModel(ModelType _model, MovementType _movement, GLuint _program, glm::vec3 _colour, glm::vec3 _scale, glm::vec3 _position, glm::vec3 _rotation, float _speed);
+    void CreateModel(GameModelOptions _options);
     void SetCamera(Camera* _camera);
     void SetCubemap(Cubemap* cubemap);
     std::vector<GameModel*> GetModels() const;
 
+    void Update(float _currentTime);
     void Render();
-    void Update(float _deltaTime);
 
     void ClearScene();
 
