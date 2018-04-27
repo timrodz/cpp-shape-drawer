@@ -58,20 +58,23 @@ int main(int argc, char **argv)
     // Initialise the box movement index (Utils)
     Utils::movementIndex = 0;
 
-    // Initialise the global camera at (0, 0, 10)
+    // Create and initialise a global camera
     Camera* g_Camera = new Camera(vec3(0, 0, 10), 45.0f, Utils::WIDTH, Utils::HEIGHT);
 
+    // Set the camera of the scene
+    GameScene::GetInstance().SetCamera(g_Camera);
+    
     // Create the Cubemap
     GLuint cubemapProgram = g_ShaderLoader.CreateProgram("shaders/skybox.vs", "shaders/skybox.fs");
     Cubemap* g_Skybox = new Cubemap(cubemapProgram, g_Camera);
 
+    // Set the cubemap of the scene
+    GameScene::GetInstance().SetCubemap(g_Skybox);
+
     // Create default shader program, most objects will use it.
     g_shaderProgram = g_ShaderLoader.CreateProgram("shaders/unlit.vs", "shaders/unlit.fs");
 
-    // Get the scene instance. We will add a camera and models to it
-    GameScene::GetInstance().SetCamera(g_Camera);
-    GameScene::GetInstance().SetCubemap(g_Skybox);
-
+    /* Defaults for testing, comment them out to see a non-empty start */
     // Load default scene
     //gs.CreateDefaultScene(g_shaderProgram);
 
@@ -131,6 +134,10 @@ void Update()
             GameScene::GetInstance().ClearScene();
             anyKeyDown = true;
             cout << "Scene cleared" << endl;
+        }
+        if (KeyCode[(unsigned char)'q'] == KeyState::Pressed || KeyCode[(unsigned char)'Q'] == KeyState::Pressed)
+        {
+            exit(EXIT_SUCCESS);
         }
     }
 }

@@ -8,32 +8,23 @@
 
 #pragma once
 
-#include "camera.h"
+#include "GameModel.h"
+#include "Model.h"
 #include "utils.h"
 
 #include <vector>
 
-class Cubemap
+class Cubemap : public GameModel
 {
 public:
-
 	Cubemap(GLuint _program, Camera* _camera);
 	~Cubemap();
-
-	void Render();
+    
+	virtual void Render() override;
 
 private:
 	GLuint CreateCubemap(std::vector<const GLchar*> _faces);
 	
 private:
-	Camera* camera;
-
-    std::vector<VertexFormat> vertices;
-	std::vector<GLuint> indices;
-
-	GLuint vertexArrayObject;
-	GLuint vertexBufferObject;
-	GLuint elementBufferObject;
-	GLuint shaderProgram;
 	GLuint texture;
 };

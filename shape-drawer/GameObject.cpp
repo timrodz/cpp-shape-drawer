@@ -1,5 +1,5 @@
 //
-//  File Name: GameModel.cpp
+//  File Name: GameObject.cpp
 //  Author: Juan Alejandro Rodriguez Morais
 //  Email: timrodz@icloud.com
 //
@@ -19,13 +19,14 @@ GameObject::GameObject() {}
 // param _options: The options to create the game model with
 // return: GameModel
 GameObject::GameObject(GameObjectOptions _options) :
-    Model(_options.modelOptions), // Set all default model options
-    shaderProgram(_options.shaderProgram),
+    GameModel(_options.modelOptions), // Set all default model options
     modelType(_options.modelType),
     movementType(_options.movementType),
     colour(_options.colour),
     speed(_options.speed)
 {
+    
+    SetShaderProgram(_options.shaderProgram);
     this->startPosition = this->position;
 
     switch (modelType)
@@ -146,16 +147,6 @@ void GameObject::Render()
     glBindVertexArray(0);
 }
 
-// Method Name: SetProgram
-// Description: Sets the shader that this object will be rendered with
-// author: Juan Alejandro Rodriguez Morais
-// param _program: The shader type
-// return: void
-void GameObject::SetProgram(GLuint _program)
-{
-    this->shaderProgram = _program;
-}
-
 // Method Name: SetStartPosition
 // Description: Sets the start position of the object
 // author: Juan Alejandro Rodriguez Morais
@@ -194,15 +185,6 @@ void GameObject::SetSpeed(float _speed)
 void GameObject::SetMovementType(MovementType _type)
 {
     this->movementType = _type;
-}
-
-// Method Name: GetProgram
-// Description: Returns the program of the object
-// author: Juan Alejandro Rodriguez Morais
-// return: GLuint
-GLuint GameObject::GetProgram() const
-{
-    return this->shaderProgram;
 }
 
 // Method Name: GetStartPosition
