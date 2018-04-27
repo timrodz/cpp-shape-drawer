@@ -27,11 +27,11 @@ ShaderLoader g_ShaderLoader;
 GLuint g_shaderProgram;
 
 /* Functions */
-void Render();
 void Update();
+void Render();
 void KeyDown(unsigned char key, int x, int y);
 void KeyUp(unsigned char key, int x, int y);
-void LoadModelsFromFile(const char* _file);
+void LoadModelsFromFile(const char* _file, const char* _sectionName);
 
 // Method Name: main
 // Description: The main program entry loop
@@ -77,7 +77,7 @@ int main(int argc, char **argv)
     //gs.CreateDefaultScene(g_shaderProgram);
 
     // Load models from external file
-    //LoadModelsFromFile();
+    //LoadModelsFromFile("shapes", "shape");
 
     // Main loop functions
     glutDisplayFunc(Render);
@@ -129,7 +129,7 @@ void Update()
         if (KeyCode[(unsigned char)'2'] == KeyState::Pressed)
         {
             GameScene::GetInstance().ClearScene();
-            LoadModelsFromFile("shapes");
+            LoadModelsFromFile("shapes", "shape");
             anyKeyDown = true;
             cout << "Load external files" << endl;
         }
@@ -137,7 +137,7 @@ void Update()
         {
             GameScene::GetInstance().ClearScene();
             GameScene::GetInstance().CreateDefaultScene(g_shaderProgram);
-            LoadModelsFromFile("shapes");
+            LoadModelsFromFile("shapes", "shape");
             anyKeyDown = true;
             cout << "Load default scene with external files" << endl;
         }
@@ -179,60 +179,81 @@ void KeyUp(unsigned char key, int x, int y)
 // Description: Loads the shapes.ini file and creates models based on the settings input there
 // author: Juan Alejandro Rodriguez Morais
 // return: void
-void LoadModelsFromFile(const char* _file)
+void LoadModelsFromFile(const char* _file, const char* _sectionName)
 {
     INIParser parser;
+
+    // First, check if the file exists
     if (!parser.LoadFile(_file))
     {
         cout << "ERROR: " << _file << ".ini is empty" << endl;
         return;
     }
 
-    std::string line = "";
+    // Initialise default options
+    ModelOptions modelOptions;
+
     GameModelOptions options;
+    options.modelOptions = modelOptions;
     options.shaderProgram = g_shaderProgram;
+
+    std::string line = "";
 
     // Populate shapes
     for (int i = 1; i <= parser.GetSectionCount(); ++i)
     {
-        std::string s = "shape" + std::to_string(i);
+        std::string s = _sectionName + std::to_string(i);
         const char* section = s.c_str();
 
         // Model Type
-        parser.GetValue<std::string>(section, "ModelType", line);
+        if (parser.GetValue<std::string>(section, "ModelType", line))
+        {
         ModelType mod = Utils::GetModelTypeFromString(line);
         options.modelType = mod;
+        }
 
         // Movement Type
-        parser.GetValue<std::string>(section, "MovementType", line);
+        if (parser.GetValue<std::string>(section, "MovementType", line))
+        {
         MovementType mov = Utils::GetMovementTypeFromString(line);
         options.movementType = mov;
+        }
 
         // Colour
-        parser.GetValue<std::string>(section, "Colour", line);
+        if (parser.GetValue<std::string>(section, "Colour", line))
+        {
         glm::vec3 colour = Utils::GetVector3FromString(line);
         colour = Utils::RGBtoAlpha(colour.r, colour.g, colour.b);
         options.colour = colour;
+        }
 
         // Position
-        parser.GetValue<std::string>(section, "Position", line);
+        if (parser.GetValue<std::string>(section, "Position", line))
+        {
         glm::vec3 position = Utils::GetVector3FromString(line);
         options.modelOptions.position = position;
+        }
 
         // Scale
-        parser.GetValue<std::string>(section, "Scale", line);
+        if (parser.GetValue<std::string>(section, "Scale", line))
+        {
         glm::vec3 scale = Utils::GetVector3FromString(line);
         options.modelOptions.scale = scale;
+        }
 
         // Rotation
-        parser.GetValue<std::string>(section, "Rotation", line);
+        if (parser.GetValue<std::string>(section, "Rotation", line))
+        {
         glm::vec3 rotation = Utils::GetVector3FromString(line);
         options.modelOptions.rotation = rotation;
+        }
 
         // Speed
         float speed = 0.0f;
-        parser.GetValue<float>(section, "Speed", speed);
+        if (parser.GetValue<float>(section, "Speed", speed))
+        {
         options.speed = speed;
+        }
 
         // Build the model
         GameScene::GetInstance().CreateModel(options);
