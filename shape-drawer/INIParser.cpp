@@ -38,7 +38,7 @@ bool INIParser::SaveFile()
         std::map<string, string>::const_iterator it;
         it = mapPairs.begin();
 
-        for (unsigned int i = 0; i < mapPairs.size(); i++)
+        for (unsigned int i = 0; i < mapPairs.size(); ++i)
         {
             std::cout << it->first << " = " << it->second << "\n";
             it++;

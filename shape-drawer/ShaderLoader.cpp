@@ -39,6 +39,7 @@ GLuint ShaderLoader::CreateProgram(char* _vertexShaderFilename, char* _fragmentS
 
     glLinkProgram(program);
     glGetProgramiv(program, GL_LINK_STATUS, &link_result);
+
     //check for link errors
     if (link_result == GL_FALSE)
     {
@@ -99,7 +100,6 @@ GLuint ShaderLoader::CreateShader(GLenum _shaderType, std::string _file, char* _
     //check for errors
     if (compile_result == GL_FALSE)
     {
-
         int info_log_length = 0;
         glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &info_log_length);
         std::vector<char> shader_log(info_log_length);

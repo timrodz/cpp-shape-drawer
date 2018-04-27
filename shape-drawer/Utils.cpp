@@ -276,11 +276,11 @@ void Utils::SetPolygonData(std::vector<VertexFormat>& _vertices, std::vector<GLu
 
     std::vector<GLuint> Indices;
 
-    for (GLuint latNumber = 0; latNumber < vertexCount; latNumber++)
+    for (GLuint x = 0; x < vertexCount; ++x)
     {
-        for (GLuint longNumber = 0; longNumber < vertexCount; longNumber++)
+        for (GLuint y = 0; y < vertexCount; ++y)
         {
-            GLuint first = (latNumber * (vertexCount + 1)) + longNumber;
+            GLuint first = (x * (vertexCount + 1)) + y;
             GLuint second = first + vertexCount + 1;
 
             Indices.push_back(first);

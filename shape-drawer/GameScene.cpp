@@ -81,7 +81,7 @@ std::vector<GameModel*> GameScene::GetModels() const
 // return: void
 void GameScene::Update(float _currentTime)
 {
-    for (auto it = gameModelVector.begin(); it < gameModelVector.end(); it++)
+    for (auto it = gameModelVector.begin(); it < gameModelVector.end(); ++it)
     {
         (*it)->Update(_currentTime);
     }
@@ -95,7 +95,7 @@ void GameScene::Render()
 {
     cubemap->Render();
 
-    for (auto it = gameModelVector.begin(); it < gameModelVector.end(); it++)
+    for (auto it = gameModelVector.begin(); it < gameModelVector.end(); ++it)
     {
         (*it)->Render();
     }
