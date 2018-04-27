@@ -39,7 +39,7 @@ int Utils::GetBoxPositionsLength()
 // return: glm::vec3
 glm::vec3 Utils::RGBtoAlpha(float _r, float _g, float _b)
 {
-    return glm::vec3((float) _r / 255, (float) _g / 255, (float) _b / 255);
+    return glm::vec3((float)_r / 255, (float)_g / 255, (float)_b / 255);
 }
 
 // Method Name: MoveTowards
@@ -259,7 +259,7 @@ void Utils::SetPolygonData(std::vector<VertexFormat>& _vertices, std::vector<GLu
 
     for (int i = 0; i < outerVertexCount; ++i)
     {
-        float percent = (i / (float) (outerVertexCount - 1));
+        float percent = (i / (float)(outerVertexCount - 1));
         float rad = percent * 2.0f * PI;
 
         //Vertex position
@@ -356,6 +356,11 @@ MovementType Utils::GetMovementTypeFromString(std::string _string)
 // return: glm::vec3
 glm::vec3 Utils::GetVector3FromString(std::string _string)
 {
+    if (_string.empty())
+    {
+        return glm::vec3(1, 1, 1);
+    }
+
     float x, y, z;
 
     std::size_t first = _string.find("(");
