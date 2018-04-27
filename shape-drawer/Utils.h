@@ -61,8 +61,7 @@ enum MovementType
     UpDown,
     LeftRight,
     Circular,
-    Box,
-    BoxInverted
+    Box
 };
 #pragma endregion
 
