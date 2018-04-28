@@ -276,9 +276,9 @@ void Utils::SetPolygonData(std::vector<VertexFormat>& _vertices, std::vector<GLu
 
     std::vector<GLuint> Indices;
 
-    for (GLuint x = 0; x < vertexCount; ++x)
+    for (int x = 0; x < vertexCount; ++x)
     {
-        for (GLuint y = 0; y < vertexCount; ++y)
+        for (int y = 0; y < vertexCount; ++y)
         {
             GLuint first = (x * (vertexCount + 1)) + y;
             GLuint second = first + vertexCount + 1;
